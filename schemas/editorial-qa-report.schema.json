@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "v0.8 Editorial QA Report",
+  "type": "object",
+  "required": ["critic", "independent", "renderRefs", "overallStatus", "sceneFindings"],
+  "properties": {
+    "critic": {"type": "string", "minLength": 1},
+    "independent": {"type": "boolean"},
+    "renderRefs": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+    "overallStatus": {"enum": ["redesign", "revise", "publish_candidate", "needs_review"]},
+    "sceneFindings": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["sceneId", "status", "checks", "findings"],
+        "properties": {
+          "sceneId": {"type": "string", "minLength": 1},
+          "status": {"enum": ["redesign", "revise", "approve"]},
+          "checks": {
+            "type": "object",
+            "required": ["thesisClear", "hierarchyClear", "stateChangeMeaningful", "pacingResolved", "continuityResolved", "assetFit"],
+            "properties": {
+              "thesisClear": {"type": "boolean"},
+              "hierarchyClear": {"type": "boolean"},
+              "stateChangeMeaningful": {"type": "boolean"},
+              "pacingResolved": {"type": "boolean"},
+              "continuityResolved": {"type": "boolean"},
+              "assetFit": {"type": "boolean"}
+            },
+            "additionalProperties": false
+          },
+          "findings": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["problem", "repair"],
+              "properties": {
+                "problem": {"type": "string", "minLength": 1},
+                "repair": {"type": "string", "minLength": 1},
+                "severity": {"enum": ["low", "medium", "high"]}
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {"properties": {"overallStatus": {"const": "publish_candidate"}}, "required": ["overallStatus"]},
+      "then": {
+        "properties": {
+          "independent": {"const": true},
+          "sceneFindings": {
+            "items": {
+              "properties": {
+                "status": {"const": "approve"},
+                "checks": {
+                  "properties": {
+                    "thesisClear": {"const": true},
+                    "hierarchyClear": {"const": true},
+                    "stateChangeMeaningful": {"const": true},
+                    "pacingResolved": {"const": true},
+                    "continuityResolved": {"const": true},
+                    "assetFit": {"const": true}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}
