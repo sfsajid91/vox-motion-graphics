@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Mo's newsprint halftone for transparent cutouts.
+"""Optional newsprint halftone treatment for transparent cutouts.
 
-Canonical treatment from the empire-downfall portraits and the Mac timeline
-machines: white fill inside the silhouette, black round dots on a 45-degree
-screen, high contrast, alpha preserved exactly.
+Produces a white fill inside the silhouette with black round dots on a
+45-degree screen while preserving source alpha. Use only when the selected
+visual language benefits from a print treatment.
 
 Usage:
   python3 halftone.py IN.png [IN2.png ...] --out OUT_DIR [--pitch 5] [--long-edge 1100]

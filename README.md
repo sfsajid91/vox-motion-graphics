@@ -1,31 +1,29 @@
-# AI Video Director v0.7 — Creative Autopilot + Finish Contracts
+# Editorial Motion Director v0.8.1
 
-Drop-in successor to `vox-motion-graphics` v0.6.
+`vox-motion-graphics` directs and implements editorial motion-graphics videos without requiring the user to storyboard or speak motion-design jargon.
 
-Start with `SKILL.md`.
+v0.8.1 keeps the v0.8 storyboard-first architecture and tightens review truthfulness and ergonomics. v0.8 made the HTML storyboard/preview the creative source of truth, freezes accepted visual decisions before Remotion, separates editorial QA from technical QA, and replaces overlapping asset contracts with one orthogonal lifecycle. It also includes bounded autonomous orchestration so coding agents can run the pipeline without endless repair loops.
 
-## What v0.7 adds
-v0.7 keeps the v0.6 directing, evidence and reference-learning model and adds implementation safeguards learned from a Remotion chart build:
-- **Studio-first structure**: major visual layers use named `Interactive.*` elements and typed inline defaults.
-- **Deterministic treatment**: procedural grain derives from frame plus stable layer seeds; static print texture does not accidentally animate.
-- **Compositing invariants**: fill, tint, grain, outline and mask layers preserve the same source bounds.
-- **Data-graphic finish contract**: dataset, origins, scale, axis, bar geometry, entrance mode and settled-frame legibility are explicit.
-- **Entrance modes**: synchronized, staggered and sequential motion are declared instead of inferred.
-- **Pixel-level finish checks**: inspect actual entry, in-motion and settled renders and confirm Studio layer visibility.
+Start with `SKILL.md`. Load only the references linked for the current production stage.
 
-It still rejects overfitted universal rules: mandatory paper/halftone/grunge, fixed scene counts, fixed audio ratios, one sentence = one scene, mandatory conflict, fixed safe zones and self-awarded QA.
+## Package shape
+
+- `SKILL.md` — workflow, routing, gates, and non-negotiables
+- `references/` — focused directing, reference-analysis, orchestration, and implementation guidance
+- `examples/positive/` and `examples/negative/` — corrected outcomes and instructive failures
+- `schemas/` — core handoff contracts plus optional tuning/reference contracts
+- `tools/validate_project.py` — deterministic timing, asset, storyboard, and implementation checks
+- `tools/make_contact_sheet.py` — representative-frame contact sheets
+- `tools/halftone.py` — optional image treatment, not a default style
 
 ## Validation
-Run:
+
+From this directory:
+
 ```bash
 python tests/test_schemas.py
+python -m unittest discover -s tests -p 'test_validate_project.py'
+python tools/validate_project.py --help
 ```
 
-The package validates all schema files and checks important guardrails such as:
-- generator cannot self-mark scene QA as pass;
-- evidence scenes require claim references;
-- literal historical assets cannot route directly to generation;
-- rights cannot be marked verified without provenance/license/evidence.
-
-## Philosophy
-**Learn why the reference works, then invent a fresh solution for the new story.**
+The validator intentionally does not score “cinematic,” “Vox-like,” or other aesthetic qualities. Those remain editorial review decisions.
