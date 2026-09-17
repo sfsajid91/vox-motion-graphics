@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["projectId", "assets"],
+  "properties": {
+    "projectId": {"type": "string"},
+    "assets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "file", "representationType", "approval", "motionMetadata"],
+        "properties": {
+          "id": {"type": "string"},
+          "file": {"type": "string"},
+          "representationType": {"enum": ["literal", "evidence", "reconstruction", "metaphor", "abstract"]},
+          "approval": {
+            "type": "object",
+            "required": ["status", "criticRef"],
+            "properties": {
+              "status": {"const": "approved"},
+              "criticRef": {"type": "string"}
+            },
+            "additionalProperties": true
+          },
+          "provenance": {"type": "object"},
+          "motionMetadata": {"type": "object"}
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": true
+}

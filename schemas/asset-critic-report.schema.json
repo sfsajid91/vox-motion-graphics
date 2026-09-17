@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["assetId", "decision", "issues"],
+  "properties": {
+    "assetId": {"type": "string"},
+    "decision": {"enum": ["approve", "revise", "reject"]},
+    "issues": {"type": "array", "items": {"type": "string"}},
+    "repairInstructions": {"type": "array", "items": {"type": "string"}},
+    "dimensions": {
+      "type": "object",
+      "properties": {
+        "semanticCorrectness": {"type": "integer", "minimum": 0, "maximum": 5},
+        "silhouetteReadability": {"type": "integer", "minimum": 0, "maximum": 5},
+        "styleCompatibility": {"type": "integer", "minimum": 0, "maximum": 5},
+        "motionUsability": {"type": "integer", "minimum": 0, "maximum": 5},
+        "representationSafety": {"type": "integer", "minimum": 0, "maximum": 5},
+        "provenanceRights": {"type": "integer", "minimum": 0, "maximum": 5}
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

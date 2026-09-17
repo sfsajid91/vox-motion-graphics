@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Motion Graphics Asset Manifest",
+  "type": "object",
+  "required": ["assets"],
+  "properties": {
+    "assets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "sceneIds", "role", "sourceType", "rightsStatus", "representationType", "factualAccuracyRequired"],
+        "properties": {
+          "id": {"type": "string"},
+          "sceneIds": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+          "role": {"type": "string"},
+          "sourceType": {"enum": ["programmatic", "owned", "licensed", "public_domain", "generated", "library", "found_unsourced"]},
+          "rightsStatus": {"enum": ["self_created", "verified", "needs_review", "unknown"]},
+          "representationType": {"enum": ["literal", "evidence", "reconstruction", "metaphor", "abstract"]},
+          "claimIds": {"type": "array", "items": {"type": "string"}},
+          "sourceUri": {"type": "string"},
+          "license": {"type": "string"},
+          "rightsEvidence": {"type": "string"},
+          "factualAccuracyRequired": {"type": "boolean"},
+          "generationPrompt": {"type": "string"},
+          "postProcess": {"type": "array", "items": {"type": "string"}},
+          "notes": {"type": "string"}
+        },
+        "allOf": [
+          {
+            "if": {"properties": {"rightsStatus": {"const": "verified"}}, "required": ["rightsStatus"]},
+            "then": {
+              "required": ["sourceUri", "license", "rightsEvidence"],
+              "properties": {
+                "sourceUri": {"minLength": 1},
+                "license": {"minLength": 1},
+                "rightsEvidence": {"minLength": 1}
+              }
+            }
+          },
+          {
+            "if": {"properties": {"representationType": {"const": "evidence"}}, "required": ["representationType"]},
+            "then": {"required": ["claimIds"], "properties": {"claimIds": {"minItems": 1}}}
+          }
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
