@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "v0.8 Narration and Frame Timing Specification",
+  "type": "object",
+  "required": ["fps", "alignmentSource", "compositionDurationSec", "scenes"],
+  "properties": {
+    "fps": {"type": "number", "minimum": 1},
+    "alignmentSource": {"type": "string", "minLength": 1},
+    "compositionDurationSec": {"type": "number", "exclusiveMinimum": 0},
+    "voiceoverEndSec": {"type": ["number", "null"], "minimum": 0},
+    "captionEndSec": {"type": ["number", "null"], "minimum": 0},
+    "finalHold": {
+      "type": ["object", "null"],
+      "properties": {
+        "startSec": {"type": "number", "minimum": 0},
+        "endSec": {"type": "number", "minimum": 0},
+        "intentional": {"const": true},
+        "reviewed": {"const": true},
+        "reason": {"type": "string", "minLength": 1}
+      },
+      "required": ["startSec", "endSec", "intentional", "reviewed", "reason"],
+      "additionalProperties": false
+    },
+    "scenes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["sceneId", "sceneStartSec", "sceneDurationSec", "microbeats"],
+        "properties": {
+          "sceneId": {"type": "string", "minLength": 1},
+          "sceneStartSec": {"type": "number", "minimum": 0},
+          "sceneDurationSec": {"type": "number", "exclusiveMinimum": 0},
+          "captionEndSec": {"type": ["number", "null"], "minimum": 0},
+          "microbeats": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["offsetSec", "event", "motionRole"],
+              "properties": {
+                "offsetSec": {"type": "number", "minimum": 0},
+                "event": {"type": "string", "minLength": 1},
+                "narrationAnchor": {"type": "string"},
+                "motionRole": {"enum": ["primary", "support", "camera", "hold", "transition", "audio"]},
+                "focalTarget": {"type": "string"},
+                "storyboardStateId": {"type": "string"}
+              },
+              "additionalProperties": false
+            }
+          },
+          "sfxEvents": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["offsetSec", "visualEvent", "sfx"],
+              "properties": {
+                "offsetSec": {"type": "number", "minimum": 0},
+                "visualEvent": {"type": "string", "minLength": 1},
+                "sfx": {"type": "string", "minLength": 1},
+                "syncPoint": {"enum": ["attack", "movement", "settle", "release", "transition"]}
+              },
+              "additionalProperties": false
+            }
+          },
+          "implementationNotes": {"type": "array", "items": {"type": "string"}}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
