@@ -41,7 +41,20 @@ Editorial QA asks whether the film communicates with clarity, specificity, and d
 - **Asset fitness:** do the selected assets support the required crop, motion, identity, and tone?
 - **Text restraint:** is text limited to labels, evidence, short emphasis, or accessibility rather than duplicating the voiceover?
 - **Style cohesion:** do continuity tokens create one film without forcing every scene into the same layout?
-- **Evidence honesty:** are literal, evidence, reconstruction, metaphor, and abstract treatments unmistakable and claim-safe?
+- **Evidence honesty:** are literal, evidence, reconstruction, metaphor, and abstract treatments unmistakable and claim-safe? Could any fabricated/retypeset document be mistaken for recovered primary evidence?
+- **Review ergonomics:** can the user judge the scene without reading implementation prompts, dense telemetry, or long frame tables?
+- **Status coherence:** are script lock, final voice status, and timing precision described consistently?
+- **Information budget:** does every on-canvas fact/label advance orientation, proof, or payoff?
+
+### Hard blockers at the storyboard gate
+
+Do not mark `ready_for_approval` while any of these remain:
+
+- a fabricated or generated evidence-looking document could be mistaken for an authentic source;
+- an identity/evidence-critical asset is presented more confidently than its provenance or representation allows;
+- the board claims final/frame-locked timing while final VO alignment is still provisional;
+- contradictory stage/status labels make it unclear what is actually approved;
+- a production prompt or implementation detail is carrying the design because the visual preview itself is not understandable.
 
 ### Editorial verdicts
 

@@ -48,3 +48,7 @@ Ask:
 
 Use the reference to improve decisions, not to reproduce its sequence or redistribute its assets.
 
+
+## Remove the Name After Translation
+
+Once the useful grammar is extracted, production direction should describe observable decisions: focal hierarchy, camera path, material behavior, cadence, transitions, typography role, and evidence treatment. Creator/channel names are weak implementation instructions and can pull an agent toward surface imitation. Keep names only in the analysis record or when the user explicitly wants them as shorthand.

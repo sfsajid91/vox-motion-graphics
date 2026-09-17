@@ -85,3 +85,12 @@ Stillness is intentional when it:
 
 Record the purpose. If narration changes idea while composition, focal point, and object relationships remain unchanged, treat the shot as a likely slideshow failure.
 
+
+## Data and Time Compression
+
+A count, clock, progress readout, or timeline can represent a real duration or quantity without playing in real time. Make the editorial compression clear.
+
+- Do not imply one-to-one elapsed time unless the scene actually uses it.
+- If many units pass faster than the eye can parse, prefer grouped increments, a rolling transition, a jump with a clear landing, or a labeled compression.
+- Do not fire one SFX per unit at rates that collapse into noise. Accent meaningful thresholds or the final value.
+- The final number must remain readable long enough to function as evidence.

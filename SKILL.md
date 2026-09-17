@@ -3,7 +3,7 @@ name: vox-motion-graphics
 description: Direct and implement polished editorial motion-graphics videos in Remotion from vague or complete briefs. Use for research-led explainers, documentary shorts, visual storytelling, storyboards, motion systems, asset direction, narration-led timing, and editorial plus technical QA without requiring the user to be a designer.
 ---
 
-# Editorial Motion Director — v0.8
+# Editorial Motion Director — v0.8.1
 
 ## Mission
 
@@ -22,6 +22,7 @@ Default to autonomous direction. Infer ordinary creative decisions, continue thr
 5. **Technical success is not editorial success.** A valid render can still be confusing, static, generic, or badly paced. Run separate technical and editorial QA.
 6. **Generated is not accepted.** Track asset origin, technical verification, editorial acceptance, rights, and factual representation separately.
 7. **References teach grammar, not templates.** Reuse a useful mechanism only when it solves the new story; do not inherit exact layouts, assets, colors, timings, or surface style by default.
+8. **The approval surface is not the production spec.** Storyboards optimize for visual judgment. Keep prompts, frame math, source notes, and implementation detail secondary or collapsed until design freeze.
 
 ## Production graph
 
@@ -38,11 +39,12 @@ For factual work:
 - record claims as `verified`, `unverified`, `disputed`, or `inference`;
 - keep rights and factual accuracy as separate axes;
 - never make narration, labels, charts, or reconstructed visuals more specific than their supporting evidence;
-- distinguish `literal`, `evidence`, `reconstruction`, `metaphor`, and `abstract` representations.
+- distinguish `literal`, `evidence`, `reconstruction`, `metaphor`, and `abstract` representations;
+- never style invented or retypeset material so it can be mistaken for a recovered primary document. Use a real sourced artifact, or clearly label an editorial reconstruction/retypeset excerpt and keep invented mastheads, quotations, and article copy out of evidence scenes.
 
 Build one editorial angle, a causal/logical spine, a viewer promise, and narrative beats. Scene boundaries follow visual ideas, not punctuation, fixed durations, or one-sentence-per-scene formulas.
 
-If the user supplies reference videos, creators, or a target look, deconstruct them before concept generation and classify transferable grammar separately from benchmark-specific surface details. Read [reference-analysis.md](references/reference-analysis.md).
+If the user supplies reference videos, creators, or a target look, deconstruct them before concept generation and classify transferable grammar separately from benchmark-specific surface details. After analysis, translate named references into observable grammar; do not use creator names as a substitute for direction in production prompts unless the user explicitly wants those names retained as human shorthand. Read [reference-analysis.md](references/reference-analysis.md).
 
 Read [story-director.md](references/story-director.md) for story construction and [research-and-representation.md](references/research-and-representation.md) for factual work.
 
@@ -79,9 +81,9 @@ Use it to decide:
 - rough pacing and readable holds;
 - continuity across scenes.
 
-Do not reproduce every Remotion prop, counter, SFX control, easing curve, or implementation detail. Document runtime-only behavior in notes.
+Do not reproduce every Remotion prop, counter, SFX control, easing curve, implementation prompt, or frame table. Document runtime-only behavior in notes after the visual direction is approved. The default approval view should foreground the actual target-ratio frame, playback/scrub controls when useful, and concise scene intent; keep research, provenance, long motion tables, and build prompts collapsed or in secondary files.
 
-Use a lightweight storyboard for simple/low-risk scenes and a playable multi-state preview for uncertain, continuous, or transition-heavy scenes. The storyboard may use placeholders, but every asset must expose its current status.
+Use a lightweight storyboard for simple/low-risk scenes and a playable multi-state preview for uncertain, continuous, or transition-heavy scenes. The storyboard may use placeholders, but every asset must expose its current status. Keep status language unambiguous: distinguish script lock, final voice-performance lock, and frame-timing lock. Do not call narration "locked" when only the words are approved but the final performance/alignment is still provisional.
 
 Critique and refine the storyboard before implementation. The HTML preview is the creative source of truth; structured files may index or validate it, but must not become a second competing storyboard. Freeze only when each scene has a clear thesis, focal point, defining relationship/state change, asset direction, transition intent, and no unresolved editorial blocker. Record frozen states in `storyboard-plan.json` only when a machine-readable handoff is actually useful.
 
@@ -113,7 +115,7 @@ Read [asset-selection.md](references/asset-selection.md). For style, typography,
 
 ## 5. Narration, timing, motion, and transitions
 
-Final narration is the authoritative clock. Align words or phrases, then reconcile:
+Final narration performance is the authoritative clock. Before that performance exists, storyboard timing is provisional: use semantic anchors and approximate scene-local seconds, and avoid presenting exact global frame ranges as authoritative. After final VO/alignment, align words or phrases and reconcile:
 
 - narration end;
 - scene start/end;
@@ -169,7 +171,9 @@ Evaluate actual storyboard/renders for:
 - pacing, holds, and transition intent;
 - continuity and construction variety;
 - asset suitability and style cohesion;
-- sound supporting semantic events.
+- sound supporting semantic events without implying unsourced historical authenticity;
+- status consistency: script/voice/timing claims do not contradict each other across the approval surface;
+- evidence density: visible labels and specifications advance the scene thesis instead of turning the frame into a production/research dashboard.
 
 ### Technical QA
 

@@ -132,3 +132,52 @@ Use this guide diagnostically. A symptom is evidence to inspect, not an automati
 
 **Exception:** Deliberate repetition can create comparison, ritual, escalation, or a setup/payoff pattern when the changing variable is unmistakable.
 
+
+
+## Approval Surface Becomes a Production Spec
+
+**Symptom:** The storyboard is dominated by long Remotion prompts, frame math, telemetry, SFX cue sheets, and implementation parameters.
+
+**Why it fails:** The user cannot quickly judge composition, motion intent, and story. The planning document starts masquerading as visual proof.
+
+**Recovery:** Put the target-ratio preview first. Keep one-sentence intent and essential risks visible; collapse or move build detail until after freeze.
+
+## Precision Before the Clock Exists
+
+**Symptom:** Exact global frame ranges and tightly synchronized cue timing are declared while final narration is still missing or only approximate.
+
+**Why it fails:** False precision hardens temporary pacing and creates expensive rework when the final voice performance changes.
+
+**Recovery:** Use semantic anchors and approximate local seconds in the storyboard. Frame-lock after final VO alignment.
+
+## Counterfeit Primary Evidence
+
+**Symptom:** A fabricated newspaper, memo, screenshot, document, or quote card is styled as if it were an authentic historical artifact.
+
+**Why it fails:** A true underlying event does not make invented presentation evidence authentic. The viewer may attribute fabricated wording or source identity to history.
+
+**Recovery:** Use the real artifact, a faithful retypeset excerpt with real source identity, or an unmistakably editorial reconstruction. Never invent a plausible masthead/article body to make a source feel real.
+
+## Spec Telemetry Flood
+
+**Symptom:** Research facts, hardware specifications, credits, dates, and labels accumulate on-canvas even though the narration makes one simple point.
+
+**Why it fails:** Evidence becomes dashboard clutter and competes with the focal relationship.
+
+**Recovery:** Keep only orientation, proof, and payoff facts visible. Move provenance and supporting specifications into notes.
+
+## Ambiguous Narration Lock
+
+**Symptom:** One place says narration is locked while another says the voice is not recorded or timing is provisional.
+
+**Why it fails:** Agents cannot tell whether wording, performance, or frame alignment is authoritative.
+
+**Recovery:** Track script lock, voice-performance lock, and timing lock separately.
+
+## Literal Per-Unit Counter Audio
+
+**Symptom:** A compressed count or duration animates dozens of units in a fraction of a second with one click/beep per unit.
+
+**Why it fails:** The viewer cannot parse the units and the sound becomes noise while implying a temporal scale the scene is not actually showing.
+
+**Recovery:** Group increments, roll quickly, jump between meaningful values, and accent the landing.

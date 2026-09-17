@@ -12,6 +12,16 @@
 
 Music must not silently dictate story timing before narration is stable.
 
+## Script Lock vs Voice Lock
+
+Keep three milestones separate:
+
+- script locked: wording/order approved;
+- voice locked: final recorded/synthesized performance accepted;
+- timing locked: word/phrase alignment measured and production frames conformed.
+
+Storyboard estimates may exist before voice lock, but exact frame choreography is provisional until timing lock.
+
 ## Narration as clock
 
 Align words or phrases and keep scene timing scene-relative. Check the whole contract:
@@ -42,6 +52,10 @@ For timed captions:
 Attach SFX to semantic events: contact, release, lock, reveal, transfer, failure, camera portal, count landing, or light activation. Trim to the attack so the perceived event aligns.
 
 Do not score every movement. Sound may share the same frame-driven state as a visual when this reinforces causality.
+
+Distinguish **sourced/diegetic** sound from **designed/illustrative** sound. Do not imply that a stylized shutter, hard-drive, machine, crowd, or period-device effect is an authentic recording unless its provenance supports that claim. At storyboard stage, specify the semantic role and material character first; exact source hunting can wait until the visual direction is approved.
+
+When a numeric fact is compressed in time, do not attach one audible event to every unit if the result becomes an imperceptible click burst. Group, roll, or accent the landing instead.
 
 ## Music
 

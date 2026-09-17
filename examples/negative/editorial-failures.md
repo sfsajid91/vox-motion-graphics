@@ -73,3 +73,22 @@ These synthetic failures are diagnostic patterns, not universal bans. Use the re
 - **Failure:** A nested screen or component uses its own default background, crop, or side bars at the transition.
 - **Why it fails:** Isolated component correctness does not guarantee scene continuity.
 - **Recovery:** Inspect exact transition frames and make background ownership explicit at the composition level.
+
+
+## 13. A true event is placed inside a fake newspaper
+
+- **Failure:** A historically correct filing/headline is rebuilt inside an invented masthead and article body, then described as authentic newsprint.
+- **Why it fails:** The event may be true while the visual artifact is counterfeit evidence.
+- **Recovery:** Show the sourced clipping, preserve the real publication identity in a faithful retypeset excerpt, or use a clearly editorial date/headline card.
+
+## 14. The approval page reads like an engineering handoff
+
+- **Failure:** Each scene includes long frame tables, exact transforms, SFX acquisition notes, credits, and copy-paste Remotion prompts before the design is approved.
+- **Why it fails:** Review attention shifts from visual judgment to implementation detail.
+- **Recovery:** Keep the preview, scene thesis, motion sketch, and blockers prominent; move production detail after freeze.
+
+## 15. Provisional VO receives final-looking frames
+
+- **Failure:** The storyboard labels narration as not yet recorded but assigns authoritative composition frame ranges and cue frames.
+- **Why it fails:** Temporary estimates become accidental contracts.
+- **Recovery:** Mark timing estimated and use local seconds/semantic anchors until final VO alignment.

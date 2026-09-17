@@ -1,8 +1,8 @@
-# Editorial Motion Director v0.8
+# Editorial Motion Director v0.8.1
 
 `vox-motion-graphics` directs and implements editorial motion-graphics videos without requiring the user to storyboard or speak motion-design jargon.
 
-v0.8 makes the HTML storyboard/preview the creative source of truth, freezes accepted visual decisions before Remotion, separates editorial QA from technical QA, and replaces overlapping asset contracts with one orthogonal lifecycle. It also includes bounded autonomous orchestration so coding agents can run the pipeline without endless repair loops.
+v0.8.1 keeps the v0.8 storyboard-first architecture and tightens review truthfulness and ergonomics. v0.8 made the HTML storyboard/preview the creative source of truth, freezes accepted visual decisions before Remotion, separates editorial QA from technical QA, and replaces overlapping asset contracts with one orthogonal lifecycle. It also includes bounded autonomous orchestration so coding agents can run the pipeline without endless repair loops.
 
 Start with `SKILL.md`. Load only the references linked for the current production stage.
 

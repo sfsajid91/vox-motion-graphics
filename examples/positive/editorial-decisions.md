@@ -49,3 +49,22 @@ These synthetic before/after examples show decisions worth preserving. Copy the 
 - **Before:** The implementation includes all storyboard objects but loses the handoff that made the design understandable.
 - **Correction:** Treat the approved relationship—transfer, reveal, replacement, accumulation, or contrast—as an implementation invariant.
 - **Why it works:** Fidelity means preserving the visual argument, not merely matching the inventory.
+
+
+## 9. Keep historical evidence honest while retaining the visual idea
+
+- **Before:** A fake newspaper is created to dramatize a real bankruptcy filing.
+- **Correction:** Use a real sourced clipping or a clearly labeled editorial retypeset of the verified headline/date, then transition into the visual metaphor.
+- **Why it works:** The scene keeps its dramatic document-to-metaphor handoff without counterfeiting evidence.
+
+## 10. Separate script approval from timing lock
+
+- **Before:** Approved wording causes the storyboard to hard-code final frame ranges before the voice performance exists.
+- **Correction:** Mark the script locked, voice pending, timing estimated; frame-conform only after the final voice alignment.
+- **Why it works:** Design can be approved without pretending temporary timing is final.
+
+## 11. Make the approval view glanceable
+
+- **Before:** A reviewer must read a long production brief to understand each scene.
+- **Correction:** Put the playable target-ratio frame first, show one-sentence intent and blockers, and collapse research/build notes.
+- **Why it works:** Human approval focuses on the actual visual decision.

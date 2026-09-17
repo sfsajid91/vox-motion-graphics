@@ -38,3 +38,13 @@ Track rights separately from accuracy. A factually correct image may still lack 
 
 When identity matters, prefer sourced real media. When provenance is uncertain but the mechanism matters, prefer a neutral programmatic reconstruction over a plausible-looking fake artifact.
 
+
+## Retypeset and Recreated Evidence
+
+Retyping a real headline or excerpt can improve legibility, but styling determines whether the viewer reads it as evidence. Preserve the real source identity when the source is part of the claim. If the original artifact is unavailable or unsuitable, use a clearly editorial source card/retypeset excerpt instead of inventing a plausible newspaper, memo, interface, letterhead, or article body.
+
+Do not call a fabricated layout "authentic" merely because the underlying event or headline is real. Authenticity applies to provenance, not visual plausibility.
+
+## Rhetorical Synthesis Is Still a Claim
+
+Punchlines, thesis cards, and memorable absolutes inherit the same evidence burden as narration. Words such as `always`, `never`, `forever`, `everyone`, `nothing`, or a single-cause conclusion can overstate a defensible synthesis. Keep the rhetorical force, but qualify or rephrase when the literal reading is stronger than the evidence.

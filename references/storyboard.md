@@ -82,6 +82,49 @@ The storyboard should answer these questions without reading implementation code
 5. Can the next scene inherit attention, direction, object, or scale?
 6. Are the selected assets capable of the intended action?
 
+
+## Approval-Surface Ergonomics
+
+The user should be able to judge the direction by watching and scanning, not by reading a production document. Default each scene to the target-ratio visual, playback/scrub controls when motion matters, a one-sentence visual thesis, and only the notes required to approve the idea.
+
+Keep these secondary, collapsed, or in separate files until freeze:
+
+- long research/source discussions;
+- full Remotion or coding prompts;
+- exact easing/transform values;
+- dense frame tables;
+- exhaustive SFX cue sheets;
+- internal implementation parameters;
+- provenance/legal notes that do not change the immediate visual decision.
+
+A storyboard may contain deep documentation, but the approval path must remain visually obvious. Do not let planning text, telemetry, or UI chrome compete with the scene itself.
+
+## Status and Precision Discipline
+
+Use separate status concepts:
+
+- **script status**: draft / approved / locked words;
+- **voice-performance status**: missing / scratch / final;
+- **timing status**: estimated / aligned / frame-locked.
+
+Do not use a single ambiguous label such as `narration locked` to cover all three. If final VO is not aligned, scene times are editorial estimates. Exact frame numbers may be shown only as explicitly provisional blocking aids; do not present them as the production timing contract.
+
+A scene can be design-ready before final VO, but frame-accurate choreography waits for the final performance.
+
+## Evidence-Looking Objects
+
+A newspaper, document, screenshot, memo, archival card, quotation panel, or chart can visually imply primary evidence even when the text is invented. Before approval, classify it.
+
+- **real evidence**: use the sourced artifact or a faithful crop/retypeset with source identity preserved;
+- **retypeset excerpt**: clearly identify it as a retypeset/editorial excerpt and do not add a fake masthead, invented article body, quotation, stamp, or date that makes it look recovered;
+- **reconstruction/metaphor**: make the reconstruction visibly editorial rather than counterfeit archival evidence.
+
+If the viewer could reasonably mistake a fabricated document for a historical source, the storyboard is not ready for approval.
+
+## Information Budget
+
+Source notes may be rich; the frame should not be. Every visible specification, telemetry label, date, badge, or caption must either orient the viewer, prove the beat, or deliver the payoff. Move supporting provenance and unused specifications out of the visual canvas. A simple narration beat should not become a dense engineering dashboard merely because the research found many facts.
+
 ## Asset Status in Storyboards
 
 Never compress acquisition, usability, taste, and rights into one status. Show the asset ledger's independent fields:
