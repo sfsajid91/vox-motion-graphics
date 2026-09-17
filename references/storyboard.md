@@ -24,38 +24,70 @@ Treat the browser preview itself as the creative source of truth. JSON/Markdown 
 
 Do not begin detailed scene implementation while important composition, asset, or mechanism decisions remain unresolved in the storyboard.
 
-## Choose the Smallest Useful Path
+## Storyboard Architecture (The Multi-Frame Grid Standard)
 
-### Lightweight path
+The approved storyboard format is a **multi-frame editorial approval document** (following the reference architecture in `storyboard_standalone.html`). It combines visual scanning, beat-by-beat frame inspection, and interactive playback.
 
-Use for a simple film, a low-risk scene, or an already-established visual language.
+A high-quality editorial storyboard MUST provide:
 
-Create one responsive HTML page containing:
+### 1. Masthead & Sticky Navigation
+- **Masthead:** Editorial display title with serif emphasis (`Newsreader` / `Georgia`), project introduction, and status line pills (Narration lock, scene counts, target aspect ratio, fps, audio status).
+- **Sticky Navigation (`.board-nav`):** Sticky bar with direct anchor jump links to every scene (`#scene-1`, `#scene-2`, ...) for rapid reviewer navigation.
 
-- the target aspect-ratio frame;
-- one panel per scene;
-- 2-4 representative states per scene: entry, meaningful change, payoff, and exit when distinct;
-- narration excerpt or semantic beat beside the frame, not as baked scene art;
-- short motion and transition notes;
-- asset placeholders labeled with their current status.
+### 2. Overview Contact Sheet (`.overview`)
+- A horizontal grid displaying a 9:16 aspect-ratio thumbnail card for every scene.
+- Each card displays the scene number, hero visual state, timing range, and current approval status (e.g. `01 · The reversal / 00–10s / LOCKED`).
 
-Static state switching is enough. Add only the JavaScript needed to step through states or preview a transition.
+### 3. Detailed Per-Scene Breakdown (`.section id="scene-X"`)
+Every scene must have its own comprehensive editorial section containing:
 
-### Full path
+1. **Section Heading:**
+   - Large serif scene number (`01`, `02`...) in `Newsreader`/`Georgia`.
+   - Scene title (`h2`) and concise director's description.
+   - Precise timing block: `00:00 – 00:08 | Frames 0 – 240 (8.0s) @ 30fps`.
 
-Use when the film has high creative uncertainty, complex processes, several visual worlds, important hero scenes, continuous transitions, or costly/generated assets.
+2. **Voiceover Blockquote (`.vo`):**
+   - Prominent blockquote displaying the exact spoken narration.
+   - Header tag: `<small>VOICEOVER (XX WORDS)</small>`.
 
-In addition to the lightweight path, include:
+3. **Multi-Frame Keyframe Grid (`.frames` — CORE REQUIREMENT):**
+   - A grid of **4 to 6 distinct keyframe cards** side-by-side per scene (`<figure class="keyframe-card">`), visually demonstrating the progression across beats:
+     * Entry / Anchor
+     * First Reveal / Evidence
+     * Transformation / Mechanism
+     * Payoff / Settle / Launchpad
+   - **Each keyframe card MUST contain:**
+     * A 9:16 vertical visual stage (`.keyframe-visual`, `aspect-ratio: 9/16`) built with real HTML/CSS/SVG layers, cutouts, telemetry callouts, and lighting.
+     * A prominent motion cue badge (`.kf-motion-cue`, e.g. `HERO PUSH ↑`, `BLUEPRINT REVEAL ↗`, `SYSTEM FRACTURES ⚡`, `PAYOFF HOLDS`).
+     * `<figcaption>` detailing:
+       - Frame range and seconds (`<time>F00–F18 · 0.0–0.6s</time>`)
+       - Bold state title (`<b>The date burns in</b>`)
+       - Concise explanation of what visual change occurs in this beat and why.
 
-- a scene/state timeline driven by approximate seconds or semantic anchors;
-- play/pause and direct state navigation;
-- rough interpolation for primary motion and scene transitions;
-- neighboring-scene playback to judge continuity;
-- variant views for unresolved concepts, clearly marked as candidates;
-- target-size and reduced-size previews for readability;
-- notes for asset provenance, representation type, and unresolved risk.
+4. **Editorial Tension Triangle (`.tension-triangle-card`):**
+   - Clearly defines the dramatic core of the scene:
+     * **Actor:** The primary subject / agent of change.
+     * **Counter-Force:** The opposing constraint, legacy system, or competitor.
+     * **Stakes:** What is won or lost in this beat.
 
-Approximate motion is sufficient. Do not spend time matching final springs, filters, particles, audio mixing, or exact frame timing.
+5. **Visual Sentence Track (`.pacing-track`):**
+   - Multi-column timeline grid breaking the scene into sequential visual micro-beats (e.g. `Anchor (f0–32)`, `Mechanism (f32–80)`, `Payoff (f80–120)`).
+   - Color-coded top borders (blue for anchor, red for clash, gold/yellow for punch/payoff).
+
+6. **Technical Physics & Audio Notes:**
+   - **Camera Physics:** Explicit camera movement, sampling rate (e.g. 12 FPS vs 30 FPS), focal push, and easing behavior.
+   - **Audio / SFX Cues:** Exact sound design sync points (whoosh, click, mechanical advance, tone shift) and voice timing anchors.
+   - **Required Scene Assets:** Asset pill links (`.asset-link-pill`) and visual reference card grid.
+
+7. **Interactive Motion Study / Playable Blocking Sketch (`<details>`):**
+   - Expandable interactive review panel.
+   - Interactive 9:16 canvas with Play, Pause, Reset, and scrub controls, synchronized to the narration audio (`*.wav`).
+   - **Motion Choreography Score Table (`.score`):**
+     * `Local time / frame`
+     * `Motion, direction & easing` (exact transform, scale, rotation, bezier curves)
+     * `Meaning & narrative justification`
+
+---
 
 ## Storyboard Content Contract
 

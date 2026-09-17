@@ -71,8 +71,20 @@ Read [scene-patterns.md](references/scene-patterns.md), [visual-language.md](ref
 
 Create a browser-viewable HTML/CSS/JS storyboard or motion preview before Remotion implementation.
 
-Use it to decide:
+Follow the **multi-frame editorial architecture** (detailed in [storyboard.md](references/storyboard.md)):
 
+1. **Masthead & Sticky Navigation:** Editorial serif typography (`Newsreader`/`Georgia`), project summary, status line, and sticky jump links (`.board-nav`).
+2. **Overview Contact Sheet:** 9:16 aspect ratio thumbnail cards for every scene with status and timecodes.
+3. **Per-Scene Detailed Breakdown:**
+   - Big serif scene number (`01`, `02`...), title, and timing block.
+   - Voiceover blockquote with word count (`.vo`).
+   - **Multi-Frame Keyframe Grid (`.frames`):** 4 to 6 distinct 9:16 vertical cards (`<figure class="keyframe-card">`) per scene showing state progression (anchor, reveal, transformation, payoff), with motion cue badges (`.kf-motion-cue`), frame ranges, and change explanations.
+   - Editorial Tension Triangle (Actor, Counter-Force, Stakes).
+   - Visual Sentence pacing track with color-coded beat tags.
+   - Technical camera physics and audio/SFX cues.
+   - Expandable interactive motion study with synchronized audio playback and a full motion choreography score table.
+
+Use this decision surface to resolve:
 - composition and focal hierarchy;
 - asset choice and representation;
 - scene structure and meaningful states;
@@ -81,9 +93,7 @@ Use it to decide:
 - rough pacing and readable holds;
 - continuity across scenes.
 
-Do not reproduce every Remotion prop, counter, SFX control, easing curve, implementation prompt, or frame table. Document runtime-only behavior in notes after the visual direction is approved. The default approval view should foreground the actual target-ratio frame, playback/scrub controls when useful, and concise scene intent; keep research, provenance, long motion tables, and build prompts collapsed or in secondary files.
-
-Use a lightweight storyboard for simple/low-risk scenes and a playable multi-state preview for uncertain, continuous, or transition-heavy scenes. The storyboard may use placeholders, but every asset must expose its current status. Keep status language unambiguous: distinguish script lock, final voice-performance lock, and frame-timing lock. Do not call narration "locked" when only the words are approved but the final performance/alignment is still provisional.
+Do not reduce the storyboard to a single video switcher or wireframe cards. Keep the approval surface rich, tactile, and structured.
 
 Critique and refine the storyboard before implementation. The HTML preview is the creative source of truth; structured files may index or validate it, but must not become a second competing storyboard. Freeze only when each scene has a clear thesis, focal point, defining relationship/state change, asset direction, transition intent, and no unresolved editorial blocker. Record frozen states in `storyboard-plan.json` only when a machine-readable handoff is actually useful.
 
@@ -92,7 +102,6 @@ If the user asked to approve the storyboard, an independent critic may mark it r
 After freeze, Remotion may refine timing, easing, compositing, and technical execution. A change to the scene thesis, focal hierarchy, defining relationship, asset identity, or transition logic returns to the storyboard.
 
 Read [storyboard.md](references/storyboard.md).
-
 ## 4. Assets and visual language
 
 Route assets deliberately:
