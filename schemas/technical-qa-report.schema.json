@@ -1,10 +1,14 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "v0.8 Technical QA Report",
+  "title": "v0.9.0 Technical QA Report",
   "type": "object",
   "required": ["runId", "overallStatus", "checks"],
   "properties": {
     "runId": {"type": "string", "minLength": 1},
+    "reviewContext": {"type": "string", "minLength": 1},
+    "boardSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "masterSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "blockers": {"type": "array", "items": {"type": "string", "minLength": 1}},
     "overallStatus": {"enum": ["fail", "blocked", "pass"]},
     "checks": {
       "type": "array",
@@ -30,6 +34,7 @@
       "if": {"properties": {"overallStatus": {"const": "pass"}}, "required": ["overallStatus"]},
       "then": {
         "properties": {
+          "blockers": {"maxItems": 0},
           "checks": {
             "items": {"properties": {"status": {"enum": ["pass", "not_applicable"]}}}
           }

@@ -41,7 +41,7 @@ These synthetic before/after examples show decisions worth preserving. Copy the 
 ## 7. Let narration set the timing contract
 
 - **Before:** Scene durations are locked before the final voice performance, leaving stale captions and a long inactive tail.
-- **Correction:** Measure the final narration, align scene and caption exits to speech boundaries, and keep only an intentional reviewed hold.
+- **Correction:** Align semantic events and actual readable payoff windows to the final performance. Let speech/captions bridge a cut when a reviewed J/L cut preserves meaning; keep only purposeful holds.
 - **Why it works:** Visual pacing follows rhetoric rather than arbitrary frame budgets.
 
 ## 8. Preserve the defining relationship in Remotion
@@ -68,3 +68,27 @@ These synthetic before/after examples show decisions worth preserving. Copy the 
 - **Before:** A reviewer must read a long production brief to understand each scene.
 - **Correction:** Put the playable target-ratio frame first, show one-sentence intent and blockers, and collapse research/build notes.
 - **Why it works:** Human approval focuses on the actual visual decision.
+
+## 12. Make recurrence observable: a refill service
+
+- **Decision:** Repeat use needs replenishment → dispenser full → contents drain and refill arrives → same dispenser works again → container identity stays fixed → do not imply an exact purchase rate without evidence.
+- **Alternative:** Accumulate supported repeat orders against one durable dispenser instead of showing physical refilling. Select by the claim, not by which is flashier.
+- **Staging:** Locked medium view makes the changing level readable; attention shifts to the refill only after depletion, then returns to restored use. One transfer accent or silence can serve the action; the exit carries the dispenser into the next comparison.
+
+## 13. Let chronology and static evidence do their own jobs
+
+- **Before:** A postal-history beat about event order is turned into an invented causal flow.
+- **Correction:** Place sourced dated notices on a timeline, then hold one notice long enough to inspect. Keep its archival limitations at a readable wider crop.
+- **Why it works:** Order is the assigned inference; neither causal animation nor motion on every asset is required. Narration may supply names the image cannot encode.
+
+## 14. Compose bold captions, not invisible accessibility
+
+- **Before:** Long captions cover a flood-warning map's evacuation boundary and uncertainty disclosure.
+- **Correction:** Recompose the map and disclosure around realistic caption loads. A subsequent spoken-warning beat may let bold captions lead while the map recedes; review both clean and accessible versions.
+- **Why it works:** Caption prominence follows the scene's job. A rounded background is acceptable if readable and non-obstructive.
+
+## 15. Score an emotional aftermath with silence
+
+- **Before:** A sports retrospective applies the same push-in and whoosh to inspection, action, and aftermath.
+- **Correction:** Inspect the worn equipment closely, show the decisive action with a clear subject, then hard-cut to a locked empty venue and stop the designed sound.
+- **Why it works:** Shot scale, motion, and silence shape the sequence's emotional turn without a camera-movement or variety quota. The hold lasts as long as the reviewed payoff needs, not a universal number.

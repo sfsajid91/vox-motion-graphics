@@ -1,6 +1,6 @@
 # Scene Patterns
 
-Use these as concept-search families, not templates. Select the family that best makes the relationship visible.
+Use these as concept-search families, not templates. Select the family that best does the beat's assigned job: explanation, identification, testimony, atmosphere, emotion, chronology, or evidence inspection.
 
 ## Transformation and state change
 
@@ -8,7 +8,7 @@ The same object or environment changes category, condition, role, or meaning. Us
 
 ## Cause and effect
 
-A visible trigger produces a visible consequence. Keep the connection on screen; do not rely on a cut between unrelated symbols to imply causality.
+A visible trigger produces a visible consequence. Make their connection observable; a cut can carry causality when the shared action or context establishes it, but unrelated symbols do not prove a connection.
 
 ## Process and handoff
 
@@ -58,14 +58,17 @@ One coherent world contains several beats; camera travel and object continuity c
 
 Use actor/counter-force/stakes only when real conflict exists. Never invent a villain to make motion dramatic.
 
-## Selection test
+## Selection procedure
 
-Choose the family that:
+For an important beat, write one compact decision:
 
-- makes the thesis readable muted;
-- uses story-specific materials;
-- creates a meaningful state change;
-- remains factually honest;
-- differs usefully from adjacent scenes;
-- can be built with accepted assets and available time.
+**Viewer inference → starting relationship → visible operation → resulting relationship → invariant → factual limit.**
+
+Name what changes and what stays stable so the difference can be seen. The factual limit states what the visual must not imply. For evidence inspection or atmosphere, the operation may be a reveal or a purposeful hold; do not force a causal diagram onto every beat.
+
+If a central relationship is unresolved—or the proposed action mainly reveals another noun/label while the claim concerns change—sketch **two materially different concepts** before polishing. A new palette or camera angle on the same mechanism is not a second concept.
+
+Select autonomously for relationship clarity, story-specificity, factual honesty, asset feasibility, and fit with neighboring scenes. Under a vague brief, infer ordinary audience/style/pacing choices and record the selected direction briefly; do not ask the user to choose diagrams, cameras, or easing. Ask only for a material factual, rights, brand, cost, or scope constraint.
+
+Example: a refill business needs recurrence. Concept A shows a container emptying, being refilled, and returning to use; concept B accumulates repeat orders against one durable dispenser. Choose according to the supported claim. Merely panning to a second container proves presence, not replenishment. Conversely, a timeline is right when the inference is which event came first—not that one event caused another.
 

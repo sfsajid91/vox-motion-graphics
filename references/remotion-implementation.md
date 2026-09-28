@@ -11,9 +11,11 @@ Preserve:
 - defining object/causal relationship;
 - accepted asset identity;
 - transition job and focal handoff;
-- intentional holds.
+- readable payoff windows, caption/disclosure hierarchy, and planned sound decisions.
 
 Implementation may refine interpolation, easing, overlap, compositing, and performance. If it changes the thesis, focal owner, defining relationship, accepted hero asset, or transition logic, return to storyboard review.
+
+Keep the frozen snapshot distinct from as-built notes. For each defining promise, carry its observable invariant and proof location, not just object/state IDs. Inspect boundary/action clips for handoffs, complete-reveal frames, deepest planned crops, and mastered sound. A present asset or cue filename does not prove it was visible or audible.
 
 ## Deterministic frame-driven motion
 
@@ -22,6 +24,8 @@ Use current official patterns from the installed Remotion version, such as frame
 - Write scene motion against local frame zero.
 - Convert aligned seconds to frames at the implementation boundary.
 - Clamp interpolation where overshoot would break composition.
+- Conform orientation, semantic trigger, action completion, readable payoff, and transition windows to final alignment; nominal scene durations are not enough.
+- Permit reviewed anticipation and J/L cuts. Count payoff reading time only after essential content becomes legible, accounting for competing action.
 - Use stable seeds for render-visible procedural variation.
 - Do not use timed CSS transitions, CSS keyframes, or browser-time animation for render-visible motion.
 
@@ -55,6 +59,8 @@ Use typed bounds. Avoid exposing arbitrary CSS. Emit a tune manifest/parameter p
 - Keep fills, tint, grain, outlines, masks, and clip paths on consistent source bounds.
 - Keep text outside image filters unless occlusion is intentional.
 - Preserve the owning scene's background across nested panels and embedded playback.
+- Check clean and captioned compositions with disclosures at intended viewing size; preserve the accepted hierarchy rather than shrinking captions to fit.
+- Match crop behavior to the promised role: a complete-object reveal must expose essential components at payoff, even if a cover crop looks attractive.
 
 ## Charts and evidence graphics
 
@@ -69,4 +75,8 @@ Use typed bounds. Avoid exposing arbitrary CSS. Emit a tune manifest/parameter p
 Use current Remotion guidance for media loading, premounting, asset readiness, and fonts. When rendering many stills locally, avoid concurrent bundlers fighting over the same cache; reuse one bundle or render sequentially.
 
 Prefer HTML/CSS/SVG/2.5D compositing before true 3D unless the story geometry requires depth that simpler methods cannot express.
+
+## Mastered review
+
+Resolve each planned sound cue as implemented, replaced, or omitted with a reason for changes. Produce a mastered draft with narration, captions/disclosures, SFX, and music as applicable, then run technical and independent editorial review on that artifact. Draft previews may render throughout; they must not inherit publication approval from an earlier board or master revision.
 

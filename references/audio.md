@@ -3,14 +3,14 @@
 ## Order of decisions
 
 1. Lock script facts and narrative order.
-2. Use scratch narration or timing estimates for storyboard pacing.
-3. Freeze the visual design.
-4. Produce the final narration performance and alignment.
-5. Implement frame-accurate choreography.
-6. Add semantic SFX.
-7. Add and audition music against narration plus SFX.
+2. Storyboard with scratch timing, realistic caption/disclosure loads, and shot-score sound intent.
+3. Independently review the design and freeze it, honoring any user-owned approval gate.
+4. Produce final narration/alignment and conform semantic events and reading windows.
+5. Implement the frozen choreography, captions, and planned sound decisions.
+6. Source/trim SFX and audition music in the relational mix; produce a mastered draft.
+7. Run technical and independent editorial review on that master before delivery.
 
-Music must not silently dictate story timing before narration is stable.
+Plan sound's role early; source and mix it later. Music must not silently dictate story timing before narration is stable. Draft renders remain available for inspection.
 
 ## Script Lock vs Voice Lock
 
@@ -26,18 +26,19 @@ Storyboard estimates may exist before voice lock, but exact frame choreography i
 
 Align words or phrases and keep scene timing scene-relative. Check the whole contract:
 
-- scene begins early enough to orient before the line needs it;
-- defining actions land on the relevant word/phrase;
-- captions disappear at sentence boundaries;
-- transitions do not cut off speech or evidence;
-- the final visual hold is declared and purposeful;
-- composition duration reconciles with VO, captions, and the hold.
+- scene or carried context orients the viewer before the line needs it;
+- defining actions land in their intended semantic windows;
+- captions follow speech and clear stale text at phrase/sentence boundaries, not arbitrary scene cuts;
+- transitions preserve meaning and allow evidence to be read;
+- intentional anticipation, J-cuts (incoming sound leads picture), and L-cuts (outgoing sound continues) are reviewed with speech;
+- the readable payoff starts when essential content is legible, not when its entrance starts;
+- composition duration reconciles with VO, captions, transitions, and a purposeful final hold.
 
 Generated narration is editorial material, not a one-click final asset. Listen for unnatural pacing, missing breath, rushed sentence endings, and pauses that do not match the visual structure.
 
 ## Captions
 
-Choose `none`, `sparse art-directed`, or `full accessibility` based on platform and brief. Do not force karaoke styling or a universal vertical position.
+Choose `none`, `sparse art-directed`, or `full accessibility` based on platform and brief. During storyboarding, reserve a viable scene-aware layout and preview realistic long captions alongside disclosures and art-directed labels before freeze. Review both clean and captioned versions at intended viewing size. Repair composition before shrinking accessibility text into illegibility; do not impose an empty caption band, karaoke styling, or a universal vertical position.
 
 For timed captions:
 
@@ -56,6 +57,8 @@ Do not score every movement. Sound may share the same frame-driven state as a vi
 Distinguish **sourced/diegetic** sound from **designed/illustrative** sound. Do not imply that a stylized shutter, hard-drive, machine, crowd, or period-device effect is an authentic recording unless its provenance supports that claim. At storyboard stage, specify the semantic role and material character first; exact source hunting can wait until the visual direction is approved.
 
 When a numeric fact is compressed in time, do not attach one audible event to every unit if the result becomes an imperceptible click burst. Group, roll, or accent the landing instead.
+
+For each planned cue, retain its semantic event and record whether it was **implemented**, **replaced**, or **omitted**. Replacement/omission needs an explicit editorial reason, including purposeful silence. Inspect its audible result in the mastered boundary/action clip; a filename or cue-table entry does not prove delivery.
 
 ## Music
 

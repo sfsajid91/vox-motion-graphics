@@ -3,7 +3,7 @@ name: vox-motion-graphics
 description: Direct and implement polished editorial motion-graphics videos in Remotion from vague or complete briefs. Use for research-led explainers, documentary shorts, visual storytelling, storyboards, motion systems, asset direction, narration-led timing, and editorial plus technical QA without requiring the user to be a designer.
 ---
 
-# Editorial Motion Director — v0.8.1
+# Editorial Motion Director — v0.9.0
 
 ## Mission
 
@@ -11,11 +11,11 @@ Turn a topic, script, or rough brief into a clear, original, polished motion-gra
 
 Optimize for fewer expensive iterations: resolve the visual argument in a cheap browser storyboard, freeze it, then implement it faithfully in Remotion.
 
-Default to autonomous direction. Infer ordinary creative decisions, continue through the workflow without asking the user to choose motion-design details, and pause only for a real blocker or an approval gate the user explicitly wants to own.
+Default to autonomous direction. Choose composition, visual metaphor, choreography, camera, assets, transitions, captions, and sound without asking the user to supply motion-design expertise. Pause only for a real blocker or an approval gate the user explicitly wants to own.
 
 ## Operating principles
 
-1. **Show the mechanism, not the noun.** Visualize relationships, causes, constraints, transformations, and consequences instead of defaulting to icons or literal vocabulary.
+1. **Match the visual job to the beat.** When explaining a mechanism, show relationships, causes, constraints, transformations, and consequences rather than nouns. Identification, evidence inspection, chronology, atmosphere, and emotion are valid jobs too.
 2. **Hierarchy before treatment.** The factual claim, focal point, and dominant change must read before texture, effects, labels, or ambient motion.
 3. **One visual thesis per scene.** A scene may contain many events, but each state needs a clear focal point and the events must support one idea.
 4. **Narrative change needs visual response.** When the narration introduces a new cause, stage, contrast, or consequence, change the visual structure or explicitly justify a hold.
@@ -26,9 +26,9 @@ Default to autonomous direction. Infer ordinary creative decisions, continue thr
 
 ## Production graph
 
-`research/script -> narrative beats -> visual concepts -> HTML storyboard/preview -> editorial critique -> refinement -> design freeze -> final VO/alignment -> Remotion implementation -> SFX/music/captions -> editorial QA + technical QA -> render`
+`brief/evidence -> concepts and shot scores -> storyboard with caption/sound intent -> independent design review -> freeze -> final VO/alignment -> timing conformance -> implementation -> mastered draft -> technical and independent editorial review -> delivery`
 
-Final voice performance is recorded or synthesized after the story and design are stable but before frame-accurate choreography. Scratch narration or timing estimates may drive the storyboard. Sound design and music remain finishing stages.
+Scratch narration drives provisional storyboard pacing. Final voice performance precedes frame-accurate choreography. Decide caption layout and sound intent with the visual design; source, synchronize, and mix the final audio during mastering. Render previews whenever needed for inspection; review the mastered output before publication.
 
 ## 1. Brief, evidence, and story
 
@@ -41,6 +41,7 @@ For factual work:
 - never make narration, labels, charts, or reconstructed visuals more specific than their supporting evidence;
 - distinguish `literal`, `evidence`, `reconstruction`, `metaphor`, and `abstract` representations;
 - never style invented or retypeset material so it can be mistaken for a recovered primary document. Use a real sourced artifact, or clearly label an editorial reconstruction/retypeset excerpt and keep invented mastheads, quotations, and article copy out of evidence scenes.
+- choose the representation type before adding concrete staging. Unspecified geography, materials, device behavior, wear, or gestures are not verified facts. Use neutral or clearly illustrative staging when those details are unsupported; do not call an invented path or action historically known.
 
 Build one editorial angle, a causal/logical spine, a viewer promise, and narrative beats. Scene boundaries follow visual ideas, not punctuation, fixed durations, or one-sentence-per-scene formulas.
 
@@ -50,20 +51,19 @@ Read [story-director.md](references/story-director.md) for story construction an
 
 ## 2. Editorial translation and visual concepts
 
-For each beat, decide:
+For each important beat, make this compact decision:
 
-1. what the viewer must understand;
-2. the real relationship or mechanism;
-3. the story-specific material vocabulary;
-4. the visible state change;
-5. the focal point and payoff;
-6. how attention hands to the next beat.
+`viewer inference -> starting relationship -> visible operation -> resulting relationship -> invariant -> factual limit`
+
+Choose story-specific materials, representation type, and focal payoff. Name what stays stable so the change can be perceived; do not invent an invariant or causal claim where the beat only establishes identity, evidence, time, or feeling. State which details are illustrative rather than supported evidence.
 
 Use `Anchor -> Action -> Consequence -> Launchpad` as a compact scene grammar, not a rigid timing template.
 
 When narration describes causality, systems, economics, loops, growth/decline, transformation, or dependencies, prefer connected structures such as flows, handoffs, accumulation/depletion, networks, object systems, diagrams, or state changes. Use archival media when it supplies identity, evidence, emotion, or context—not as a substitute for explaining the mechanism.
 
-When creative uncertainty is meaningful, compare 2–4 cheap concepts across different scene families. Uncertainty is meaningful when the mechanism, asset feasibility, factual representation, or neighboring-scene distinctness is unresolved. Do not polish several full scenes.
+If an explanatory action mainly reveals another noun or label, or its mechanism/asset feasibility remains unresolved, sketch two materially different concepts before polishing. Select autonomously for relationship clarity, story-specificity, factual honesty, feasibility, and fit with neighboring scenes. A different palette is not a different concept. Do not multiply candidates when the visual argument already works.
+
+Turn the chosen concept into a short shot score: **composition/viewpoint; object action; camera and information revealed; attention path; rhythm/payoff; sound or silence; exit/handoff**. Camera discovery is not a substitute for object change when the claim needs that change. A locked camera or direct cut may be the strongest choice. Use [motion-patterns.md](references/motion-patterns.md) for the working procedure.
 
 Read [scene-patterns.md](references/scene-patterns.md), [visual-language.md](references/visual-language.md), and [transitions.md](references/transitions.md).
 
@@ -79,34 +79,9 @@ Before authoring the storyboard:
 - Treat the shell as layout grammar, not as a copy of another project's topic, assets, scene count, copy, or animation.
 - Keep frame content, scene-specific visual systems, and motion studies inside the shell. Do not let them change the outer page anatomy without an explicit design decision.
 
-Follow the **multi-frame editorial architecture** (detailed in [storyboard.md](references/storyboard.md)):
+Keep the review shell stable: masthead and scene navigation, whole-sequence contact sheet, repeated scene inspection pairs, meaningful keyframes, and concise director notes. The exact dimensions, tokens, responsive rules, and component anatomy live in [storyboard-layout.md](references/storyboard-layout.md); do not duplicate them in production instructions. Those shell tokens are not a mandated film palette or genre.
 
-1. **Masthead and Sticky Director Rail:** Centered editorial header, serif display title, project summary, compact metadata/status block, and a sticky horizontally scrollable scene-jump rail.
-2. **Overview Contact Sheet:** Whole-sequence 9:16 thumbnail overview before detailed scenes.
-3. **Repeated Scene Shell:** Stable metadata rail plus flexible scene body; title/status row, concise thesis, context or voiceover card, then the visual inspection area.
-4. **Inspection Pair:** Primary focal composition beside a flexible sequence/keyframe inspection area.
-5. **Director Notes:** Short rationale and handoff block closing each scene.
-
-The default shell contract is:
-
-- centered `1540px` page frame;
-- masthead `1fr auto` grid, `32px` gap, `52px 40px 32px` padding;
-- sticky rail with `10px 40px` inner padding and horizontal overflow;
-- scene shell `140px minmax(0, 1fr)` with `36px` gap and `52px 0` padding;
-- inspection pair `minmax(300px, 350px) minmax(0, 1fr)` with `32px` gap;
-- four-column sequence grid with `12px` gaps, reducing to two columns below `1180px`;
-- 9:16 canvases, `4px` container radii, hairline rules, restrained shadows, and `44px` minimum interaction targets;
-- at `860px`, stack the masthead, scene rail, and inspection pair, center the focal stage, and use `24px` page gutters;
-- at `680px`, make the overview horizontally scrollable with `130px` minimum cards and stack director notes;
-- at `580px`, use one frame column, compact navigation, and hide secondary tools.
-
-Use the extracted surface language as the fallback: warm paper, dark ink, Newsreader/Georgia editorial type, system sans body copy, JetBrains Mono metadata, and red only for active/selected/locked signals. A project `DESIGN.md` may replace these tokens, but should not be ignored or silently rewritten.
-
-Inside the stable shell, use the content modules required by the brief:
-
-- 4–6 distinct keyframe cards for beat-level review;
-- tension triangle, pacing track, asset notes, audio notes, or motion study when they help approval;
-- expandable production detail when it would otherwise crowd the visual decision surface.
+Show enough states to judge the mechanism and payoff, plus a short motion study where camera, timing, or transitions cannot be judged from stills. Keep production detail expandable.
 
 Use this decision surface to resolve:
 - composition and focal hierarchy;
@@ -117,11 +92,13 @@ Use this decision surface to resolve:
 - rough pacing and readable holds;
 - continuity across scenes.
 
+Preview realistic captions and required disclosures before freeze, at intended viewing size. Inspect clean and captioned states together; repair composition before shrinking accessibility text. Choose a coherent scene-aware layout, not a universal empty caption band.
+
 Do not reduce the storyboard to a single video switcher or wireframe cards. Keep the approval surface rich, tactile, and structured, but do not let production telemetry or animation controls crowd out the stable page hierarchy.
 
-Critique and refine the storyboard before implementation. The HTML preview is the creative source of truth; structured files may index or validate it, but must not become a second competing storyboard. Freeze only when each scene has a clear thesis, focal point, defining relationship/state change, asset direction, transition intent, and no unresolved editorial blocker. Record frozen states in `storyboard-plan.json` only when a machine-readable handoff is actually useful.
+Critique and refine the storyboard before implementation. The HTML preview is the creative source of truth; structured files index or validate it, not replace it. Freeze only when each scene's visual job, focal point, defining relationship/state change, asset fitness, caption/sound intent, transition, and payoff work with no unresolved editorial blocker. Keep the approved snapshot distinct from as-built notes and bind review evidence to that revision. Use `storyboard-plan.json` only when a machine-readable handoff is useful.
 
-If the user asked to approve the storyboard, an independent critic may mark it ready for approval but must not substitute for that human gate. If approval was explicitly delegated, an independent critic may freeze it.
+If the user asked to approve the storyboard, an independent critic may mark it ready but must not substitute for that human gate. Otherwise, independent design review may freeze it autonomously.
 
 After freeze, Remotion may refine timing, easing, compositing, and technical execution. A change to the scene thesis, focal hierarchy, defining relationship, asset identity, or transition logic returns to the storyboard.
 
@@ -143,7 +120,7 @@ Track orthogonal asset fields:
 - `rightsStatus`: unresolved, needs review, verified, or self-created;
 - `representationType`: literal, evidence, reconstruction, metaphor, or abstract.
 
-An asset enters implementation only when its editorial status is accepted. Verification never implies suitability, and generation never implies either verification or acceptance.
+An asset enters implementation only when its editorial status is accepted and it meets the actual shot requirements. Inspect the deepest crop and promised full-object payoff, not just nominal dimensions. Evidence needs supported claims and source provenance; rights are a separate delivery gate. If the asset cannot support the shot, choose a feasible shot or an honest representation rather than fabricating evidence.
 
 Read [asset-selection.md](references/asset-selection.md). For style, typography, hierarchy, treatments, and text restraint, read [visual-language.md](references/visual-language.md).
 
@@ -159,7 +136,7 @@ Final narration performance is the authoritative clock. Before that performance 
 - declared final hold;
 - total composition duration.
 
-Do not cut a scene before its narration/captions resolve. Do not leave an inactive tail after they resolve unless a reviewed hold has an editorial purpose.
+Conform important events, not just scene lengths: orientation window, narration trigger, action completion, readable payoff, and transition. Reading time begins when essential content is readable, not when its entrance starts. Permit anticipation and J/L cuts when they preserve meaning and caption readability; an offset alone is not a defect. Do not truncate speech or evidence, or leave an unexplained inactive tail. If the available time cannot support the shot, simplify or reconform it rather than speeding every action up.
 
 Meaningful motion changes state: it reveals, routes, transforms, accumulates, compares, blocks, replaces, or reframes. A static image plus slow zoom is insufficient when the narration is explaining a process or changing ideas. Stillness is valid when it creates tension, gives evidence time to read, or lets a payoff land; record that reason.
 
@@ -183,6 +160,8 @@ The implementation agent is primarily an implementer of the frozen visual decisi
 - Use deterministic seeded variation; never uncontrolled render-visible randomness.
 - Keep text sharp and outside destructive image-treatment filters.
 - Verify visible bounds, crops, identity anchors, and settled data labels in actual renders.
+- Prove defining relationships, not just object/state presence: inspect actual boundary clips, visible before/after states, full-object reveals, and readable payoffs against the frozen revision.
+- Account for planned sound cues as implemented, deliberately replaced, or intentionally omitted; audition the mastered result.
 
 Expose a small typed tune surface only for decisions likely to need safe repair. Property controls, parameter manifests, and patches are conditional tools—not requirements for every scene. Studio-specific layer structures are optional unless the project needs manual editability.
 
@@ -190,13 +169,15 @@ Read [remotion-implementation.md](references/remotion-implementation.md).
 
 ## 7. Critique and QA
 
-Render representative evidence around semantic moments: anchor, pre-action, defining change, payoff/settle, and handoff. Use short motion previews when timing or camera behavior matters. Build contact sheets with `tools/make_contact_sheet.py` when useful.
+Render representative evidence around semantic moments: anchor, pre-action, defining change, payoff/settle, and handoff. Use short motion previews when timing or camera behavior matters. Build contact sheets with `tools/make_contact_sheet.py` when useful. Metadata cannot prove that a relationship is visible or a sound is audible.
+
+The independent critic first observes the visual sequence without the director's explanation, recording focal subjects, changes, stable references, and inferred relationships. Then compare that observation with the intended visual job and review the complete captioned/audio master. Do not demand that images alone encode every name or factual qualification.
 
 ### Editorial QA
 
 Evaluate actual storyboard/renders for:
 
-- mute-readable thesis and factual honesty;
+- a legible assigned visual contribution and factual honesty;
 - clear focal hierarchy;
 - meaningful structure/state changes;
 - process/causal legibility;
@@ -208,6 +189,8 @@ Evaluate actual storyboard/renders for:
 - sound supporting semantic events without implying unsourced historical authenticity;
 - status consistency: script/voice/timing claims do not contradict each other across the approval surface;
 - evidence density: visible labels and specifications advance the scene thesis instead of turning the frame into a production/research dashboard.
+
+Route failures to their cause: wrong relationship -> redesign; correct relationship but weak staging -> composition/choreography repair; accepted plan missing from output -> implementation repair; subjective preference without functional harm -> taste, not blocker.
 
 ### Technical QA
 
@@ -225,11 +208,11 @@ Both gates must pass. A technical pass cannot override an editorial revision, an
 
 The generating/implementation pass must not self-award `publish_candidate`. Use an independent critic when available. If independent review is unavailable, report `needs_review` rather than claiming production readiness.
 
-Read [critique.md](references/critique.md) and [anti-patterns.md](references/anti-patterns.md). For compact before/correction patterns, read [positive editorial decisions](examples/positive/editorial-decisions.md) and [editorial failures](examples/negative/editorial-failures.md). Use `tools/validate_project.py` for deterministic cross-artifact checks when a project manifest is available. For autonomous stage ownership, bounded retries, approval gates, and resumable execution, read [orchestration.md](references/orchestration.md).
+Read [critique.md](references/critique.md) and [anti-patterns.md](references/anti-patterns.md). For compact before/correction patterns, read [positive editorial decisions](examples/positive/editorial-decisions.md) and [editorial failures](examples/negative/editorial-failures.md). Use `tools/validate_project.py` for deterministic cross-artifact checks; before promoting a publish candidate, run its publication gate with artifact-bound review evidence as described in [orchestration.md](references/orchestration.md). Hashes prove artifact identity, not creative quality or reviewer honesty.
 
 ## Artifacts: one source of truth per decision
 
-Do not emit JSON merely because a schema exists. Structured artifacts are optional machine contracts for handoffs, validation, or resumability—not a second creative workspace.
+Do not emit JSON merely because a schema exists. Structured artifacts support handoffs, validation, or resumability—not a second creative workspace. Publication needs a small machine-checkable evidence contract; exploratory previews do not need release paperwork.
 
 Typical minimum:
 
@@ -246,6 +229,7 @@ Add structured artifacts only when they solve a concrete need:
 - editorial/technical QA reports when another agent or automation consumes verdicts;
 - `reference-analysis.json` when references materially drive decisions;
 - tune manifests/patches when bounded parameter repair is actually used.
+- publication review receipts binding the frozen board and mastered output to the reviewed artifacts, with verdicts, blockers, and evidence references.
 
 If structured metadata disagrees with an approved HTML storyboard, do not silently trust either copy. Treat it as drift, inspect the approved preview/review evidence, and reconcile the metadata before implementation.
 
@@ -257,7 +241,7 @@ Continue until:
 - accepted assets and final narration are available;
 - implementation matches the frozen defining relationships;
 - technical QA passes;
-- independent editorial QA marks a publish candidate, or the result is clearly labeled `needs_review` when independence is unavailable;
+- independent editorial QA and the publication gate approve the mastered artifact, or the output stays explicitly draft/`needs_review` when prerequisites are missing;
 - factual and rights blockers are resolved;
 - the requested render/preview exists.
 

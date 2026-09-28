@@ -2,29 +2,33 @@
 
 Use motion to clarify meaning, not to decorate a static composition.
 
-## Motion stack
+## Joint shot score
 
-A scene may contain:
+Resolve these together before implementation; one short line per decision is enough:
 
-1. primary semantic action;
-2. one or two supporting actions;
-3. camera behavior that reveals or reframes;
-4. subtle ambient life;
-5. an intentional settle/hold;
-6. a focal handoff.
+| Decision | Answer |
+|---|---|
+| Composition | Dominant subject, viewpoint, and necessary context |
+| Object action | Relationship that changes, and stable reference |
+| Camera | New information revealed, or reason to remain locked |
+| Attention | Look here before → during → after the action |
+| Rhythm | What establishes, changes, resolves, and holds |
+| Sound | Semantic accent, texture, bridge, or deliberate silence |
+| Exit | Orientation carried forward, or contrast motivating a reset |
 
-Not every scene needs every layer. Remove any layer that competes with the thesis.
+Object action and camera discovery are not interchangeable: finding a second object does not demonstrate replacement. Supporting motion and ambient life are optional; remove layers that compete with the assigned job.
+
+Watch the sequence as a film: shot scale, density, movement, and stillness should support its emotional progression. Repetition can establish a system or rhythm; contrast can mark a turn. Do not impose a variety quota, obligatory camera move, or fixed establish/action/hold formula.
 
 ## Semantic timing
 
-Attach important motion to narration anchors:
+After final VO alignment, bind each meaning-bearing event to an **orientation window → semantic trigger → action completion → readable payoff window → transition interval**. Before voice lock, these are provisional local estimates.
 
-- noun establishes the object;
-- verb triggers action;
-- contrast introduces the counter-state;
-- number locks into evidence;
-- reversal pivots camera or composition;
-- payoff receives a readable settle.
+A noun may orient, a verb trigger action, a contrast introduce the counter-state, or a number lock into evidence. These are choices, not a requirement to animate each word. Record purposeful anticipation and J/L cuts when sound leads or trails the picture without confusing meaning. An offset alone is not a defect; an unexplained semantic mismatch is.
+
+Measure the payoff from the first frame where essential content is actually readable, accounting for entrance motion and competing action—not from animation start. Inspect with speech at delivery size. No fixed hold duration proves readability. If the time envelope cannot support the shot, simplify it or deliberately reconform the edit; do not leave a nominal hold whose final state appears only at the cut.
+
+When the final performance changes, reconform these events and reading windows, not just the scene endpoints.
 
 When adding a beat to an accepted scene, give the new beat its own readable state. Do not stack another hero object over the existing focal subject.
 
@@ -83,7 +87,7 @@ Stillness is intentional when it:
 - gives an emotional or thesis payoff room;
 - creates contrast before the next action.
 
-Record the purpose. If narration changes idea while composition, focal point, and object relationships remain unchanged, treat the shot as a likely slideshow failure.
+Record the purpose. If narration changes idea while composition, focal point, and object relationships remain unchanged, check whether the held image still performs its assigned job. Sustained testimony, identity, emotion, or evidence inspection can remain valid across multiple spoken facts.
 
 
 ## Data and Time Compression

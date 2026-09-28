@@ -92,3 +92,27 @@ These synthetic failures are diagnostic patterns, not universal bans. Use the re
 - **Failure:** The storyboard labels narration as not yet recorded but assigns authoritative composition frame ranges and cue frames.
 - **Why it fails:** Temporary estimates become accidental contracts.
 - **Recovery:** Mark timing estimated and use local seconds/semantic anchors until final VO alignment.
+
+## 16. Related nouns substitute for the required relationship
+
+- **Failure:** A water-filter subscription beat pans from a dirty cartridge to a clean cartridge but never shows removal, replacement, or renewed use.
+- **Route:** Wrong concept if discovery is the entire design; implementation defect if the approved replacement action is missing.
+- **Recovery:** Compare replacement-in-place with supported repeat-order accumulation; choose the concept that proves recurrence. A pan is valid when the job is simply to identify the two cartridge types.
+
+## 17. A correct mechanism is staged unreadably
+
+- **Failure:** A reservoir diagram correctly separates falling inflow from fixed demand, but the demand label, captions, and moving level overlap.
+- **Route:** Composition/choreography repair, not a new causal theory.
+- **Recovery:** Preserve the invariant, separate the attention sequence, and preview long captions/disclosures at delivery size. Bold caption-led emphasis is valid in a different beat where the words are the focal subject.
+
+## 18. Inventory passes while promises disappear
+
+- **Failure:** A telescope's components exist in the project but a cover crop hides the mount at the promised complete reveal; a declared shape match jumps scale; a sound bridge is listed but inaudible; the conclusion settles only 0.08 seconds before the cut.
+- **Route:** Implementation repair against the frozen crop, boundary clip, cue decision, and readable payoff—not aesthetic redesign by default.
+- **Recovery:** Show the full required assembly, preserve the intended match or review a hard-cut replacement, implement/replace/omit the cue explicitly, and reconform actual reading time. Do not fix an unreadable ending by merely increasing its declared hold metadata.
+
+## 19. Taste becomes a false blocker
+
+- **Failure:** A critic rejects a migration-history timeline, a held census excerpt, rounded bold captions, and a silent memorial passage because “cinematic work always moves and sounds.”
+- **Route:** Taste, unless observable confusion, obstruction, false implication, or timing harm is demonstrated.
+- **Recovery:** Observe first, then compare with the assigned contribution. Chronology, static evidence, caption-led emphasis, and silence can each be the right decision.

@@ -46,7 +46,7 @@ Verified rights require source/license evidence. Self-created does not waive fac
 
 `literal | evidence | reconstruction | metaphor | abstract`
 
-Evidence assets require claim references. Generated historical-looking material is a reconstruction, not primary evidence.
+Evidence assets require a retrievable source and supported claim references. Generated historical-looking material is a reconstruction, not primary evidence. Self-created status does not make a fabricated document authentic.
 
 ## Motion-aware requirements
 
@@ -55,7 +55,7 @@ Before sourcing or generation, record as relevant:
 - semantic role and scene usages;
 - full-object/full-body need;
 - expected crop and maximum zoom;
-- minimum dimensions;
+- output-scale readability at the planned crop (source dimensions are diagnostic, not an automatic rejection threshold);
 - alpha/transparency;
 - independent parts;
 - viewpoint and rotation tolerance;
@@ -70,12 +70,17 @@ Generate/source extra candidates only when the decision is expensive or ambiguou
 
 ## Acceptance gate
 
-Before implementation, confirm:
+Accept against the actual role, retaining the smallest useful proof:
 
-- file exists and meets declared technical needs;
-- representation and claim linkage are honest;
-- provenance/rights state is explicit;
-- editorial role is accepted;
-- recurring uses point to one master or declared derivatives;
-- storyboard uses the same asset identity or explicitly returns for review.
+| Role | Acceptance evidence |
+|---|---|
+| Inspection | Deepest planned crop at output scale remains intelligible |
+| Complete-object reveal | Essential components and identity are visible together at payoff |
+| Evidence | Retrievable source, supported claim, honest representation/disclosure |
+| External media | Rights evidence appropriate to the intended delivery |
+| Animated object | Required separable parts and viewpoint capability |
+
+Also confirm file integrity, accepted editorial role, recurring master/derivative identity, and agreement with the storyboard. Keep unresolved rights explicit; they block publication, not a clearly marked inspection draft.
+
+Do not reject useful low-resolution archives by dimensions alone. The same source may fail a close-up and succeed in a wider composition. If it cannot support the shot, autonomously choose a feasible crop, shot, source, or honest reconstruction and review any defining design change. Never invent documentary authority to preserve a preferred treatment.
 

@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "v0.8 Motion Graphics Asset Ledger",
+  "title": "v0.9.0 Motion Graphics Asset Ledger",
   "type": "object",
   "required": ["projectId", "assets"],
   "properties": {
@@ -68,7 +68,14 @@
           },
           {
             "if": {"properties": {"representationType": {"const": "evidence"}}, "required": ["representationType"]},
-            "then": {"required": ["claimIds"], "properties": {"claimIds": {"minItems": 1}}}
+            "then": {
+              "required": ["claimIds", "sourceUri"],
+              "properties": {
+                "claimIds": {"minItems": 1, "items": {"type": "string", "minLength": 1}},
+                "sourceUri": {"type": "string", "minLength": 1},
+                "origin": {"not": {"enum": ["generated", "reconstructed"]}}
+              }
+            }
           }
         ]
       }

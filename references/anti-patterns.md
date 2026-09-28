@@ -84,13 +84,13 @@ Use this guide diagnostically. A symptom is evidence to inspect, not an automati
 
 ## Scene Ends Before Meaning Resolves
 
-**Symptom:** The cut arrives while narration or captions continue, before a value settles, or before the payoff can be read.
+**Symptom:** The cut leaves continuing narration/captions without relevant visual context, interrupts a required value settling, or removes the payoff before it can be read.
 
 **Why it fails:** The edit interrupts comprehension and weakens the next scene's entry.
 
 **Recovery:** Extend the scene, advance the meaningful action, shorten the copy, or overlap the transition only after the focal event is legible.
 
-**Exception:** Intentional interruption can express shock or urgency, but it must be rare and editorially motivated.
+**Exception:** J/L cuts and anticipation are valid when the incoming/outgoing context preserves meaning and caption readability. Intentional interruption can express shock or urgency; do not confuse every speech overlap with interruption.
 
 ## Unsupported Generated Evidence
 
@@ -108,7 +108,7 @@ Use this guide diagnostically. A symptom is evidence to inspect, not an automati
 
 **Why it fails:** File existence says nothing about semantic correctness, crop, motion usability, style compatibility, identity, or provenance.
 
-**Recovery:** Mark it `produced`, inspect it in the target composition, verify required constraints, then let an independent editorial review promote it to `accepted`.
+**Recovery:** Mark it technically `available`, inspect it in the target composition and deepest planned crop, verify requirements, then record editorial acceptance separately from provenance and rights.
 
 **Exception:** Low-risk disposable support assets may use a single candidate, but they still need a quick target-frame check.
 
@@ -164,7 +164,7 @@ Use this guide diagnostically. A symptom is evidence to inspect, not an automati
 
 **Why it fails:** Evidence becomes dashboard clutter and competes with the focal relationship.
 
-**Recovery:** Keep only orientation, proof, and payoff facts visible. Move provenance and supporting specifications into notes.
+**Recovery:** Keep orientation, proof, payoff, and required disclosures legible. Move nonessential supporting specifications and detailed provenance into notes; do not hide a disclosure needed to prevent a misleading representation.
 
 ## Ambiguous Narration Lock
 

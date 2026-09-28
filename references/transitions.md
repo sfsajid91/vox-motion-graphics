@@ -48,7 +48,9 @@ If it only advertises an effect, remove or simplify it.
 
 ## Freeze and implementation
 
-The storyboard freeze should capture transition type, focal handoff, defining object relationship, and rough pacing. Remotion may refine easing and overlap, but changing the transition's editorial job returns to storyboard review.
+The storyboard freeze captures transition type, focal handoff, defining relationship, rough pacing, and sound intent. Record only the defining **observable invariant + proof location**: for example, the same object stays registered while its carrier departs, or the broad starting state is visible before narrowing. Do not inventory every pixel.
 
-Inspect actual frames immediately before, during, and after the handoff. A correct final frame does not prove a transition works.
+Inspect short boundary clips spanning before, during, and after the handoff against the frozen revision. Endpoint frames cannot prove spatial continuity, timing, or an audible cue. Include the mastered sound when it carries the transition; record each planned cue as implemented, deliberately replaced, or explicitly omitted with a reason.
+
+Remotion may refine easing and overlap, but changing the editorial job returns to review. A reviewed hard-cut replacement is valid; silent drift is not. Contrast transitions need not preserve exact transforms. Intentional J/L cuts and anticipation may cross scene boundaries when orientation and meaning survive.
 

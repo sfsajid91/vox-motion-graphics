@@ -78,6 +78,18 @@ def main():
     no_change = storyboard()
     no_change["scenes"][0]["states"][0].pop("meaningfulChange")
     assert_invalid("storyboard-plan.schema.json", no_change)
+    scored = storyboard()
+    scored["scenes"][0]["relationshipInvariants"] = [
+        {"id": "carrier", "observable": "image stays registered as carrier departs", "proofRef": "boundary clip 00:04-00:06"}
+    ]
+    scored["scenes"][0]["shotScore"] = {
+        "composition": "image dominates", "objectAction": "carrier departs", "camera": "locked",
+        "attention": "image to departing carrier", "rhythm": "resolve then hold",
+        "sound": "texture stops", "exit": "hard cut resets scale",
+    }
+    assert_valid("storyboard-plan.schema.json", scored)
+    scored["scenes"][0]["relationshipInvariants"][0].pop("observable")
+    assert_invalid("storyboard-plan.schema.json", scored)
 
     ready = storyboard()
     ready["status"] = "ready_for_approval"
@@ -131,6 +143,14 @@ def main():
     evidence = json.loads(json.dumps(accepted))
     evidence["assets"][0]["representationType"] = "evidence"
     assert_invalid("asset-manifest.schema.json", evidence)
+    evidence["assets"][0].update(claimIds=["C1"], sourceUri="https://archive.example/source")
+    assert_invalid("asset-manifest.schema.json", evidence)
+    evidence["assets"][0]["origin"] = "programmatic"
+    assert_valid("asset-manifest.schema.json", evidence)
+    evidence["assets"][0]["origin"] = "sourced"
+    assert_valid("asset-manifest.schema.json", evidence)
+    evidence["assets"][0].update(origin="reconstructed", representationType="reconstruction")
+    assert_valid("asset-manifest.schema.json", evidence)
 
     timing = {
         "fps": 30,
@@ -162,6 +182,18 @@ def main():
         ],
     }
     assert_valid("frame-scene-spec.schema.json", timing)
+    timing["scenes"][0]["microbeats"][0]["semanticTiming"] = {
+        "phrase": "flow stops", "orientationStartSec": 0, "triggerSec": 2,
+        "actionCompleteSec": 3, "readableStartSec": 3.2, "readableEndSec": 5,
+        "transitionStartSec": 4.5, "transitionEndSec": 6,
+    }
+    timing["scenes"][0]["sfxEvents"] = [{
+        "offsetSec": 2, "visualEvent": "gate closes", "sfx": "planned impact",
+        "disposition": "omitted", "decisionReason": "silence makes the stop perceptible",
+    }]
+    assert_valid("frame-scene-spec.schema.json", timing)
+    timing["scenes"][0]["sfxEvents"][0].pop("decisionReason")
+    assert_invalid("frame-scene-spec.schema.json", timing)
 
     editorial = {
         "critic": "critic-agent",
@@ -201,6 +233,22 @@ def main():
     false_pass = json.loads(json.dumps(technical))
     false_pass["checks"][0]["status"] = "fail"
     assert_invalid("technical-qa-report.schema.json", false_pass)
+    editorial.update(reviewContext="critic-session", boardSha256="a" * 64, masterSha256="b" * 64, blockers=[])
+    assert_valid("editorial-qa-report.schema.json", editorial)
+    editorial["blockers"] = ["unresolved label"]
+    assert_invalid("editorial-qa-report.schema.json", editorial)
+    technical["blockers"] = ["decode failure"]
+    assert_invalid("technical-qa-report.schema.json", technical)
+    receipt = {
+        "producerContext": "director-session",
+        "board": {"file": "board.html", "sha256": "a" * 64},
+        "master": {"file": "master.mp4", "sha256": "b" * 64},
+        "reviews": {name: {"file": f"{name}.json", "sha256": "c" * 64}
+                    for name in ("design", "editorial", "technical")},
+    }
+    assert_valid("review-receipt.schema.json", receipt)
+    receipt["reviews"]["editorial"]["sha256"] = "approval"
+    assert_invalid("review-receipt.schema.json", receipt)
 
     reference = {
         "referenceId": "ref1",
@@ -267,7 +315,7 @@ def main():
     }
     assert_valid("parameter-patch.schema.json", patch)
 
-    print(f"OK: {len(schema_files)} schemas + v0.8 behavioral guardrails")
+    print(f"OK: {len(schema_files)} schemas + behavioral guardrails")
 
 
 if __name__ == "__main__":

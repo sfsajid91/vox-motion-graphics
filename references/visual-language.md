@@ -21,7 +21,7 @@ For every storyboard state:
 1. Name the first thing the viewer should see.
 2. Name the one relationship or change that matters.
 3. Remove or subordinate elements with equal visual weight.
-4. Check the state at intended viewing size and without narration.
+4. Check clean and realistically captioned states at intended viewing size, including necessary disclosures.
 
 Use scale, contrast, position, depth, isolation, timing, and motion direction to establish hierarchy. Centering is neither required nor forbidden.
 
@@ -29,15 +29,11 @@ The payoff or thesis often benefits from simplification: remove evidence objects
 
 ## Text roles
 
-Art-directed text should add information:
+Assign each art-directed text element a job: **orientation, evidence, relationship label, disclosure, or payoff**. Verified numbers/dates, quotations, and concise contrasts belong when they perform that job.
 
-- verified number or date;
-- short evidence label;
-- quotation;
-- concise contrast or payoff;
-- necessary orientation.
+Remove or subordinate text that adds no useful information. Do not turn storyboard notes into visible badges. Accessibility captions have a separate function, but participate in the same composition: test their realistic load before freeze, alongside labels and disclosures, and repair layout before reducing legibility.
 
-Do not turn storyboard notes or narration paraphrases into visible badges. Keep accessibility captions separate from scene art when possible.
+Prominence is not itself a defect. Bold caption-led storytelling, telemetry, cards, and rounded caption backgrounds are valid when their relevance, readability, and hierarchy serve the brief. A permanent empty caption band is not required; use scene-aware placement within a consistent caption system.
 
 ## Treatments
 

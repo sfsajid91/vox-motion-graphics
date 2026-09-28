@@ -25,21 +25,30 @@ The critic must inspect the artifact itself:
 
 If no independent reviewer is available, mark the relevant verdict `unreviewed`. Continue only as a draft; do not claim approval or production readiness. If the user explicitly owns the approval gate, the critic may mark work `ready_for_approval` but only the user's approval freezes it.
 
+Bind each stage verdict to the artifact revision/digest actually inspected, reviewer/context, unresolved blockers, and evidence locations. Preserve the frozen board separately from as-built notes. A defining change invalidates affected approval; an unchanged artifact does not need redundant review. Fingerprints prove identity, not quality. Draft rendering is allowed to obtain evidence; publish-candidate promotion requires current independent approval and resolved delivery blockers.
+
 ## Editorial QA
 
 Editorial QA asks whether the film communicates with clarity, specificity, and deliberate visual direction.
 
+### Observe first, then compare
+
+1. **Without the director's thesis or rationale**, inspect the artifact and describe focal subjects, visible changes, stable references, and inferred relationships. When isolating a visual mechanism, begin without narration/accessibility captions; retain meaningful on-canvas evidence and labels. Record what is actually observable, not the most charitable explanation.
+2. **Then receive the intended contribution** and compare it with those observations. Review the complete accessible master with narration, captions, disclosures, and mixed sound. Judge the assigned job—not whether pictures encode every word, proper name, or historical fact.
+
+A timeline may correctly show order but fail a claim about cumulative pressure. A portrait may establish identity while narration supplies the name. Static evidence, testimony, atmosphere, symbolism, and purposeful silence remain valid contributions.
+
 ### Review dimensions
 
-- **Visual thesis:** can the scene's main relationship or state change be described without repeating the narration?
+- **Visual contribution:** can the scene's assigned relationship, identification, evidence, or emotional job be described from the observed image rather than supplied by the director's explanation?
 - **Focal hierarchy:** is one element dominant in each meaningful state, and does attention move intentionally?
-- **Mechanism clarity:** does the scene show cause, process, comparison, transformation, or evidence rather than merely illustrate nouns?
-- **State progression:** does visual structure evolve when the narration introduces a new idea?
+- **Contribution clarity:** does the visual perform its assigned explanatory, identification, emotional, chronological, or evidence job rather than merely naming related objects?
+- **State progression:** when the intended contribution changes, does the visual respond or sustain a justified useful hold?
 - **Payoff:** does the scene land on a readable consequence, often with a simpler composition than the buildup?
 - **Pacing:** are holds purposeful, actions readable, and transitions timed around semantic resolution?
 - **Continuity:** does attention hand off through position, direction, object, line, color, or scale?
 - **Asset fitness:** do the selected assets support the required crop, motion, identity, and tone?
-- **Text restraint:** is text limited to labels, evidence, short emphasis, or accessibility rather than duplicating the voiceover?
+- **Text hierarchy:** do labels, evidence, disclosures, payoff text, and accessibility captions remain useful and readable together in clean/captioned reviews?
 - **Style cohesion:** do continuity tokens create one film without forcing every scene into the same layout?
 - **Evidence honesty:** are literal, evidence, reconstruction, metaphor, and abstract treatments unmistakable and claim-safe? Could any fabricated/retypeset document be mistaken for recovered primary evidence?
 - **Review ergonomics:** can the user judge the scene without reading implementation prompts, dense telemetry, or long frame tables?
@@ -63,7 +72,16 @@ Do not mark `ready_for_approval` while any of these remain:
 - `redesign`: the mechanism, hierarchy, or representation is fundamentally weak;
 - `unreviewed`: no independent editorial review occurred.
 
-Every non-approval verdict should name the symptom, affected scene/state, responsible design decision, and smallest useful repair.
+Route issues by cause, naming symptom, scene/state, observed evidence, and smallest useful repair:
+
+| Finding | Route |
+|---|---|
+| Wrong inferred relationship for the assigned job | `redesign`: concept/storyboard |
+| Correct relationship, weak visibility or staging | `revise`: composition/choreography |
+| Correct frozen plan, missing label/action/cue or broken crop/timing | Implementation repair; redesign only if the plan itself changes |
+| Aesthetic disagreement without functional harm | Taste note, not blocker |
+
+Restore missing execution before judging whether it fixes the idea; restoring labels cannot rescue an unrelated mechanism. Do not reject cards, timelines, bold captions, static evidence, hard cuts, or silence on style preference alone.
 
 ## Technical QA
 
@@ -106,36 +124,25 @@ Run technical QA first so broken output does not waste editorial review. Then co
 
 ### Final gate
 
-Run both verdicts on the mastered output. Reopen only the responsible layer:
-
-- weak thesis, hierarchy, state change, asset choice, or pacing -> storyboard/editorial repair;
-- timing arithmetic, clipping, loading, determinism, captions, provenance, or render failure -> technical repair;
-- implementation drift that changes meaning -> storyboard change control, then both reviews again.
+Run both verdicts on the mastered output, using the issue-routing table above. Reopen only the responsible layer and its affected approval; do not rerun unrelated design decisions to repair a missing implementation detail.
 
 ## Critique Evidence
 
 Use the smallest evidence set that proves the verdict:
 
-- entry, meaningful action, payoff, and exit frames;
-- short motion previews for pacing, camera, or transition issues;
-- reduced-size preview for hierarchy/readability;
-- narration/caption/scene timing table for duration issues;
-- before/after comparison for repairs;
-- frozen storyboard comparison for implementation fidelity.
+- entry, meaningful action, payoff, and exit frames at delivery viewing size;
+- boundary/action clips for camera, transition, timing, and audible cue promises;
+- clean and realistically captioned views, including disclosures;
+- final alignment plus orientation/trigger/completion/readable-payoff/transition windows, checked with speech;
+- deepest asset crop and complete-reveal payoff where those roles are promised;
+- frozen revision comparison and observable invariant/proof location for defining relationships;
+- before/after comparison for repairs, tied to the mastered output actually reviewed.
 
 A final frame cannot prove motion quality, and source code cannot prove rendered composition.
 
 ## Repair Discipline
 
-Repair in causal order:
-
-1. truthfulness and representation;
-2. scene mechanism and visual thesis;
-3. focal hierarchy and state progression;
-4. asset selection and composition;
-5. timing and transition intent;
-6. surface treatment and polish;
-7. implementation defects within the accepted design.
+Repair the responsible layer; do not march through unrelated polish. Resolve truthfulness and wrong concepts first, then staging/readability, then surface treatment. An implementation omission in an accepted design goes directly to implementation repair. Verify the repaired artifact rather than relying on updated notes.
 
 After two failed low-level repairs to the same editorial problem, return to the storyboard and redesign. If one redesign still cannot produce a clearly better direction, escalate the smallest meaningful choice instead of looping. Do not stack effects or parameters around a weak concept.
 

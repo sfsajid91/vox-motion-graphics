@@ -1,12 +1,12 @@
-# v0.8 Behavioral Regression Prompts
+# v0.9 Behavioral Regression Prompts
 
-Run these across target coding agents without benchmark answers. Inspect their decisions and artifacts, not exact wording.
+Run these across target coding agents without supplying the expectations as benchmark answers. Inspect decisions and artifacts, not exact wording or completed fields. These are proposed evaluation cases, not evidence of measured creative improvement; use the held-out procedure in [vague-autopilot-prompts.md](vague-autopilot-prompts.md).
 
 ## 1. Causal economics
 
 “Create a 55-second vertical explainer about why high interest rates can hurt a government even when it never misses a payment.”
 
-Expect: claims remain honest; debt is physicalized as burden/flow rather than money-bag iconography; HTML storyboard precedes Remotion; final VO governs timing.
+Expect: claims remain honest; a visible relationship explains the burden without prescribing one diagram; HTML storyboard precedes Remotion; final VO governs semantic timing and reading windows.
 
 ## 2. Technical process
 
@@ -18,7 +18,7 @@ Expect: connected state/flow visualization; no repeated specification cards; eac
 
 “Create a 50-second short about the invention of the shipping container using supplied archival photos.”
 
-Expect: photos provide identity/evidence but do not become long wallpaper holds; generated reconstructions cannot masquerade as evidence; asset states remain explicit.
+Expect: photos provide identity/evidence; static inspection remains valid when that is the job; process claims get an explanatory relationship rather than wallpaper; reconstructions cannot masquerade as evidence; asset states remain explicit.
 
 ## 4. Product/UI
 
@@ -67,7 +67,7 @@ Expect: origin is generated, technical status may be verified, editorial status 
 - The user is not asked to choose layout, easing, transition, or coordinates.
 - Storyboard fidelity matches uncertainty: lightweight for simple scenes, playable for complex transitions/processes.
 - Editorial QA reviews rendered/storyboard evidence; technical checks do not self-award creative approval.
-- No Kodak-specific facts, palette, frame rate, timings, or surface treatment appear as defaults.
+- No Kodak/Concorde facts, palette, frame rate, timings, surface treatment, or mandatory hero continuity become defaults.
 
 ## 11. Conflicting creative metadata
 
@@ -117,3 +117,21 @@ Expect: preserves the 23-second fact but rejects imperceptible per-unit click sp
 “Analyze Vox, Johnny Harris, and MoSidd, then write the production prompt.”
 
 Expect: analysis may name references, but production direction translates them into concrete observable grammar instead of using creator names as the main style instruction.
+
+## v0.9 matched probes
+
+Run the failure and valid-counterexample variants; a critic that rejects both is not passing.
+
+| Probe prompt / supplied artifact | Expected distinction |
+|---|---|
+| “Explain why printer cartridges generate repeat purchases.” Supply a concept that only pans to a second cartridge; contrast with a beat whose sole job is identifying cartridge types. | For recurrence, compare two materially different mechanisms and select autonomously using inference/before/operation/after/invariant/factual limit. Identification may correctly use discovery alone. |
+| “Show how two pressures jointly constrain a housing project.” Supply a dates-only timeline; then assign the same timeline the job of showing event order. | Wrong relationship for combined constraint → concept redesign. Correct chronology → accept; no universal timeline ban. |
+| “Stage artifact inspection, reservoir depletion, then an emotional aftermath.” | Joint score separates camera discovery from object action and supports film-level cadence. A locked view, hard cut, or silence may be chosen; generic push-ins are not sufficient explanation or a required repair. |
+| Supply a correct reservoir mechanism with overlapping demand labels, long captions, and disclosure; also a sparse bold-caption-led warning scene. | First needs staging/composition repair in clean and captioned views, not a new concept or tiny captions. Bold prominence alone is not failure. |
+| Supply two performances of identical words at different pacing, stale round-number scene windows, and an ending that becomes readable 0.08 seconds before the cut; include a purposeful L-cut. | Reconform semantic events and actual readable windows with speech. Flag stale timing/unreadable payoff; accept the purposeful overlap. A metadata duration alone cannot pass. |
+| Supply one low-resolution archive used at an unreadable deep crop and at a readable wide view; a complete-object reveal that hides essential parts; a self-created fake primary document; a clearly disclosed reconstruction. | Accept by actual role, not source dimensions. Reject the failed crop/reveal and false evidence; permit the wider archive and honest reconstruction, subject to rights. |
+| Against a frozen board, remove a relationship label, jump a match transform, and drop a planned sound bridge. Also supply reviewed hard-cut and silence replacements. | Route missing promises to implementation repair using boundary clips and mastered sound; accept reviewed replacements. Do not infer fidelity from asset/state inventory. |
+| Give a critic clean pictures first, then the director's thesis and complete accessible master. Include a portrait whose name is supplied only in narration. | Critic records observed relationships before intent, compares assigned contribution, and does not require the portrait to visually encode the name. |
+| Supply draft output with no independent review; then a reviewed master receipt followed by a changed master; then the unchanged reviewed artifact. | Draft rendering remains allowed. Missing/stale approval or unresolved delivery rights blocks publication; unchanged reviewed output does not trigger redundant review. |
+
+For each critique record **wrong concept**, **weak staging**, **implementation defect**, or **taste**, plus observable evidence and the smallest responsible repair. Do not count a correct category label without artifact inspection as success. Technical/gate compliance and creative directing quality are separate outcomes.

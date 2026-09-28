@@ -16,9 +16,9 @@ Pause only when:
 
 ## Stage graph
 
-`brief/research -> story -> concepts -> HTML storyboard -> editorial critic -> repair -> approval/freeze -> final VO -> Remotion -> technical QA -> editorial render QA -> audio/master -> final render`
+`brief/evidence -> concepts and shot scores -> storyboard with caption/sound intent -> independent design review -> freeze -> final VO/alignment -> timing conformance -> implementation -> mastered draft -> technical and independent editorial review -> delivery`
 
-Keep stage outputs small. The HTML storyboard is the creative source of truth until freeze; Remotion becomes the implementation source after freeze. Machine-readable artifacts should index those decisions, not duplicate them unnecessarily.
+Keep stage outputs small. The HTML storyboard is the creative source of truth; freeze an immutable snapshot and keep as-built timing, cue decisions, and implementation notes separately. Never overwrite the approved board with a description of what happened to get implemented. Plan caption composition and sound intent before freeze; source/mix finishing audio and produce the accessible master before final review. Draft renders are permitted whenever inspection needs them; publication, not rendering, is gated.
 
 ## Bounded iteration
 
@@ -43,7 +43,7 @@ When the user wants approval before implementation:
 - do not start final Remotion implementation until approval;
 - after approval, freeze the defining visual relationships and treat later redesign as change control.
 
-When the user explicitly delegates approval, an independent critic may freeze the storyboard automatically.
+Unless the user explicitly reserves an approval gate, the director continues autonomously and an independent critic may approve the freeze. Do not turn ordinary creative decisions into new user approval requests.
 
 ## Critic independence
 
@@ -54,6 +54,64 @@ A useful independent critic is a separate review pass that receives the artifact
 3. same model in a clean critic context with no hidden chain from generation.
 
 A second message in the same implementation context that merely asks “is this good?” is not strong independence.
+
+The critic first observes focal subjects, changes, stable references, and inferred relationships without the director's explanation; then compares with the intended job and reviews the accessible mastered output. Missing execution goes to implementation repair; an incorrect visual relationship returns to directing. An aesthetic preference without functional harm is not a blocker.
+
+## Deterministic publish gate
+
+Run from the skill directory:
+
+```sh
+python tools/validate_project.py /project/project-manifest.json --stage draft
+python tools/validate_project.py /project/project-manifest.json --stage publish --json
+```
+
+`draft` is the default and preserves provisional manifests and preview rendering. A draft pass is not release approval. `publish` requires a populated frozen board, as-built scene/state metadata, accepted/verified used assets, resolved rights/provenance, and the receipt below. The validator's docstring describes the base manifest; add `storyboard.preview.path`, `masterFile`, and `reviewReceipt`:
+
+```json
+{
+  "storyboard": {"preview": {"path": "frozen/board.html"}},
+  "masterFile": "output/master.mp4",
+  "reviewReceipt": "reviews/release.json"
+}
+```
+
+These are additions to the complete manifest, not a standalone valid manifest. The receipt follows `schemas/review-receipt.schema.json`:
+
+```json
+{
+  "producerContext": "director-and-implementation-session",
+  "board": {"file": "frozen/board.html", "sha256": "<64 lowercase hex characters>"},
+  "master": {"file": "output/master.mp4", "sha256": "<64 lowercase hex characters>"},
+  "reviews": {
+    "design": {"file": "reviews/design.json", "sha256": "<64 lowercase hex characters>"},
+    "editorial": {"file": "reviews/editorial.json", "sha256": "<64 lowercase hex characters>"},
+    "technical": {"file": "reviews/technical.json", "sha256": "<64 lowercase hex characters>"}
+  }
+}
+```
+
+**Every file path is relative to the project manifest directory, including paths inside the receipt and review references—not relative to the receipt directory.** Use a self-contained frozen HTML or a bundled board archive when linked files carry defining content. The validator hashes the listed file bytes only; it does not recursively collect HTML dependencies.
+
+Design and final editorial files use `editorial-qa-report.schema.json`; technical uses `technical-qa-report.schema.json`. For publish, each report additionally requires `reviewContext`, `boardSha256`, and `blockers: []`. Final editorial and technical also require `masterSha256`. Design verdict is `overallStatus: "approve"`; final editorial is `"publish_candidate"`; technical is `"pass"`. Design and editorial require `critic`, `independent: true`, a `reviewContext` different from `producerContext`, and affirmative checks for every board scene. Technical checks must pass or explicitly be not applicable with evidence. Report hashes in the receipt bind the actual review files; report artifact hashes must match the receipt and actual frozen board/master. Missing reviews, negative scene verdicts/checks, blockers, or changed bytes fail.
+
+Design/editorial `renderRefs` must identify at least one existing local review artifact or HTTP(S) locator. Local paths resolve from the manifest directory; remote locators are not fetched by the validator. A verdict without these evidence locations is incomplete.
+
+Keep the existing board `freezeEvidence` as an index of the design review, not a substitute for it. Obtain the review before recording its digest. If board content changes, independently review the new board and resulting master; if only the master changes, refresh final reviews without repeating an unchanged design review. Never rewrite a digest to manufacture approval. Hash equality establishes identity, not quality, reviewer authenticity, or actual independence; independent artifact inspection remains mandatory.
+
+Used assets are the union of board/state/implementation `assetIds` and ledger entries with nonempty `sceneIds`. Unused candidates can retain unresolved rights. Used assets must be accepted/verified, have resolved `rightsStatus`, a `sourceUri` (HTTP(S) locator or existing local source/creation record), and `rightsEvidence`; verified rights also require `license`. Rights text is a traceable research record, not machine legal clearance.
+
+For `representationType: "evidence"`, require `sourceUri` and `claimIds`. Include the existing claim-set shape as manifest `claimSet`; each referenced claim needs verified claim text and `sourceRefs` resolving to source records with an HTTP(S) `url` or existing local file. The validator checks linkage/local existence, not remote retrieval or factual truth. Generated/reconstructed assets cannot claim `evidence`; honest reconstructions remain valid as `reconstruction`, and sourced/first-party documentary evidence and supported programmatic charts remain valid.
+
+## Compact conformance handoff
+
+- Optional storyboard scene `shotScore` records `composition`, `objectAction`, `camera`, `attention`, `rhythm`, `sound`, and `exit`. It hands staging to the implementer; locked camera and deliberate silence are valid values.
+- Optional `relationshipInvariants` records only defining promises as `{id, observable, proofRef}`. The critic consumes `proofRef` (frame, boundary clip, or timecode location), comparing the observable against the frozen promise. These fields do not assert that matching IDs prove visible continuity.
+- After final alignment, optional frame-spec microbeat `semanticTiming` carries `phrase`, `orientationStartSec`, `triggerSec`, `actionCompleteSec`, `readableStartSec`, `readableEndSec`, `transitionStartSec`, and `transitionEndSec`. Copy the same microbeats into validator manifest `scenes` for checking; all times are scene-local seconds. Orientation ≤ trigger ≤ action completion ≤ transition end; readable start < readable end ≤ transition end; transition start ≤ transition end; all times stay inside the scene. Readability may overlap action and transition: do not wait for every easing curve to finish before counting actual reading time. The trigger is the intended visual semantic event, not necessarily the first spoken word; justify anticipation/J/L-cuts during review. No fixed hold length is imposed.
+- Frame-spec/manifest scene `sfxEvents` may record `disposition: implemented|replaced|omitted`; replacements/omissions require `decisionReason`. Retain the planned cue in the frozen board, record the as-built choice separately, and review intentional silence or replacement rather than silently dropping sound.
+
+The validator checks timing ranges/order and cue-decision completeness only. It cannot infer actual readability, a perceptible relationship, factual honesty, or audible sound from fields. Review boundary clips, clean and captioned compositions at viewing size, and the mastered sound/VO together.
+
 
 ## Safe parallelism
 
@@ -96,10 +154,10 @@ Changes limited to easing, interpolation, micro-timing, compositing, performance
 A run is complete when:
 
 - requested approval gates have been satisfied;
-- factual/rights blockers are resolved or explicitly surfaced;
-- implementation matches frozen direction;
-- technical QA passes;
-- editorial review has a valid verdict;
+- factual/rights blockers are resolved for publication (otherwise deliver only a clearly labeled review draft);
+- implementation matches frozen direction, with reviewed as-built deviations recorded separately;
+- technical QA passes on the actual master;
+- independent editorial review approves that same master, or the output remains `needs_review`;
 - requested render/output exists.
 
 Do not continue polishing merely because another effect or variant is possible.

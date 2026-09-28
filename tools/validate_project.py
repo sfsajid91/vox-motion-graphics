@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate deterministic v0.8 motion-project contracts.
+"""Validate deterministic v0.9.0 motion-project contracts.
 
 The validator deliberately does not score aesthetics. It checks one compact JSON
 manifest that joins timing, asset, storyboard, and implementation metadata so
@@ -65,11 +65,46 @@ Paths are resolved relative to the manifest. Alpha inspection is dependency-free
 and currently supports PNG. A positive tail after narration/captions is accepted
 only when an explicit reviewed finalHold covers it. There are no built-in
 aesthetic, stillness, safe-zone, or duration-preference thresholds.
+
+Draft is the default stage and never implies publication approval. Publish adds:
+  manifest.storyboard.preview.path = frozen board file
+  manifest.masterFile = mastered output file
+  manifest.reviewReceipt = receipt JSON file
+Receipt: {"producerContext": "...", "board": {"file": "...", "sha256": "..."},
+          "master": {"file": "...", "sha256": "..."},
+          "reviews": {"design": {"file": "...", "sha256": "..."},
+                      "editorial": {"file": "...", "sha256": "..."},
+                      "technical": {"file": "...", "sha256": "..."}}}
+All paths, including receipt paths, are relative to the project manifest.
+Reviews use editorial/technical QA report fields plus reviewContext, boardSha256,
+blockers (empty for approval), and masterSha256 for final reviews. Design uses
+overallStatus=approve; final editorial uses publish_candidate; technical uses
+pass. Independent design/editorial reviewContext must differ from producerContext.
+The actual review files and board/master bytes are hashed; hashes identify
+revisions, not quality or reviewer honesty. Keep the board snapshot self-contained
+(or a bundled archive) so its digest includes its defining content.
+
+Evidence assets require sourceUri and claimIds resolving through manifest.claimSet
+(the existing claim-set shape) to verified claims with retrievable source URLs or
+local files. Generated/reconstructed assets cannot claim representationType=evidence.
+Publish checks used assets from board/state/implementation assetIds and sceneIds;
+resolved rights also require sourceUri and rightsEvidence, including creation
+records for self-created work. Unused candidates need not have resolved rights.
+
+Optional scenes[].microbeats[].semanticTiming uses scene-local seconds:
+phrase, orientationStartSec <= triggerSec <= actionCompleteSec <= readableStartSec
+< readableEndSec <= transitionEndSec, with transitionStartSec <= transitionEndSec.
+Transition overlap is allowed; all times must fit the scene. Optional sfxEvents
+disposition is implemented/replaced/omitted; replacement/omission needs decisionReason.
+Storyboard relationshipInvariants contain id, observable, proofRef; these index
+review evidence, not a machine assertion that a relationship is visible.
 """
 
 from __future__ import annotations
 
 import argparse
+import hashlib
+import math
 import json
 import struct
 import sys
@@ -94,7 +129,7 @@ class Finding:
 
 
 def _is_number(value: Any) -> bool:
-    return isinstance(value, (int, float)) and not isinstance(value, bool)
+    return isinstance(value, (int, float)) and not isinstance(value, bool) and math.isfinite(value)
 
 
 def _nonempty_string(value: Any) -> bool:
@@ -201,6 +236,30 @@ def _validate_timing(manifest: dict[str, Any], findings: list[Finding]) -> None:
                 path,
                 f"scene {scene_id!r} ends at {end:.3f}s after composition end {duration:.3f}s",
             )
+        for index, beat in enumerate(_list(scene.get("microbeats"))):
+            timing = _object(_object(beat).get("semanticTiming"))
+            if "semanticTiming" not in _object(beat):
+                continue
+            timing_path = f"{path}.microbeats[{index}].semanticTiming"
+            fields = ("orientationStartSec", "triggerSec", "actionCompleteSec",
+                      "readableStartSec", "readableEndSec", "transitionEndSec")
+            values = [timing.get(field) for field in fields]
+            transition_start = timing.get("transitionStartSec")
+            if (not _nonempty_string(timing.get("phrase"))
+                    or any(not _is_number(value) or not 0 <= value <= scene_duration
+                           for value in [*values, transition_start])):
+                _add(findings, "INVALID_SEMANTIC_TIMING", timing_path, "requires a phrase and scene-local times within scene bounds")
+            elif (not values[0] <= values[1] <= values[2] <= values[-1]
+                  or not values[3] < values[4] <= values[-1]
+                  or transition_start > values[-1]):
+                _add(findings, "INVALID_SEMANTIC_ORDER", timing_path, "orientation, trigger, and completion must be ordered; readable and transition windows must end within the event")
+        for index, cue in enumerate(_list(scene.get("sfxEvents"))):
+            cue = _object(cue)
+            if "disposition" not in cue:
+                continue
+            if (cue["disposition"] not in ("implemented", "replaced", "omitted")
+                    or (cue["disposition"] != "implemented" and not _nonempty_string(cue.get("decisionReason")))):
+                _add(findings, "INVALID_CUE_DISPOSITION", f"{path}.sfxEvents[{index}]", "replacement or omission requires a decisionReason")
     if scenes and latest_scene_end < duration - tolerance:
         _add(
             findings,
@@ -328,6 +387,27 @@ def _validate_assets(
                 f"{path}.rightsStatus",
                 f"must be one of {sorted(RIGHTS_STATUSES)}",
             )
+        if asset.get("representationType") == "evidence":
+            if origin in {"generated", "reconstructed"}:
+                _add(findings, "COUNTERFEIT_EVIDENCE", path, "generated/reconstructed material must use an honest non-evidence representation")
+            claim_set = _object(manifest.get("claimSet"))
+            claims = {item.get("id"): item for item in _list(claim_set.get("claims"))
+                      if isinstance(item, dict) and _nonempty_string(item.get("id"))}
+            sources = {item.get("id"): item for item in _list(claim_set.get("sources"))
+                       if isinstance(item, dict) and _nonempty_string(item.get("id"))}
+            claim_ids = asset.get("claimIds")
+            if (not _source_exists(asset.get("sourceUri"), manifest_dir) or not isinstance(claim_ids, list)
+                    or not claim_ids or any(not _nonempty_string(item) for item in claim_ids)):
+                _add(findings, "INCOMPLETE_EVIDENCE", path, "evidence needs sourceUri and supported claimIds")
+            else:
+                for claim_id in claim_ids:
+                    claim = claims.get(claim_id, {})
+                    refs = _list(claim.get("sourceRefs"))
+                    if (claim.get("status") != "verified" or not _nonempty_string(claim.get("claim"))
+                            or not refs or any(not _nonempty_string(ref) or ref not in sources
+                                              or not _source_exists(sources[ref].get("url"), manifest_dir)
+                                              for ref in refs)):
+                        _add(findings, "UNSUPPORTED_EVIDENCE_CLAIM", path, f"claim {claim_id!r} needs verified text and retrievable sourceRefs")
         if editorial == "accepted":
             if technical != "verified":
                 _add(
@@ -418,6 +498,22 @@ def _validate_storyboard(
         if isinstance(item, dict) and _nonempty_string(item.get("id"))
     }
     storyboard_state_ids: dict[str, list[str]] = {}
+    for scene_id, scene in storyboard_index.items():
+        path = f"storyboard.scenes[{scene_id}]"
+        if "relationshipInvariants" in scene:
+            invariants = scene["relationshipInvariants"]
+            if not isinstance(invariants, list):
+                _add(findings, "INVALID_RELATIONSHIP_INVARIANTS", path, "relationshipInvariants must be an array")
+            else:
+                indexed = _unique_ids(invariants, f"{path}.relationshipInvariants", findings)
+                for invariant in indexed.values():
+                    if any(not _nonempty_string(invariant.get(field)) for field in ("observable", "proofRef")):
+                        _add(findings, "INCOMPLETE_RELATIONSHIP_INVARIANT", path, "each defining promise needs observable and proofRef")
+        if "shotScore" in scene:
+            score = _object(scene["shotScore"])
+            if any(not _nonempty_string(score.get(field)) for field in
+                   ("composition", "objectAction", "camera", "attention", "rhythm", "sound", "exit")):
+                _add(findings, "INCOMPLETE_SHOT_SCORE", path, "shot score must resolve composition, action, camera, attention, rhythm, sound, and exit")
 
     if status in {"ready_for_approval", "frozen"}:
         evidence_field = "freezeEvidence" if status == "frozen" else "reviewEvidence"
@@ -616,14 +712,145 @@ def _validate_storyboard(
                 "state order differs from the frozen storyboard",
             )
 
+def _source_exists(value: Any, base: Path) -> bool:
+    if not _nonempty_string(value):
+        return False
+    # Network retrieval and source authority remain research/editorial review work.
+    from urllib.parse import urlparse
+    try:
+        parsed = urlparse(value)
+        return (parsed.scheme in {"http", "https"} and bool(parsed.netloc)) or (base / value).is_file()
+    except (ValueError, OSError):
+        return False
 
-def validate_manifest(manifest: Any, manifest_path: Path) -> list[Finding]:
+
+def _bound_file(value: Any, base: Path, path: str, findings: list[Finding]) -> Path | None:
+    artifact = _object(value)
+    filename, digest = artifact.get("file"), artifact.get("sha256")
+    if (not _nonempty_string(filename) or not isinstance(digest, str) or len(digest) != 64
+            or any(char not in "0123456789abcdef" for char in digest)):
+        _add(findings, "INVALID_ARTIFACT_BINDING", path, "requires file and lowercase SHA-256 digest")
+        return None
+    resolved = (base / filename).resolve()
+    try:
+        with resolved.open("rb") as handle:
+            actual = hashlib.file_digest(handle, "sha256").hexdigest()
+    except OSError as error:
+        _add(findings, "ARTIFACT_READ_ERROR", path, str(error))
+        return None
+    if actual != digest:
+        _add(findings, "STALE_ARTIFACT", path, "file bytes differ from reviewed SHA-256")
+        return None
+    return resolved
+
+
+def _validate_publish(manifest: dict[str, Any], base: Path, assets: dict[str, dict[str, Any]],
+                      findings: list[Finding]) -> None:
+    board = _object(manifest.get("storyboard"))
+    if board.get("status") != "frozen" or not _list(board.get("scenes")):
+        _add(findings, "PUBLISH_REQUIRES_FREEZE", "storyboard", "publish requires a populated frozen storyboard")
+    if not _list(_object(manifest.get("implementation")).get("scenes")):
+        _add(findings, "PUBLISH_REQUIRES_IMPLEMENTATION", "implementation", "publish requires as-built scene metadata")
+    used = set()
+    for section in (board, _object(manifest.get("implementation"))):
+        for scene in _list(section.get("scenes")):
+            scene = _object(scene)
+            for item in [scene, *[_object(state) for state in _list(scene.get("states"))]]:
+                used.update(value for value in _list(item.get("assetIds")) if _nonempty_string(value))
+    used.update(asset_id for asset_id, asset in assets.items() if _list(asset.get("sceneIds")))
+    for asset_id in sorted(used):
+        asset = assets.get(asset_id)
+        if asset is None:
+            _add(findings, "UNKNOWN_ASSET_REFERENCE", "assets", f"used asset {asset_id!r} is not declared")
+            continue
+        if asset.get("technicalStatus") != "verified" or asset.get("editorialStatus") != "accepted":
+            _add(findings, "PUBLISH_ASSET_NOT_READY", f"assets.{asset_id}", "used assets must be verified and accepted")
+        if asset.get("rightsStatus") not in {"verified", "self_created"}:
+            _add(findings, "PUBLISH_RIGHTS_UNRESOLVED", f"assets.{asset_id}", "used asset rights must be resolved")
+        if (not _source_exists(asset.get("sourceUri"), base)
+                or not _nonempty_string(asset.get("rightsEvidence"))):
+            _add(findings, "PUBLISH_PROVENANCE_MISSING", f"assets.{asset_id}", "used assets require sourceUri and rightsEvidence (creation records for self-created work)")
+    receipt_ref = manifest.get("reviewReceipt")
+    if not _nonempty_string(receipt_ref):
+        _add(findings, "PUBLISH_RECEIPT_REQUIRED", "reviewReceipt", "publish requires an artifact-bound review receipt")
+        return
+    try:
+        receipt = json.loads((base / receipt_ref).read_text(encoding="utf-8"))
+    except (OSError, ValueError) as error:
+        _add(findings, "RECEIPT_READ_ERROR", "reviewReceipt", str(error))
+        return
+    receipt = _object(receipt)
+    producer = receipt.get("producerContext")
+    if not _nonempty_string(producer):
+        _add(findings, "MISSING_PRODUCER_CONTEXT", "reviewReceipt.producerContext", "requires the generating/implementation context identity")
+    for name, expected in (("board", _object(board.get("preview")).get("path")),
+                           ("master", manifest.get("masterFile"))):
+        artifact = _object(receipt.get(name))
+        _bound_file(artifact, base, f"reviewReceipt.{name}", findings)
+        if (not _nonempty_string(expected) or not _nonempty_string(artifact.get("file"))
+                or (base / expected).resolve() != (base / artifact["file"]).resolve()):
+            _add(findings, "ARTIFACT_PATH_MISMATCH", f"reviewReceipt.{name}", "receipt must bind the manifest's frozen preview/master file")
+    for name, verdict in (("design", "approve"), ("editorial", "publish_candidate"), ("technical", "pass")):
+        path = f"reviewReceipt.reviews.{name}"
+        review_path = _bound_file(_object(receipt.get("reviews")).get(name), base, path, findings)
+        if review_path is None:
+            continue
+        try:
+            review = _object(json.loads(review_path.read_text(encoding="utf-8")))
+        except (OSError, ValueError) as error:
+            _add(findings, "REVIEW_READ_ERROR", path, str(error))
+            continue
+        if review.get("overallStatus") != verdict or review.get("blockers") != []:
+            _add(findings, "REVIEW_NOT_APPROVED", path, "requires the stage's affirmative verdict and empty blockers")
+        context = review.get("reviewContext")
+        if not _nonempty_string(context):
+            _add(findings, "MISSING_REVIEW_CONTEXT", path, "requires reviewer context identity")
+        if name != "technical" and (review.get("independent") is not True or context == producer
+                                    or not _nonempty_string(review.get("critic"))):
+            _add(findings, "REVIEW_NOT_INDEPENDENT", path, "design/editorial approval requires an identified independent critic context")
+        for artifact in (("board",) if name == "design" else ("board", "master")):
+            digest = _object(receipt.get(artifact)).get("sha256")
+            if not digest or review.get(f"{artifact}Sha256") != digest:
+                _add(findings, "REVIEW_ARTIFACT_MISMATCH", path, f"review does not cover current {artifact}")
+        if name == "technical":
+            checks = _list(review.get("checks"))
+            if (not _nonempty_string(review.get("runId")) or not checks
+                    or any(_object(check).get("status") not in ("pass", "not_applicable")
+                           or not _nonempty_string(_object(check).get("id"))
+                           or not _nonempty_string(_object(check).get("evidence")) for check in checks)):
+                _add(findings, "TECHNICAL_CHECKS_UNRESOLVED", path, "technical checks need passing results and evidence")
+        else:
+            render_refs = review.get("renderRefs")
+            if (not isinstance(render_refs, list) or not render_refs
+                    or any(not _source_exists(ref, base) for ref in render_refs)):
+                _add(findings, "REVIEW_EVIDENCE_MISSING", path, "design/editorial review requires existing local renderRefs or source URLs")
+            scene_reviews = _list(review.get("sceneFindings"))
+            required_scenes = {scene.get("id") for scene in _list(board.get("scenes"))
+                               if isinstance(scene, dict) and _nonempty_string(scene.get("id"))}
+            reviewed_scenes = {item.get("sceneId") for item in scene_reviews
+                               if isinstance(item, dict) and _nonempty_string(item.get("sceneId"))}
+            checks = ("thesisClear", "hierarchyClear", "stateChangeMeaningful",
+                      "pacingResolved", "continuityResolved", "assetFit")
+            if (not scene_reviews or required_scenes != reviewed_scenes
+                    or len(scene_reviews) != len(reviewed_scenes)
+                    or any(_object(item).get("status") != "approve"
+                           or any(_object(_object(item).get("checks")).get(key) is not True for key in checks)
+                           for item in scene_reviews)):
+                _add(findings, "EDITORIAL_CHECKS_UNRESOLVED", path, "every board scene needs affirmative editorial checks")
+
+
+
+def validate_manifest(manifest: Any, manifest_path: Path, stage: str = "draft") -> list[Finding]:
     findings: list[Finding] = []
     if not isinstance(manifest, dict):
         return [Finding("INVALID_MANIFEST", "$", "top-level JSON value must be an object")]
+    if stage not in ("draft", "publish"):
+        return [Finding("INVALID_STAGE", "stage", "must be draft or publish")]
     _validate_timing(manifest, findings)
     asset_index = _validate_assets(manifest, manifest_path.parent, findings)
     _validate_storyboard(manifest, asset_index, findings)
+    if stage == "publish":
+        _validate_publish(manifest, manifest_path.parent, asset_index, findings)
     return findings
 
 
@@ -644,6 +871,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("manifest", type=Path, help="project-manifest JSON path")
     parser.add_argument("--json", action="store_true", help="emit machine-readable findings")
+    parser.add_argument("--stage", choices=("draft", "publish"), default="draft", help="draft checks or artifact-bound publish gate (default: draft)")
     return parser
 
 
@@ -659,7 +887,7 @@ def main(argv: list[str] | None = None) -> int:
             print(f"FAIL: {finding.code}: {finding.message}", file=sys.stderr)
         return 1
 
-    findings = validate_manifest(manifest, args.manifest.resolve())
+    findings = validate_manifest(manifest, args.manifest.resolve(), args.stage)
     if args.json:
         print(json.dumps({"ok": not findings, "findings": [asdict(item) for item in findings]}, indent=2))
     else:

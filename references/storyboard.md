@@ -11,7 +11,7 @@ Use ordinary HTML, CSS, and minimal JavaScript to resolve the decisions that are
 - scene structure and meaningful visual states;
 - motion and transition intent;
 - pacing and intentional holds;
-- text density and readability;
+- caption mode, realistic text/disclosure loads, and sound intent;
 - continuity between neighboring scenes.
 
 The storyboard is not a second renderer. It should communicate the intended experience without reproducing Remotion's frame math, media pipeline, effects stack, or component architecture.
@@ -20,9 +20,9 @@ Treat the browser preview itself as the creative source of truth. JSON/Markdown 
 
 ## Place in the Workflow
 
-`research/script -> narrative beats -> visual concepts -> HTML storyboard -> editorial critique -> refinement -> freeze -> Remotion implementation -> technical QA -> editorial render QA`
+`brief/evidence -> concepts and shot scores -> storyboard with caption/sound intent -> independent design review -> freeze -> final VO/alignment -> timing conformance -> implementation -> mastered draft -> technical and independent editorial review -> delivery`
 
-Do not begin detailed scene implementation while important composition, asset, or mechanism decisions remain unresolved in the storyboard.
+Do not begin detailed scene implementation while important composition, asset, or mechanism decisions remain unresolved in the storyboard. Cheap draft previews remain permitted to answer those questions; a draft render is not publication approval.
 
 ## Storyboard Architecture (Editorial Control Room standard)
 
@@ -89,24 +89,22 @@ These modules are content decisions, not shell decisions. They may vary by story
 
 For each scene, make the following visible or inspectable:
 
-- semantic job: what the viewer must understand;
-- visual thesis: what should read with the sound muted;
-- focal subject for every meaningful state;
-- entry state, primary state change, payoff state, and exit/handoff;
-- primary mechanism and any supporting motion;
-- scene construction family;
-- asset roles and current asset status;
-- art-directed text, if any;
-- narration anchors that cause visible changes;
-- transition intent into and out of the scene;
+- semantic job and compact concept decision: inference → before → operation → after → invariant → factual limit;
+- focal subject and meaningful entry/change/payoff/exit states;
+- joint shot score from [motion-patterns.md](motion-patterns.md): composition, object action, camera/revealed information, attention, rhythm, sound, exit;
+- selected construction family and, for unresolved explanatory beats that only reveal nouns, the materially different alternative considered;
+- asset roles, acceptance evidence, and current status;
+- caption mode, realistic clean/captioned previews, and editorial text/disclosure roles;
+- provisional semantic anchors and actual readable payoff intent;
+- defining transition/relationship promises with observable invariants and proof locations;
 - known uncertainty or representation risk.
 
 The storyboard should answer these questions without reading implementation code:
 
 1. Where does the eye go first?
 2. What changes, and why does that change matter?
-3. Does the visual structure respond when the narration changes idea?
-4. Is the payoff clearer and usually simpler than the buildup?
+3. Does the visual respond to the assigned contribution, including justified stillness?
+4. Is essential payoff content readable after it settles, with captions and competing action?
 5. Can the next scene inherit attention, direction, object, or scale?
 6. Are the selected assets capable of the intended action?
 
@@ -151,7 +149,7 @@ If the viewer could reasonably mistake a fabricated document for a historical so
 
 ## Information Budget
 
-Source notes may be rich; the frame should not be. Every visible specification, telemetry label, date, badge, or caption must either orient the viewer, prove the beat, or deliver the payoff. Move supporting provenance and unused specifications out of the visual canvas. A simple narration beat should not become a dense engineering dashboard merely because the research found many facts.
+Source notes may be rich; the frame should not be. Assign visible text a role: orientation, evidence, relationship label, disclosure, or payoff; accessibility captions remain a distinct function. Preview realistic long caption loads before freeze, including necessary disclosures, at intended viewing size. Repair composition before shrinking readable text. Move unused specifications and supporting provenance out of the canvas, but retain visible disclosures needed for honest representation. Dense technical displays and bold caption-led scenes remain valid when they serve the story.
 
 ## Asset Status in Storyboards
 
@@ -173,18 +171,18 @@ Storyboard timing is for editorial judgment. Use semantic anchors and approximat
 
 Preview:
 
-- when the primary state change occurs;
-- whether a hold has a reading or dramatic purpose;
-- whether narration changes while the image remains structurally unchanged;
-- whether a transition begins before the current payoff resolves;
-- whether the scene appears to end before its narration or captions;
+- orientation, semantic trigger, action completion, readable payoff, and transition interval;
+- whether the held image still performs its assigned job as narration develops;
+- whether essential payoff content is readable before the next competing action;
+- whether speech/captions intentionally bridge a cut or instead create an unexplained mismatch;
+- whether planned sound or silence supports the attention path;
 - whether an unexplained dead tail follows the final meaningful event.
 
-Exact word timestamps, spring parameters, frame rounding, audio trimming, and render-safe media handling belong to the Remotion implementation stage.
+Intentional anticipation and J/L cuts are valid; scene endpoints need not coincide with sentence boundaries. After final VO, conform these semantic windows before frame-accurate implementation. Exact alignment, frame rounding, audio trimming, and render-safe media handling belong to that conformance/implementation handoff, not provisional board estimates.
 
 ## Critique and Refinement
 
-Run editorial critique on the storyboard before freeze. Review at the intended aspect ratio and at a realistic small viewing size.
+Run independent editorial critique before freeze. Have the critic observe subjects, changes, invariants, and inferred relationships before receiving the director's thesis; then compare against the assigned visual contribution. Review clean and realistically captioned versions at the intended aspect ratio and small viewing size.
 
 Resolve, in this order:
 
@@ -204,16 +202,16 @@ Use [critique.md](critique.md) for verdict ownership and [anti-patterns.md](anti
 
 An independent editorial critic may mark a storyboard `ready_for_approval` when:
 
-- every scene has a readable thesis and focal hierarchy;
-- narration changes are matched by appropriate visual state changes or justified holds;
-- process/system beats visualize relationships rather than defaulting to cards or archival stills;
-- identity/evidence-critical assets are accepted and correctly represented;
-- transitions and final holds are intentional;
+- every scene performs its assigned contribution with readable hierarchy;
+- explanatory beats show the required relationship; identification, chronology, evidence, atmosphere, and purposeful holds are judged by their own jobs;
+- identity/evidence-critical assets are accepted for their actual crop/reveal and honestly represented;
+- captions and disclosures coexist legibly in realistic preview states;
+- shot score, transition promises, sound intent, and readable payoff windows are resolved;
 - unresolved issues are implementation details rather than design questions.
 
-If the user asked to approve the preview, stop at `ready_for_approval` and show the preview plus concise review notes. Freeze only after that approval. If the user explicitly delegated approval, an independent critic may freeze automatically.
+If the user asked to approve the preview, stop at `ready_for_approval` and show the preview plus concise review notes. Freeze only after that approval. Otherwise, continue autonomously through independent review; do not invent a human gate for ordinary directing choices.
 
-Record the freeze identifier or timestamp and the accepted scene states only when another agent/tool needs a machine-readable handoff. The generating agent may declare its own work ready for review, but may not self-award approval.
+Preserve the approved board snapshot separately from as-built notes. Keep a compact receipt linking its revision/digest, reviewer/context, verdict, blockers, and evidence locations. Machine-readable indexing is optional unless a tool/handoff needs it. The generating agent may request review but may not self-award approval.
 
 ## Handoff to Remotion
 
@@ -252,4 +250,4 @@ Do not let implementation convenience silently redesign a frozen scene.
 
 ## Storyboard-to-Render Check
 
-At implementation review, compare representative rendered frames with the frozen storyboard. Differences are acceptable when they improve fidelity or technical safety without changing the design intent. Record material deviations and route design changes back through storyboard critique.
+Compare actual output with the frozen revision, not a board rewritten to match implementation. Verify defining relationships through their observable invariants and proof locations; object/state presence alone is insufficient. Use boundary/action clips for transitions and sound, deepest-crop/full-reveal views for assets, and actual readable payoff windows with speech. Record reviewed deviations and route defining changes back through storyboard critique. Final editorial review inspects the mastered draft with captions, disclosures, and mixed sound.

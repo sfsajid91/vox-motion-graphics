@@ -22,6 +22,8 @@ A downstream element may not become more specific than its supporting claim.
 
 Shortening copy is allowed only when truth conditions remain the same.
 
+Choose representation before staging. Autonomy permits creative choices, not stronger factual claims: do not turn an unspecified journey into a known map route, a generic refill into documented device mechanics, or an emotional beat into an asserted historical gesture. Use neutral event order or clearly illustrative/reconstructed staging when geometry, materials, wear, or actions are unsupported. At concept selection, separate the supported inference from invented staging and ensure the visible treatment/disclosure preserves that distinction.
+
 ## Representation types
 
 - `literal`: a real identifiable subject or event;

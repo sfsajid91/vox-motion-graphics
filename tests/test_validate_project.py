@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import importlib.util
 import io
+import hashlib
 import json
 import struct
 import sys
@@ -274,6 +275,202 @@ class ValidateProjectTests(unittest.TestCase):
         self.manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
         with redirect_stdout(io.StringIO()):
             self.assertEqual(VALIDATOR.main([str(self.manifest_path), "--json"]), 1)
+
+    def release(self):
+        manifest = base_manifest()
+        (self.root / "board.html").write_text("<h1>Frozen transformation</h1>")
+        (self.root / "master.mp4").write_bytes(b"master fixture bytes")
+        (self.root / "creation.txt").write_text("Original illustration; created for this production")
+        manifest["storyboard"]["preview"] = {"path": "board.html", "mode": "static"}
+        manifest["masterFile"] = "master.mp4"
+        manifest["reviewReceipt"] = "release.json"
+        manifest["assets"][0].update(sourceUri="creation.txt", rightsEvidence="creation.txt")
+        receipt = {
+            "producerContext": "director-session",
+            "board": self.binding("board.html"),
+            "master": self.binding("master.mp4"),
+            "reviews": {},
+        }
+        for name, verdict in (("design", "approve"), ("editorial", "publish_candidate"), ("technical", "pass")):
+            report = {
+                "reviewContext": f"{name}-session", "overallStatus": verdict, "blockers": [],
+                "boardSha256": receipt["board"]["sha256"],
+            }
+            if name != "design":
+                report["masterSha256"] = receipt["master"]["sha256"]
+            if name == "technical":
+                report.update(runId="qa-1", checks=[{"id": "render", "status": "pass", "evidence": "decoded frames"}])
+            else:
+                report.update(critic="independent-critic", independent=True, renderRefs=["board.html"],
+                              sceneFindings=[{"sceneId": "S1", "status": "approve", "findings": [],
+                                              "checks": {key: True for key in (
+                                                  "thesisClear", "hierarchyClear", "stateChangeMeaningful",
+                                                  "pacingResolved", "continuityResolved", "assetFit")}}])
+            (self.root / f"{name}.json").write_text(json.dumps(report))
+            receipt["reviews"][name] = self.binding(f"{name}.json")
+        (self.root / "release.json").write_text(json.dumps(receipt))
+        return manifest
+
+    def binding(self, filename):
+        return {"file": filename, "sha256": hashlib.sha256((self.root / filename).read_bytes()).hexdigest()}
+
+    def change_review(self, name, change):
+        path = self.root / f"{name}.json"
+        review = json.loads(path.read_text())
+        change(review)
+        path.write_text(json.dumps(review))
+        receipt_path = self.root / "release.json"
+        receipt = json.loads(receipt_path.read_text())
+        receipt["reviews"][name] = self.binding(path.name)
+        receipt_path.write_text(json.dumps(receipt))
+
+    def publish(self, manifest):
+        return VALIDATOR.validate_manifest(manifest, self.manifest_path, "publish")
+
+    def test_draft_is_not_publish_and_valid_release_passes(self):
+        draft = base_manifest()
+        draft["storyboard"]["status"] = "draft"
+        self.assertEqual(self.validate(draft), [])
+        self.assertTrue({"PUBLISH_REQUIRES_FREEZE", "PUBLISH_RECEIPT_REQUIRED"} <= codes(self.publish(draft)))
+        self.assertEqual(self.publish(self.release()), [])
+        self.assertIn("INVALID_STAGE", codes(VALIDATOR.validate_manifest(draft, self.manifest_path, "typo")))
+
+    def test_release_rejects_changed_artifact_or_missing_file(self):
+        for filename in ("board.html", "master.mp4", "design.json", "editorial.json", "technical.json"):
+            with self.subTest(filename=filename):
+                manifest = self.release()
+                (self.root / filename).write_bytes(b"changed after review")
+                self.assertIn("STALE_ARTIFACT", codes(self.publish(manifest)))
+        manifest = self.release()
+        (self.root / "editorial.json").unlink()
+        self.assertIn("ARTIFACT_READ_ERROR", codes(self.publish(manifest)))
+
+    def test_release_rejects_negative_missing_or_self_review(self):
+        cases = [
+            ("editorial", lambda r: r.update(overallStatus="revise"), "REVIEW_NOT_APPROVED"),
+            ("technical", lambda r: r.update(blockers=["decode error"]), "REVIEW_NOT_APPROVED"),
+            ("design", lambda r: r.update(independent=False), "REVIEW_NOT_INDEPENDENT"),
+            ("editorial", lambda r: r.update(reviewContext="director-session"), "REVIEW_NOT_INDEPENDENT"),
+            ("editorial", lambda r: r.pop("reviewContext"), "MISSING_REVIEW_CONTEXT"),
+            ("editorial", lambda r: r.pop("renderRefs"), "REVIEW_EVIDENCE_MISSING"),
+            ("design", lambda r: r.update(renderRefs=["missing-frame.png"]), "REVIEW_EVIDENCE_MISSING"),
+            ("technical", lambda r: r.update(masterSha256="0" * 64), "REVIEW_ARTIFACT_MISMATCH"),
+            ("design", lambda r: r.update(boardSha256="0" * 64), "REVIEW_ARTIFACT_MISMATCH"),
+            ("editorial", lambda r: r["sceneFindings"][0].update(status="revise"), "EDITORIAL_CHECKS_UNRESOLVED"),
+            ("technical", lambda r: r["checks"][0].update(status="fail"), "TECHNICAL_CHECKS_UNRESOLVED"),
+        ]
+        for name, change, expected in cases:
+            with self.subTest(expected=expected, name=name):
+                manifest = self.release()
+                self.change_review(name, change)
+                self.assertIn(expected, codes(self.publish(manifest)))
+        for receipt in ({}, [], {"board": True}):
+            manifest = self.release()
+            (self.root / "release.json").write_text(json.dumps(receipt))
+            self.assertIn("INVALID_ARTIFACT_BINDING", codes(self.publish(manifest)))
+
+    def test_used_asset_release_rights_and_provenance(self):
+        for status in ("unresolved", "needs_review"):
+            manifest = self.release()
+            manifest["assets"][0]["rightsStatus"] = status
+            self.assertEqual(self.validate(manifest), [])
+            self.assertIn("PUBLISH_RIGHTS_UNRESOLVED", codes(self.publish(manifest)))
+        manifest = self.release()
+        manifest["assets"][0].pop("sourceUri")
+        self.assertIn("PUBLISH_PROVENANCE_MISSING", codes(self.publish(manifest)))
+        manifest = self.release()
+        manifest["implementation"]["scenes"][0]["assetIds"] = ["missing"]
+        self.assertIn("UNKNOWN_ASSET_REFERENCE", codes(self.publish(manifest)))
+        manifest = self.release()
+        manifest["assets"].append({"id": "unused", "origin": "sourced", "technicalStatus": "candidate",
+                                   "editorialStatus": "pending", "rightsStatus": "unresolved",
+                                   "representationType": "literal", "sceneIds": []})
+        self.assertEqual(self.publish(manifest), [])
+
+    def test_evidence_requires_honest_origin_and_supported_claim(self):
+        manifest = base_manifest()
+        asset = manifest["assets"][0]
+        asset.update(representationType="evidence", sourceUri="https://archive.example/item", claimIds=["claim"])
+        manifest["claimSet"] = {
+            "sources": [{"id": "source", "title": "Archive", "url": "https://archive.example/item"}],
+            "claims": [{"id": "claim", "claim": "The product existed", "status": "verified", "sourceRefs": ["source"]}],
+        }
+        for origin in ("generated", "reconstructed"):
+            asset["origin"] = origin
+            self.assertIn("COUNTERFEIT_EVIDENCE", codes(self.validate(manifest)))
+        for origin in ("sourced", "programmatic", "reused"):
+            asset["origin"] = origin
+            self.assertEqual(self.validate(manifest), [])
+        manifest["claimSet"]["claims"][0]["sourceRefs"] = ["missing"]
+        self.assertIn("UNSUPPORTED_EVIDENCE_CLAIM", codes(self.validate(manifest)))
+        asset.update(origin="reconstructed", representationType="reconstruction")
+        self.assertEqual(self.validate(manifest), [])
+        asset.update(representationType="evidence")
+        asset.pop("claimIds")
+        self.assertIn("INCOMPLETE_EVIDENCE", codes(self.validate(manifest)))
+
+    def test_semantic_windows_and_cue_disposition(self):
+        manifest = base_manifest()
+        timing = {"phrase": "the transformation resolves", "orientationStartSec": 0, "triggerSec": 2,
+                  "actionCompleteSec": 4, "readableStartSec": 4.2, "readableEndSec": 6,
+                  "transitionStartSec": 5.5, "transitionEndSec": 7}
+        manifest["scenes"][0]["microbeats"] = [{"semanticTiming": timing}]
+        manifest["scenes"][0]["sfxEvents"] = [{"disposition": "omitted", "decisionReason": "deliberate silence"}]
+        self.assertEqual(self.validate(manifest), [])
+        for field, value, code in (("actionCompleteSec", 8, "INVALID_SEMANTIC_ORDER"),
+                                   ("readableEndSec", 4.2, "INVALID_SEMANTIC_ORDER"),
+                                   ("transitionEndSec", 13, "INVALID_SEMANTIC_TIMING"),
+                                   ("triggerSec", float("nan"), "INVALID_SEMANTIC_TIMING")):
+            old = timing[field]
+            timing[field] = value
+            self.assertIn(code, codes(self.validate(manifest)))
+            timing[field] = old
+        manifest["scenes"][0]["sfxEvents"][0].pop("decisionReason")
+        self.assertIn("INVALID_CUE_DISPOSITION", codes(self.validate(manifest)))
+
+    def test_readability_can_overlap_action_and_transition(self):
+        manifest = base_manifest()
+        manifest["scenes"][0]["microbeats"] = [{"semanticTiming": {
+            "phrase": "the comparison remains readable while moving",
+            "orientationStartSec": 0, "triggerSec": 1, "actionCompleteSec": 5,
+            "readableStartSec": 3, "readableEndSec": 6,
+            "transitionStartSec": 5.5, "transitionEndSec": 7,
+        }}]
+        self.assertEqual(self.validate(manifest), [])
+
+    def test_cli_publish_is_explicit(self):
+        manifest = self.release()
+        self.manifest_path.write_text(json.dumps(manifest))
+        with redirect_stdout(io.StringIO()):
+            self.assertEqual(VALIDATOR.main([str(self.manifest_path), "--stage", "publish", "--json"]), 0)
+        manifest["assets"][0]["rightsStatus"] = "unresolved"
+        self.manifest_path.write_text(json.dumps(manifest))
+        with redirect_stdout(io.StringIO()):
+            self.assertEqual(VALIDATOR.main([str(self.manifest_path)]), 0)
+            self.assertEqual(VALIDATOR.main([str(self.manifest_path), "--stage", "publish"]), 1)
+
+    def test_defining_promises_need_observable_proof_and_complete_score(self):
+        manifest = base_manifest()
+        scene = manifest["storyboard"]["scenes"][0]
+        scene["relationshipInvariants"] = [{"id": "match", "observable": "carrier stays registered",
+                                           "proofRef": "boundary.mp4 at 2-3s"}]
+        scene["shotScore"] = {"composition": "carrier dominates", "objectAction": "carrier releases image",
+                              "camera": "locked", "attention": "image", "rhythm": "resolve and hold",
+                              "sound": "silence", "exit": "hard cut"}
+        self.assertEqual(self.validate(manifest), [])
+        scene["relationshipInvariants"][0].pop("proofRef")
+        scene["shotScore"].pop("camera")
+        self.assertTrue({"INCOMPLETE_RELATIONSHIP_INVARIANT", "INCOMPLETE_SHOT_SCORE"} <= codes(self.validate(manifest)))
+
+    def test_first_party_documentary_evidence_can_publish(self):
+        manifest = self.release()
+        asset = manifest["assets"][0]
+        asset.update(origin="reused", representationType="evidence", claimIds=["C1"])
+        manifest["claimSet"] = {
+            "sources": [{"id": "source", "title": "First-party record", "url": "creation.txt"}],
+            "claims": [{"id": "C1", "claim": "This object was photographed", "status": "verified", "sourceRefs": ["source"]}],
+        }
+        self.assertEqual(self.publish(manifest), [])
 
 
 if __name__ == "__main__":

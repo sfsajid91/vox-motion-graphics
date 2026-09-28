@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "v0.8 Narration and Frame Timing Specification",
+  "title": "v0.9.0 Narration and Frame Timing Specification",
   "type": "object",
   "required": ["fps", "alignmentSource", "compositionDurationSec", "scenes"],
   "properties": {
@@ -42,6 +42,22 @@
                 "offsetSec": {"type": "number", "minimum": 0},
                 "event": {"type": "string", "minLength": 1},
                 "narrationAnchor": {"type": "string"},
+                "semanticTiming": {
+                  "type": "object",
+                  "description": "Scene-local windows; validator checks ordering, independent review checks meaning and readability.",
+                  "required": ["phrase", "orientationStartSec", "triggerSec", "actionCompleteSec", "readableStartSec", "readableEndSec", "transitionStartSec", "transitionEndSec"],
+                  "properties": {
+                    "phrase": {"type": "string", "minLength": 1},
+                    "orientationStartSec": {"type": "number", "minimum": 0},
+                    "triggerSec": {"type": "number", "minimum": 0},
+                    "actionCompleteSec": {"type": "number", "minimum": 0},
+                    "readableStartSec": {"type": "number", "minimum": 0},
+                    "readableEndSec": {"type": "number", "minimum": 0},
+                    "transitionStartSec": {"type": "number", "minimum": 0},
+                    "transitionEndSec": {"type": "number", "minimum": 0}
+                  },
+                  "additionalProperties": false
+                },
                 "motionRole": {"enum": ["primary", "support", "camera", "hold", "transition", "audio"]},
                 "focalTarget": {"type": "string"},
                 "storyboardStateId": {"type": "string"}
@@ -58,9 +74,15 @@
                 "offsetSec": {"type": "number", "minimum": 0},
                 "visualEvent": {"type": "string", "minLength": 1},
                 "sfx": {"type": "string", "minLength": 1},
+                "disposition": {"enum": ["implemented", "replaced", "omitted"]},
+                "decisionReason": {"type": "string", "minLength": 1},
                 "syncPoint": {"enum": ["attack", "movement", "settle", "release", "transition"]}
               },
-              "additionalProperties": false
+              "additionalProperties": false,
+              "allOf": [{
+                "if": {"properties": {"disposition": {"enum": ["replaced", "omitted"]}}, "required": ["disposition"]},
+                "then": {"required": ["decisionReason"]}
+              }]
             }
           },
           "implementationNotes": {"type": "array", "items": {"type": "string"}}
