@@ -299,6 +299,21 @@ def main():
         "scopeFindings": [{"scopeType": "film", "scopeId": "film", "status": "approve", "finding": "argument resolves"}],
     }
     assert_valid("editorial-qa-report.schema.json", editorial)
+    for status in ("approve", "publish_candidate"):
+        approved = json.loads(json.dumps(editorial))
+        approved["overallStatus"] = status
+        assert_valid("editorial-qa-report.schema.json", approved)
+        approved.pop("scopeFindings")
+        assert_invalid("editorial-qa-report.schema.json", approved)
+        approved["scopeFindings"] = []
+        assert_invalid("editorial-qa-report.schema.json", approved)
+    for status in ("revise", "redesign", "needs_review"):
+        incomplete = json.loads(json.dumps(editorial))
+        incomplete["overallStatus"] = status
+        incomplete.pop("scopeFindings")
+        assert_valid("editorial-qa-report.schema.json", incomplete)
+        incomplete["scopeFindings"] = []
+        assert_valid("editorial-qa-report.schema.json", incomplete)
     self_approved = json.loads(json.dumps(editorial))
     self_approved["independent"] = False
     assert_invalid("editorial-qa-report.schema.json", self_approved)

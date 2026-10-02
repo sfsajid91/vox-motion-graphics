@@ -911,6 +911,9 @@ def _validate_publish(manifest: dict[str, Any], base: Path, assets: dict[str, di
     if not _object(board.get("direction")):
         _add(findings, "PUBLISH_REQUIRES_DIRECTION", "storyboard.direction",
              "v0.10 publish requires film, sequence, and vocabulary direction")
+    if not _list(_object(board.get("direction")).get("vocabulary")):
+        _add(findings, "PUBLISH_REQUIRES_VOCABULARY", "storyboard.direction.vocabulary",
+             "v0.10 publish requires a populated visual vocabulary contract")
     for index, scene in enumerate(_list(board.get("scenes"))):
         scene = _object(scene)
         job = scene.get("visualJob")

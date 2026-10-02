@@ -39,10 +39,11 @@
   "allOf": [{
     "if": {"properties": {"overallStatus": {"enum": ["approve", "publish_candidate"]}}, "required": ["overallStatus"]},
     "then": {
+      "required": ["scopeFindings"],
       "properties": {
         "independent": {"const": true}, "blockers": {"maxItems": 0},
         "sceneFindings": {"items": {"properties": {"status": {"const": "approve"}, "checks": {"properties": {"thesisClear": {"const": true}, "hierarchyClear": {"const": true}, "visualJobSatisfied": {"const": true}, "pacingResolved": {"const": true}, "continuityResolved": {"const": true}, "assetFit": {"const": true}}}}}},
-        "scopeFindings": {"items": {"properties": {"status": {"const": "approve"}}}}
+        "scopeFindings": {"minItems": 1, "items": {"properties": {"status": {"const": "approve"}}}}
       }
     }
   }]

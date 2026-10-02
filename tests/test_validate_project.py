@@ -454,6 +454,20 @@ class ValidateProjectTests(unittest.TestCase):
             with self.subTest(duration=duration):
                 self.assertEqual(self.publish(self.release(duration, chaptered)), [])
 
+    def test_publish_requires_populated_visual_vocabulary(self):
+        for present, vocabulary in ((False, None), (True, []), (True, None), (True, {})):
+            with self.subTest(present=present, vocabulary=vocabulary):
+                manifest = self.release()
+                direction = manifest["storyboard"]["direction"]
+                if present:
+                    direction["vocabulary"] = vocabulary
+                else:
+                    direction.pop("vocabulary")
+                for scene in manifest["storyboard"]["scenes"]:
+                    scene.pop("vocabularyIds")
+                self.assertEqual(self.validate(manifest), [])
+                self.assertIn("PUBLISH_REQUIRES_VOCABULARY", codes(self.publish(manifest)))
+
     def test_direction_partitions_and_vocabulary_bindings(self):
         manifest = self.release()
         manifest["storyboard"]["direction"]["sequences"][0]["sceneIds"] = ["missing"]
