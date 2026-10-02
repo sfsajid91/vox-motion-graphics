@@ -24,90 +24,63 @@ Treat the browser preview itself as the creative source of truth. JSON/Markdown 
 
 Do not begin detailed scene implementation while important composition, asset, or mechanism decisions remain unresolved in the storyboard. Cheap draft previews remain permitted to answer those questions; a draft render is not publication approval.
 
-## Storyboard Architecture (Editorial Control Room standard)
+## Storyboard Architecture
 
-The default storyboard is a **multi-frame editorial approval surface** with a stable, reusable page shell. It should feel like an editorial control room: scan the whole sequence first, then inspect one scene at a time without losing navigation or context.
+The storyboard is the visual decision surface for both short and long work: scan the larger structure, then inspect the relevant scene without losing navigation or neighboring context.
 
 Before building the shell:
 
-- Always load [storyboard-layout.md](storyboard-layout.md). It is the embedded canonical copy of the extracted `DESIGN.md` and is the default layout contract.
-- If the project has a root `DESIGN.md`, use it as the local override for tokens and named rules; preserve the embedded shell anatomy unless its `Layout` section explicitly changes it.
-- Treat the shell as layout grammar, not as a template for another project's topic, assets, copy, scene count, or animation.
-- Keep frame art, scene-specific visual systems, and motion studies inside the shell; do not let them redefine the outer anatomy.
+- Always load [storyboard-layout.md](storyboard-layout.md), the canonical layout contract.
+- A project `DESIGN.md` may override tokens and named rules. Preserve shell anatomy unless its `Layout` section explicitly changes it.
+- Treat the shell as layout grammar, not a template for topic, assets, copy, scene count, or animation.
+- Keep frame art, scene-specific visual systems, and motion studies inside the shell.
 
-### Layout shell (required default)
+### Navigation and inspection
 
-Unless the brief explicitly requests another approval surface, include these regions in this order:
+Expose Film → Chapter → Sequence → Scene → Beat navigation where those levels exist. Shorts may collapse to one film/sequence overview and need no artificial chapter or extra approval page. Long-form work should remain browsable by chapter and sequence, with grouped contact sheets for the relevant scene ranges rather than one unwieldy wall of thumbnails.
 
-1. **Masthead (`.masthead`):** A centered page-frame header with a serif display title, short project description, and compact metadata/status block. Use `max-width: 1540px`, a `1fr auto` grid, `32px` gap, bottom alignment, and `52px 40px 32px` padding.
-2. **Sticky director rail (`.director-rail`):** A full-width sticky navigation band at `top: 0` with direct scene-jump links and one utility action. Use a `1540px` inner frame, `10px 40px` padding, a bottom rule, translucent paper, subtle blur, and horizontal overflow for the jump group.
-3. **Overview contact sheet (`.overview-section`):** A whole-sequence scan before detailed scenes. Use 9:16 thumbnail cards with an identifier and time/status caption. Use seven equal columns with `14px` gaps on wide screens, four columns below `1080px`, and a horizontal row with `130px` minimum cards below `680px`.
-4. **Repeated scene shell (`.scene`):** Each scene is an article with a stable metadata rail and flexible body: `140px minmax(0, 1fr)` columns, `36px` gap, `52px 0` padding, and a structural bottom rule. The metadata rail may stick at `top: 76px`.
-5. **Scene context block (`.scene-editorial-header`):** Place the title/status row, concise thesis, and context or voiceover card before the inspection pair. Let the title/status row wrap rather than force overflow.
-6. **Inspection pair (`.canvas-row`):** Place the primary focal stage beside a flexible sequence area using `minmax(300px, 350px) minmax(0, 1fr)` and a `32px` gap.
-7. **Sequence area (`.sequence-section`):** Start with a shared section-label bar, then use a four-column frame grid with `12px` gaps. Each frame unit may contain a timing row, state title, 9:16 preview, and concise note. Use 4–6 cards when beat-level inspection is needed.
-8. **Director notes (`.director-notes`):** Close each scene with a two-column rationale/handoff block, `28px` apart, separated by a top rule.
+Start at an overview that communicates progression and lets the reviewer jump to a scene. The scene inspection view should retain breadcrumbs and nearby sequence context, and provide a clear route back to the overview. Beats are inspectable within a scene when their timing or visual change needs review. Navigation and controls retain minimum 44px targets.
 
-The shell is the approval surface. It must make the hierarchy obvious without requiring the reviewer to read implementation notes.
+The overview and inspection canvas use the project's target aspect ratio, not a fixed vertical format. Grouped contact sheets may adjust card density to the number of scenes while preserving the shell's scanning hierarchy and usable controls.
 
-### Responsive contract
+### Layout shell
 
-- Below `1180px`, reduce the focal column to `minmax(260px, 320px)` with a `24px` gap and use two frame columns.
-- Below `860px`, stack the masthead, scene metadata, and inspection pair; make metadata static and horizontal; center the focal stage; cap the focal canvas at `360px`; use `24px` page gutters.
-- Below `680px`, make the contact sheet horizontally scrollable with `130px` minimum cards and stack director notes with a `16px` gap.
-- Below `580px`, use one frame column, compact scene-jump buttons, and hide secondary director tools.
-- Preserve a minimum `44px` interaction target for navigation and controls at every width.
+Use a centered editorial frame, masthead, sticky director rail, overview/grouped contact sheets, repeated scene inspection units, and concise director notes. Each scene inspection presents context and focal visual beside supporting sequence/beat views when useful. The canonical layout reference gives responsive behavior and visual tokens; these may be adapted for target ratio and long-form browsing without reintroducing fixed seven-scene or vertical-only constraints.
 
-### Surface baseline
+The shell is the approval surface. It must make hierarchy obvious without requiring the reviewer to read implementation notes.
 
-When no project-specific `DESIGN.md` overrides it, use:
+### Scene construction and direction
 
-- warm paper page and card surfaces;
-- dark ink and muted secondary text;
-- Newsreader/Georgia for editorial display;
-- system sans for body copy;
-- JetBrains Mono for production metadata;
-- `4px` container radii and `999px` only for scene navigation;
-- 1px hairline rules and restrained shadows;
-- red only for active, selected, locked, or otherwise meaningful signals.
+Before asset acquisition, define vocabulary as subject identity, visual role/viewpoint, and representation—not as a predetermined composition. Bind selected assets later through the existing asset ledger. Reuse is intentional when an asset, motif, or visual role recurs with a clear narrative purpose; record that purpose rather than forcing novelty.
 
-The baseline is a structural and visual default, not a topic or animation prescription. A project design document may change tokens, type, depth, or component treatment while preserving the inspection hierarchy unless its `Layout` section explicitly changes it.
+Describe each scene's visual contribution, construction family, staging, density, and rhythm profile. For difficult or important explanatory beats, including unresolved label-only mechanisms, compare 2–3 materially different low-cost concepts across construction families before expensive sourcing or coding. Select one and state why; do not create variants for low-stakes or non-explanatory scenes.
 
-### Scene content modules
+Explanatory scenes that claim a relationship change require a conditional `stateDelta` with `before`, `operation`, `after`, and `viewerInference`. Identification, evidence, chronology, atmosphere, or emotion may use another suitable job; a justified hold is valid and need not invent a delta. The universal editorial check is `visualJobSatisfied`: judge whether the assigned contribution is perceptible, not whether four fields exist or every scene changes state.
 
-Inside the stable shell, add only the modules needed for the review:
+For each sequence, state its `purpose`, `payoffTrajectory`, `repetitionAssessment`, and `rhythmIntent`; one line may justify a quiet or uniform passage. Chapters, when present, state their `argumentTurn`, `evidenceBurden`, and `payoff`. For important neighboring relationships, record an observable handoff/payoff intent and proof location. Hard cuts, contrast, sound-led transitions, typography, and stillness are valid. Scan construction, scale, camera, object, visual/information density, value/color, motion energy, and media mode; explain intentional repetition without quotas or family bans.
 
-1. **Section context:** Scene title, timing status, and one-sentence visual thesis.
-2. **Voiceover blockquote (`.vo`):** Exact narration and word count when narration is part of the approval decision.
-3. **Multi-frame keyframe grid (`.frames`):** Distinct states such as entry, reveal, mechanism, payoff, and handoff. Each card needs a 9:16 stage, state/timing metadata, and a short explanation.
-4. **Editorial support:** Tension triangle, pacing track, asset notes, audio notes, or an expandable motion study when they clarify approval.
-
-These modules are content decisions, not shell decisions. They may vary by story without changing the page frame, navigation, overview, scene anatomy, or focal/sequence relationship.
 ---
 
 ## Storyboard Content Contract
 
 For each scene, make the following visible or inspectable:
 
-- semantic job and compact concept decision: inference → before → operation → after → invariant → factual limit;
-- focal subject and meaningful entry/change/payoff/exit states;
+- semantic job and compact concept decision: inference → before → operation → after → invariant → factual limit, when a state delta applies;
+- focal subject, construction/staging, meaningful entry/change/payoff/exit states, and rhythm profile;
 - joint shot score from [motion-patterns.md](motion-patterns.md): composition, object action, camera/revealed information, attention, rhythm, sound, exit;
-- selected construction family and, for unresolved explanatory beats that only reveal nouns, the materially different alternative considered;
+- selected construction family and, for difficult or important explanatory beats, materially different mechanism alternatives considered;
+- pre-asset vocabulary identity, visual role/viewpoint, representation, and later asset bindings;
 - asset roles, acceptance evidence, and current status;
 - caption mode, realistic clean/captioned previews, and editorial text/disclosure roles;
 - provisional semantic anchors and actual readable payoff intent;
-- defining transition/relationship promises with observable invariants and proof locations;
+- important handoff/payoff promises with observable invariants and proof locations;
 - known uncertainty or representation risk.
 
-The storyboard should answer these questions without reading implementation code:
+The storyboard should answer: where does the eye go first; what does the visual contribute; what changes or usefully holds; can the reviewer perceive the intended relationship and payoff; how does attention hand to the next scene; and are the assets fit for their roles?
 
-1. Where does the eye go first?
-2. What changes, and why does that change matter?
-3. Does the visual respond to the assigned contribution, including justified stillness?
-4. Is essential payoff content readable after it settles, with captions and competing action?
-5. Can the next scene inherit attention, direction, object, or scale?
-6. Are the selected assets capable of the intended action?
+### Sequence scan
 
+Across each sequence, inspect changes in construction, scale, camera, object, visual and information density, value/color, motion energy, and media mode. Explain meaningful repetition and variation in service of escalation, callbacks, stillness, or payoff. These dimensions prompt editorial judgment; they are not automated diversity quotas.
 
 ## Approval-Surface Ergonomics
 
@@ -182,7 +155,9 @@ Intentional anticipation and J/L cuts are valid; scene endpoints need not coinci
 
 ## Critique and Refinement
 
-Run independent editorial critique before freeze. Have the critic observe subjects, changes, invariants, and inferred relationships before receiving the director's thesis; then compare against the assigned visual contribution. Review clean and realistically captioned versions at the intended aspect ratio and small viewing size.
+Run independent editorial critique before freeze. The critic observes subjects, changes, invariants, and inferred relationships before receiving the director's thesis, then compares them with the assigned contribution. Review clean and realistically captioned versions at the target aspect ratio and actual small consumption size.
+
+Review Scene scope independently using the existing scene findings; add `scopeFindings` for the Film and each declared Sequence and optional Chapter in the existing design/editorial report. Preserve the receipt triad. Reopen affected neighboring scopes after defining changes; harmless easing does not require whole-film redesign.
 
 Resolve, in this order:
 
@@ -200,18 +175,19 @@ Use [critique.md](critique.md) for verdict ownership and [anti-patterns.md](anti
 
 ## Freeze Gate
 
-An independent editorial critic may mark a storyboard `ready_for_approval` when:
+Independent Scene, Sequence, optional Chapter, and Film critics must pass their relevant scopes before freeze. Each scope review records evidence and findings, including actual small-size viewing—not just metadata or deterministic field checks. Freeze only when:
 
 - every scene performs its assigned contribution with readable hierarchy;
-- explanatory beats show the required relationship; identification, chronology, evidence, atmosphere, and purposeful holds are judged by their own jobs;
+- explanatory beats show a perceptible relationship; identification, chronology, evidence, atmosphere, emotion, and purposeful holds are judged by their own jobs;
 - identity/evidence-critical assets are accepted for their actual crop/reveal and honestly represented;
-- captions and disclosures coexist legibly in realistic preview states;
+- captions and disclosures coexist legibly in realistic preview states at intended viewing size;
 - shot score, transition promises, sound intent, and readable payoff windows are resolved;
+- progression, escalation, callbacks/repetition, style/emotional rhythm, payoff, and cumulative comprehension work across sequences, chapters, and the whole film;
 - unresolved issues are implementation details rather than design questions.
 
-If the user asked to approve the preview, stop at `ready_for_approval` and show the preview plus concise review notes. Freeze only after that approval. Otherwise, continue autonomously through independent review; do not invent a human gate for ordinary directing choices.
+If the user asked to approve the preview, stop at `ready_for_approval` and show it with concise review notes. Freeze only after that approval. Otherwise, continue autonomously through independent review; do not invent a human gate for ordinary directing choices.
 
-Preserve the approved board snapshot separately from as-built notes. Keep a compact receipt linking its revision/digest, reviewer/context, verdict, blockers, and evidence locations. Machine-readable indexing is optional unless a tool/handoff needs it. The generating agent may request review but may not self-award approval.
+Preserve the approved board snapshot separately from as-built notes. Keep the existing compact receipt linking revision/digest, reviewer/context, verdict, blockers, and evidence locations. Put scoped findings in the existing design/editorial reports; do not create a parallel receipt. The generating agent may request review but may not self-award approval.
 
 ## Handoff to Remotion
 
@@ -224,7 +200,7 @@ After freeze, the Remotion agent is primarily an implementer. It should preserve
 - motion and transition intent;
 - readable payoff and handoff states.
 
-It may refine deterministic timing, responsive geometry, easing, compositing, accessibility, and render reliability without reopening design.
+It may refine deterministic timing, responsive geometry, easing, compositing, accessibility, and render reliability without reopening design. Reopen only the affected scene and neighboring scopes when a defining change alters their promise; harmless easing does not call for whole-film redesign.
 
 ## Change Control After Freeze
 

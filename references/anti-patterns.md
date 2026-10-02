@@ -122,15 +122,15 @@ Use this guide diagnostically. A symptom is evidence to inspect, not an automati
 
 **Exception:** Very low-amplitude motion can preserve atmosphere during an intentional hold when it does not compete with the subject.
 
-## Template Repetition Across Scenes
+## Repeated Construction Without Purpose
 
-**Symptom:** Neighboring scenes reuse the same centered object, headline position, entrance, and camera behavior despite different semantic jobs.
+**Symptom:** Neighboring scenes use the same card, diagram, or other construction as a label module even though their ideas and relationships differ.
 
-**Why it fails:** The film reads as a slideshow and loses editorial specificity.
+**Why it fails:** The sequence feels interchangeable and hides its argument's progression.
 
-**Recovery:** Revisit construction-family choice and mechanism. Reuse code rigs only when relationship geometry matches; change visible composition, focal flow, and material behavior.
+**Recovery:** Scan the neighboring scenes and adjust the responsible sequence or scene where repetition weakens clarity, attention, or payoff. Choose a construction that serves the actual job.
 
-**Exception:** Deliberate repetition can create comparison, ritual, escalation, or a setup/payoff pattern when the changing variable is unmistakable.
+**Exception:** Repeated families are valid for comparison, ritual, escalation, accumulation, a callback, or another legible purpose. Do not require novelty, prohibit a construction family, or vary the work merely to satisfy a diversity quota.
 
 
 

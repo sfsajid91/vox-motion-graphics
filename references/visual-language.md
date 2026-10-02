@@ -21,7 +21,9 @@ For every storyboard state:
 1. Name the first thing the viewer should see.
 2. Name the one relationship or change that matters.
 3. Remove or subordinate elements with equal visual weight.
-4. Check clean and realistically captioned states at intended viewing size, including necessary disclosures.
+
+Check clean and realistically captioned states at intended viewing sizes: phone portrait, plus landscape desktop and mobile YouTube. Judge whether the essential subject, relationship, captions, and disclosures are actually readable; no magical pixel threshold proves a pass.
+
 
 Use scale, contrast, position, depth, isolation, timing, and motion direction to establish hierarchy. Centering is neither required nor forbidden.
 

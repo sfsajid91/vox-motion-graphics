@@ -7,6 +7,9 @@ Use these without extra motion-design guidance. The skill should make creative c
 3. `Make a short about how CRISPR edits DNA for people who know nothing about biology.`
 4. `Show why a bank run can destroy a healthy bank.`
 5. `Make an engaging reel about the invention of the barcode.`
+6. `Make a 55-second film about why city trees can cool some streets more than others.`
+7. `Create a five-minute explainer about how a regional food bank gets supplies to rural towns.`
+8. `Make a 15-minute documentary about how a community recovers after a major flood.`
 
 Regression checks:
 - different topics produce different visual worlds
@@ -22,6 +25,17 @@ Regression checks:
 - final VO reconforms semantic events, actual readable payoff windows, and purposeful J/L cuts
 - editorial and technical QA remain separate
 - no user question about transitions/easing/layout unless truly necessary
+
+## v0.10 direction checks
+
+- short planning collapses film/chapter/sequence ownership without artificial chapters or scene quotas; five-minute and 10–20-minute work may use proportionate sequence/chapter turns without fixed counts
+- each progression establishes questions, evidence-led answers/escalation, callbacks that change meaning, and a visually demonstrated conclusion
+- neighboring scenes receive a full rhythm scan; repeated families remain when comparison or another purpose justifies them and are not used as monotonous label modules
+- purposeful evidence stillness remains valid; no forced motion or state delta for non-explanatory work
+- vocabulary breadth distinguishes subject identity, viewpoint/role, representation, and composition; limited material yields an honest programmatic/reconstructed fallback rather than invented evidence
+- any future scene/sequence handoff stays bounded to its assigned scope and relevant frozen context rather than duplicating the film history
+- viewing-size judgment includes phone portrait and landscape desktop/mobile YouTube contexts; readability is observed, not asserted through a pixel cutoff
+- these are behavioral probes, not measured proof of improved creative quality
 
 ## Held-out creative evaluation
 

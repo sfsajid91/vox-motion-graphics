@@ -99,7 +99,11 @@ Design/editorial `renderRefs` must identify at least one existing local review a
 
 Keep the existing board `freezeEvidence` as an index of the design review, not a substitute for it. Obtain the review before recording its digest. If board content changes, independently review the new board and resulting master; if only the master changes, refresh final reviews without repeating an unchanged design review. Never rewrite a digest to manufacture approval. Hash equality establishes identity, not quality, reviewer authenticity, or actual independence; independent artifact inspection remains mandatory.
 
-Used assets are the union of board/state/implementation `assetIds` and ledger entries with nonempty `sceneIds`. Unused candidates can retain unresolved rights. Used assets must be accepted/verified, have resolved `rightsStatus`, a `sourceUri` (HTTP(S) locator or existing local source/creation record), and `rightsEvidence`; verified rights also require `license`. Rights text is a traceable research record, not machine legal clearance.
+Design and final editorial reports retain their verdicts and scene findings, add `scopeFindings` for Film and each declared Sequence/Chapter, and carry each scene's viewing-size proof as `{widthPx, heightPx, distance, observation, proofRef, proofSha256}`. Local proof files resolve from the manifest directory and their inspected bytes are hash-bound inside the report. Critics must confirm they depict the reviewed board/master; hashes cannot infer that relationship. Scoped review passes before freeze and again on the mastered, captioned/audio output. Defining changes reopen affected scopes; never rewrite digests to simulate approval.
+
+Draft migration may retain legacy storyboard metadata. v0.10 publication requires the new direction hierarchy and complete scoped review evidence, including real independent re-review of the actual artifact. Updating fields or regenerating hashes cannot stand in for review.
+
+Used assets are the union of board/state/implementation `assetIds`, assets bound to vocabulary roles referenced by scene `vocabularyIds`, and ledger entries with nonempty `sceneIds`. Unused candidates may retain unresolved rights. Used assets must be accepted/verified, have resolved `rightsStatus`, a `sourceUri` (HTTP(S) locator or existing local source/creation record), and `rightsEvidence`; verified rights also require `license`. Role descriptions need not be identical strings; editorial review verifies fit against the actual shot. Rights text is a traceable research record, not machine legal clearance.
 
 For `representationType: "evidence"`, require `sourceUri` and `claimIds`. Include the existing claim-set shape as manifest `claimSet`; each referenced claim needs verified claim text and `sourceRefs` resolving to source records with an HTTP(S) `url` or existing local file. The validator checks linkage/local existence, not remote retrieval or factual truth. Generated/reconstructed assets cannot claim `evidence`; honest reconstructions remain valid as `reconstruction`, and sourced/first-party documentary evidence and supported programmatic charts remain valid.
 
@@ -111,6 +115,8 @@ For `representationType: "evidence"`, require `sourceUri` and `claimIds`. Includ
 - Frame-spec/manifest scene `sfxEvents` may record `disposition: implemented|replaced|omitted`; replacements/omissions require `decisionReason`. Retain the planned cue in the frozen board, record the as-built choice separately, and review intentional silence or replacement rather than silently dropping sound.
 
 The validator checks timing ranges/order and cue-decision completeness only. It cannot infer actual readability, a perceptible relationship, factual honesty, or audible sound from fields. Review boundary clips, clean and captioned compositions at viewing size, and the mastered sound/VO together.
+
+The universal editorial job check is `visualJobSatisfied`: judge the assigned job, not a mandatory state change. Stillness is explicitly valid when it performs its intended job; explanatory relationship changes require perceptible evidence, while identification, evidence, chronology, atmosphere, and emotion are judged on their own terms. Schema or manifest fields cannot establish perception.
 
 
 ## Safe parallelism

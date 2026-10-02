@@ -1,6 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "v0.9.0 Editorial QA Report",
+  "$id": "https://vox-motion-graphics.local/schemas/editorial-qa-report.schema.json",
+  "title": "v0.10 Editorial QA Report",
   "type": "object",
   "required": ["critic", "independent", "renderRefs", "overallStatus", "sceneFindings"],
   "properties": {
@@ -13,72 +14,36 @@
     "renderRefs": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
     "overallStatus": {"enum": ["redesign", "revise", "approve", "publish_candidate", "needs_review"]},
     "sceneFindings": {
-      "type": "array",
-      "minItems": 1,
+      "type": "array", "minItems": 1,
       "items": {
-        "type": "object",
-        "required": ["sceneId", "status", "checks", "findings"],
+        "type": "object", "required": ["sceneId", "status", "checks", "findings", "viewingSizeEvidence"],
         "properties": {
           "sceneId": {"type": "string", "minLength": 1},
           "status": {"enum": ["redesign", "revise", "approve"]},
           "checks": {
-            "type": "object",
-            "required": ["thesisClear", "hierarchyClear", "stateChangeMeaningful", "pacingResolved", "continuityResolved", "assetFit"],
-            "properties": {
-              "thesisClear": {"type": "boolean"},
-              "hierarchyClear": {"type": "boolean"},
-              "stateChangeMeaningful": {"type": "boolean"},
-              "pacingResolved": {"type": "boolean"},
-              "continuityResolved": {"type": "boolean"},
-              "assetFit": {"type": "boolean"}
-            },
+            "type": "object", "required": ["thesisClear", "hierarchyClear", "visualJobSatisfied", "pacingResolved", "continuityResolved", "assetFit"],
+            "properties": {"thesisClear": {"type": "boolean"}, "hierarchyClear": {"type": "boolean"}, "visualJobSatisfied": {"type": "boolean"}, "pacingResolved": {"type": "boolean"}, "continuityResolved": {"type": "boolean"}, "assetFit": {"type": "boolean"}},
             "additionalProperties": false
           },
-          "findings": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "required": ["problem", "repair"],
-              "properties": {
-                "problem": {"type": "string", "minLength": 1},
-                "repair": {"type": "string", "minLength": 1},
-                "severity": {"enum": ["low", "medium", "high"]}
-              },
-              "additionalProperties": false
-            }
-          }
+          "viewingSizeEvidence": {"type": "array", "minItems": 1, "items": {"type": "object", "required": ["widthPx", "heightPx", "distance", "observation", "proofRef", "proofSha256"], "properties": {"widthPx": {"type": "integer", "minimum": 1}, "heightPx": {"type": "integer", "minimum": 1}, "size": {"type": "string", "minLength": 1}, "distance": {"type": "string", "minLength": 1}, "observation": {"type": "string", "minLength": 1}, "proofRef": {"type": "string", "minLength": 1}, "proofSha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}, "additionalProperties": false}},
+          "findings": {"type": "array", "items": {"type": "object", "required": ["problem", "repair"], "properties": {"problem": {"type": "string", "minLength": 1}, "repair": {"type": "string", "minLength": 1}, "severity": {"enum": ["low", "medium", "high"]}}, "additionalProperties": false}}
         },
         "additionalProperties": false
       }
+    },
+    "scopeFindings": {
+      "type": "array", "items": {"type": "object", "required": ["scopeType", "scopeId", "status", "finding"], "properties": {"scopeType": {"enum": ["film", "sequence", "chapter"]}, "scopeId": {"type": "string", "minLength": 1}, "status": {"enum": ["redesign", "revise", "approve"]}, "finding": {"type": "string", "minLength": 1}}, "additionalProperties": false}
     }
   },
   "additionalProperties": false,
-  "allOf": [
-    {
-      "if": {"properties": {"overallStatus": {"enum": ["approve", "publish_candidate"]}}, "required": ["overallStatus"]},
-      "then": {
-        "properties": {
-          "independent": {"const": true},
-          "blockers": {"maxItems": 0},
-          "sceneFindings": {
-            "items": {
-              "properties": {
-                "status": {"const": "approve"},
-                "checks": {
-                  "properties": {
-                    "thesisClear": {"const": true},
-                    "hierarchyClear": {"const": true},
-                    "stateChangeMeaningful": {"const": true},
-                    "pacingResolved": {"const": true},
-                    "continuityResolved": {"const": true},
-                    "assetFit": {"const": true}
-                  }
-                }
-              }
-            }
-          }
-        }
+  "allOf": [{
+    "if": {"properties": {"overallStatus": {"enum": ["approve", "publish_candidate"]}}, "required": ["overallStatus"]},
+    "then": {
+      "properties": {
+        "independent": {"const": true}, "blockers": {"maxItems": 0},
+        "sceneFindings": {"items": {"properties": {"status": {"const": "approve"}, "checks": {"properties": {"thesisClear": {"const": true}, "hierarchyClear": {"const": true}, "visualJobSatisfied": {"const": true}, "pacingResolved": {"const": true}, "continuityResolved": {"const": true}, "assetFit": {"const": true}}}}}},
+        "scopeFindings": {"items": {"properties": {"status": {"const": "approve"}}}}
       }
     }
-  ]
+  }]
 }

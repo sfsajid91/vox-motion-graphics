@@ -1,5 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://vox-motion-graphics.local/schemas/story-plan.schema.json",
   "title": "Motion Graphics Story Plan",
   "type": "object",
   "required": ["project", "story", "narration"],
@@ -45,6 +46,7 @@
       },
       "additionalProperties": false
     },
+    "direction": {"$ref": "direction-plan.schema.json"},
     "narration": {
       "type": "object",
       "required": ["text", "estimatedWordCount"],

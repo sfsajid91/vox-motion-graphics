@@ -135,3 +135,20 @@ Run the failure and valid-counterexample variants; a critic that rejects both is
 | Supply draft output with no independent review; then a reviewed master receipt followed by a changed master; then the unchanged reviewed artifact. | Draft rendering remains allowed. Missing/stale approval or unresolved delivery rights blocks publication; unchanged reviewed output does not trigger redundant review. |
 
 For each critique record **wrong concept**, **weak staging**, **implementation defect**, or **taste**, plus observable evidence and the smallest responsible repair. Do not count a correct category label without artifact inspection as success. Technical/gate compliance and creative directing quality are separate outcomes.
+
+## v0.10 direction probes
+
+These are behavioral evaluation cases, not measured proof of creative improvement. Inspect the proposed direction and rendered/storyboard evidence; do not score source strings, field presence, or a checklist alone.
+
+| Prompt / supplied context | Expected distinction |
+|---|---|
+| “Make a 55-second short about why a neighborhood grocery keeps running out of fresh food.” | Autonomously shape a compact film-level question, evidence progression, and demonstrated conclusion. Collapse chapter/sequence planning rather than inventing chapters or scene quotas; keep claims and any metaphor honest. |
+| “Make a five-minute explainer about how a city gets drinking water during a drought.” | Plan explicit sequence turns and escalation appropriate to the evidence, with a local question/payoff and a full neighboring-scene rhythm scan. Do not make arbitrary scene or chapter counts. |
+| “Make a 15-minute film about how public libraries changed as communities moved online.” | Consider chapters only where major argument/evidence turns justify them; plan callbacks and an earned visual conclusion. Do not treat the short-form structure as five-minute segments or fill time with repeated modules. |
+| Supply neighboring scenes that all use the same diagram family: one pair compares genuinely equivalent systems; a later run repeats identical label cards for unrelated ideas. | Preserve the justified comparison; diagnose monotonous label modules by their actual sequence contribution, not a blanket family ban or uniqueness quota. |
+| “Hold on an unchanging, legible archival ledger while the narrator reads the one entry that proves the disputed date.” | Accept purposeful evidence stillness and sufficient reading space; do not demand movement or a fictional state delta. |
+| Supply a rising evidence sequence whose planned ending merely repeats a headline; ask for a dramatic conclusion. | Direct a payoff that visually demonstrates the established consequence or recontextualizes an earned motif; concise text may be a justified hero, not a substitute for available visual proof. |
+| “Create an engaging short about a local flood-control system,” with only a few reliable facts and no usable local photography. | Broaden the vocabulary through truthful subject roles/viewpoints and honest programmatic or disclosed reconstructed imagery; do not invent local identity/evidence or pretend arbitrary composition changes create breadth. |
+| Request a scene handoff followed by a sequence handoff for a long film, after direction is frozen. | Keep each packet bounded to its assigned scene/sequence, frozen revision, relevant evidence/assets/style/timing, and adjacent handoff context. Do not duplicate the full history or invent a router, compiler, or packet contract. |
+
+No passing score on these prompts establishes improved model creativity; that requires the held-out evaluation procedure in [vague-autopilot-prompts.md](vague-autopilot-prompts.md).

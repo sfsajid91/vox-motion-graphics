@@ -3,22 +3,37 @@ from pathlib import Path
 import json
 
 from jsonschema import Draft202012Validator
+from referencing import Registry, Resource
 
 
 ROOT = Path(__file__).resolve().parents[1]
 SCHEMAS = ROOT / "schemas"
 
-
 def load(name):
     return json.loads((SCHEMAS / name).read_text())
+def registry():
+    resources = []
+    for path in SCHEMAS.glob("*.schema.json"):
+        schema = json.loads(path.read_text())
+        uri = schema.get("$id", f"https://vox-motion-graphics.local/schemas/{path.name}")
+        resources.append((uri, Resource.from_contents(schema)))
+    return Registry().with_resources(resources)
+
+
+REGISTRY = registry()
+
+
+def validator(name):
+    schema = load(name)
+    return Draft202012Validator(schema, registry=REGISTRY)
 
 
 def assert_valid(schema_name, obj):
-    Draft202012Validator(load(schema_name)).validate(obj)
+    validator(schema_name).validate(obj)
 
 
 def assert_invalid(schema_name, obj):
-    errors = list(Draft202012Validator(load(schema_name)).iter_errors(obj))
+    errors = list(validator(schema_name).iter_errors(obj))
     assert errors, f"expected {schema_name} to reject object"
 
 
@@ -78,6 +93,70 @@ def main():
     no_change = storyboard()
     no_change["scenes"][0]["states"][0].pop("meaningfulChange")
     assert_invalid("storyboard-plan.schema.json", no_change)
+
+    explanation = storyboard()
+    explanation["scenes"][0].update(visualJob="explanation", stateDelta={
+        "before": "full flow", "operation": "one gate narrows", "after": "queue forms",
+        "viewerInference": "the system depends on this bottleneck",
+    })
+    assert_valid("storyboard-plan.schema.json", explanation)
+    malformed_delta = json.loads(json.dumps(explanation))
+    malformed_delta["scenes"][0]["stateDelta"].pop("operation")
+    assert_invalid("storyboard-plan.schema.json", malformed_delta)
+    stillness = storyboard()
+    stillness["scenes"][0]["visualJob"] = "evidence"
+    assert_valid("storyboard-plan.schema.json", stillness)
+
+    directional = storyboard()
+    directional["direction"] = {
+        "film": {"viewerPromise": "Understand the bottleneck", "argument": "one route constrains the system",
+                 "emotionalProgression": "curiosity to concern", "conclusion": "capacity is the limit"},
+        "sequences": [{"id": "Q1", "sceneIds": ["S1"], "purpose": "show the bottleneck",
+                       "payoffTrajectory": "route narrows into consequence", "rhythmIntent": "hold scale",
+                       "repetitionAssessment": "repeated route diagrams clarify the accumulating queue"}],
+    }
+    assert_valid("storyboard-plan.schema.json", directional)
+    story_plan = {
+        "project": {"topic": "bottlenecks", "targetPlatforms": ["web"], "targetDurationSec": 55},
+        "story": {"angle": "one route changes everything", "hook": "Where does flow stop?",
+                  "thesis": "capacity is the constraint", "causalSpine": ["route narrows", "queue grows"],
+                  "payoff": "the route sets the limit",
+                  "beats": [{"id": "B1", "purpose": "explain", "viewerQuestionIn": "where?",
+                             "viewerQuestionOut": "why?", "emotion": "concern", "claimIds": []}]},
+        "narration": {"text": "The route narrows.", "estimatedWordCount": 3},
+        "direction": directional["direction"],
+    }
+    assert_valid("story-plan.schema.json", story_plan)
+    directional["direction"]["sequences"][0]["sceneIds"] = []
+    assert_invalid("storyboard-plan.schema.json", directional)
+
+    packet = {
+        "projectId": "p", "packetType": "ScenePacket",
+        "frozenBoard": {"file": "board.html", "sha256": "a" * 64},
+        "scope": {"id": "S1", "sceneIds": ["S1"]},
+        "context": {"objective": "show the bottleneck", "constraints": ["keep existing typography"]},
+        "artifacts": [], "evidence": [],
+        "style": {"visualLanguage": "cut paper, restrained navy"},
+        "timing": {"startSec": 0, "durationSec": 4, "beats": [{"id": "B1", "startSec": 0, "endSec": 4}]},
+        "assets": [], "neighbors": {"next": {"sceneId": "S2", "handoff": "contrast"}},
+    }
+    assert_valid("implementation-packet.schema.json", packet)
+    unfrozen_packet = json.loads(json.dumps(packet))
+    unfrozen_packet.pop("frozenBoard")
+    assert_invalid("implementation-packet.schema.json", unfrozen_packet)
+    long_packet = json.loads(json.dumps(packet))
+    long_packet["packetType"] = "SequencePacket"
+    assert_valid("implementation-packet.schema.json", long_packet)
+    long_packet["scope"]["sceneIds"] = ["S1", "S2"]
+    assert_valid("implementation-packet.schema.json", long_packet)
+    long_packet["packetType"] = "ScenePacket"
+    assert_invalid("implementation-packet.schema.json", long_packet)
+    invalid_timing = json.loads(json.dumps(packet))
+    invalid_timing["timing"]["startSec"] = -1
+    assert_invalid("implementation-packet.schema.json", invalid_timing)
+    invalid_digest = json.loads(json.dumps(packet))
+    invalid_digest["frozenBoard"]["sha256"] = "stale"
+    assert_invalid("implementation-packet.schema.json", invalid_digest)
     scored = storyboard()
     scored["scenes"][0]["relationshipInvariants"] = [
         {"id": "carrier", "observable": "image stays registered as carrier departs", "proofRef": "boundary clip 00:04-00:06"}
@@ -207,14 +286,17 @@ def main():
                 "checks": {
                     "thesisClear": True,
                     "hierarchyClear": True,
-                    "stateChangeMeaningful": True,
+                    "visualJobSatisfied": True,
                     "pacingResolved": True,
                     "continuityResolved": True,
                     "assetFit": True,
                 },
+                "viewingSizeEvidence": [{"widthPx": 360, "heightPx": 640, "size": "portrait player", "distance": "arm's length",
+                                         "observation": "label reads", "proofRef": "phone-frame.png", "proofSha256": "a" * 64}],
                 "findings": [],
             }
         ],
+        "scopeFindings": [{"scopeType": "film", "scopeId": "film", "status": "approve", "finding": "argument resolves"}],
     }
     assert_valid("editorial-qa-report.schema.json", editorial)
     self_approved = json.loads(json.dumps(editorial))

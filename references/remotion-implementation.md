@@ -17,6 +17,8 @@ Implementation may refine interpolation, easing, overlap, compositing, and perfo
 
 Keep the frozen snapshot distinct from as-built notes. For each defining promise, carry its observable invariant and proof location, not just object/state IDs. Inspect boundary/action clips for handoffs, complete-reveal frames, deepest planned crops, and mastered sound. A present asset or cue filename does not prove it was visible or audible.
 
+Use a bounded [implementation packet](implementation-packets.md) for the assigned scene or sequence: cite the frozen board revision/hash, relevant claims/rights/assets, approved implementation decisions, style and aligned timing, and applicable neighbor boundaries. Include only relevant reference excerpts, not the whole skill as a per-scene prerequisite. The packet helps bound context; it never supersedes the frozen storyboard, ledger, evidence, or review gates.
+
 ## Deterministic frame-driven motion
 
 Use current official patterns from the installed Remotion version, such as frame/config hooks, interpolation, springs/easing, sequences/series, and Remotion media primitives.
@@ -79,4 +81,6 @@ Prefer HTML/CSS/SVG/2.5D compositing before true 3D unless the story geometry re
 ## Mastered review
 
 Resolve each planned sound cue as implemented, replaced, or omitted with a reason for changes. Produce a mastered draft with narration, captions/disclosures, SFX, and music as applicable, then run technical and independent editorial review on that artifact. Draft previews may render throughout; they must not inherit publication approval from an earlier board or master revision.
+
+For a v0.10 publish candidate, retain independent pre-freeze Scene and Sequence reviews, Chapter review where applicable, and Film review. After implementation, reopen the changed scope and affected neighbors when a defining deviation changes their promise. Run final multi-level editorial review on the actual mastered output with captions, disclosures, narration, and mixed sound; keep its inspected board/master hashes unchanged. Small viewing-size evidence must show actual consumption-size readability. Neither a packet validator nor artifact digest proves perception or approval.
 

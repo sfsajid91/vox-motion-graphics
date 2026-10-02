@@ -1,6 +1,6 @@
 ---
 name: Storyboard Layout System
-description: Editorial control-room layout for reviewing a vertical storyboard as a repeatable sequence of scenes and inspection modules.
+description: Editorial control-room layout for reviewing target-ratio work as browsable films, chapters, sequences, scenes, and inspection modules.
 colors:
   paper: "#f4efe5"
   paper-warm: "#ece5d6"
@@ -97,10 +97,10 @@ components:
     textColor: "{colors.ink}"
     rounded: "{rounded.sm}"
     padding: "16px 20px"
-  vertical-canvas:
+  visual-canvas:
     backgroundColor: "{colors.canvas}"
     rounded: "{rounded.sm}"
-    size: "9 / 16"
+    aspectRatio: "project target"
   frame-card-selected:
     textColor: "{colors.red}"
     rounded: "{rounded.sm}"
@@ -114,15 +114,15 @@ components:
 
 **Creative North Star: "Editorial Control Room"**
 
-This is a calm, information-dense review surface for a sequence of visual work. It reads like an editorial desk: a strong masthead establishes the artifact, a sticky director’s rail keeps navigation available, and the body repeats one dependable inspection unit per scene. The page uses a warm paper field, dark ink, compact mono labels, and a restrained red signal so the hierarchy feels authored without becoming a dashboard.
+This is a calm, information-dense review surface for short and long visual work. A masthead establishes the artifact; a sticky director rail navigates its hierarchy; grouped contact sheets provide an overview; and repeatable scene units support close inspection.
 
-The layout separates overview from inspection. A seven-item contact sheet gives the whole sequence a fast scan; each scene then expands into metadata, editorial context, one focal vertical canvas, a row of supporting inspection cards, and short director notes. The shell is intentionally repeatable. Frame artwork, scene-specific content, and motion behavior are outside this system document.
+The overview and inspection canvas use the project's target aspect ratio. Short work can collapse to one film/sequence overview; long work remains browsable by chapter and sequence with grouped scene previews. The shell is repeatable; frame artwork, scene-specific content, and motion behavior are outside this system document.
 
 **Key Characteristics:**
 - Centered 1540px editorial frame with generous outer margins.
-- Sticky horizontal navigation rail with persistent scene jumps and one utility action.
-- Overview-first contact sheet followed by repeatable two-column scene inspection modules.
-- Warm layered paper, hairline rules, small radii, and restrained canvas shadows.
+- Sticky horizontal navigation rail with hierarchical jumps and utility actions.
+- Overview-first contact sheets grouped by chapter/sequence where useful.
+- Target-ratio previews, warm layered paper, hairline rules, small radii, and restrained canvas shadows.
 - Responsive collapse from desktop inspection pair to a centered single-column mobile flow.
 
 ## Colors
@@ -149,7 +149,7 @@ The shell uses warm paper neutrals and dark ink, with red reserved for active st
 - **Muted Ink** (`#535e6c`): Metadata, timestamps, and low-emphasis labels.
 - **Hairline** (`rgba(17, 25, 35, 0.12)`): Quiet separators and section label rules.
 - **Strong Hairline** (`rgba(17, 25, 35, 0.22)`): Structural boundaries between masthead, overview, and scenes.
-- **Canvas** (`#0d141e`): Neutral backing behind vertical visual canvases and thumbnails.
+- **Canvas** (`#0d141e`): Neutral backing behind target-ratio visual previews and thumbnails.
 - **White** (`#ffffff`): Text placed on dark active controls and canvas overlays.
 - **Dark Paper** (`#0c1219`), **Dark Warm** (`#111a24`), **Dark Card** (`#15202c`), and **Dark Ink** (`#f8fafc`): Dark-mode surface and text roles.
 
@@ -176,22 +176,22 @@ The shell uses warm paper neutrals and dark ink, with red reserved for active st
 
 ## Layout
 
-Use one centered page frame: `max-width: 1540px; margin: 0 auto`. On desktop, the masthead and director rail share the same frame width. The masthead uses a `1fr auto` grid with a 32px gap and bottom alignment. Its light-mode padding is `52px 40px 32px`; at `max-width: 860px` it becomes `40px 24px 24px` and stacks into one column.
+Use one centered page frame: `max-width: 1540px; margin: 0 auto`. On desktop, the masthead and director rail share the frame. The masthead uses a `1fr auto` grid with a 32px gap and bottom alignment. Its light-mode padding is `52px 40px 32px`; at `max-width: 860px` it becomes `40px 24px 24px` and stacks into one column.
 
-The sticky director rail sits at the top of the viewport (`top: 0`) with a translucent paper surface, 14px backdrop blur, a bottom rule, and a 100px stacking level. Its inner row uses `10px 40px` padding, keeps scene jumps in a horizontally scrollable group, and holds utility actions on the opposite edge. At `max-width: 860px`, horizontal padding becomes 24px. At `max-width: 580px`, hide the director tools and keep the jump buttons compact.
+The sticky director rail sits at the top of the viewport (`top: 0`) with translucent paper, 14px backdrop blur, a bottom rule, and a 100px stacking level. Its inner row uses `10px 40px` padding, keeps hierarchical jumps horizontally scrollable, and holds utility actions opposite. At `max-width: 860px`, horizontal padding becomes 24px. At `max-width: 580px`, hide secondary tools and keep controls compact.
 
-The main frame uses `padding: 40px 40px 100px`. The contact sheet comes first with `48px` bottom margin, `32px` bottom padding, and a strong bottom rule. Its seven equal columns use a 14px gap. At `max-width: 1080px`, use four columns. At `max-width: 680px`, switch to a horizontal scroll row with 130px minimum cards so the overview remains a single gesture rather than a cramped miniature grid.
+The main frame uses `padding: 40px 40px 100px`. The overview comes first with `48px` bottom margin, `32px` bottom padding, and a strong bottom rule. Contact sheets are grouped by chapter/sequence when helpful; card columns adapt to viewport and group size rather than assuming seven scenes. At `max-width: 680px`, use horizontal overflow with 130px minimum cards so previews remain usable rather than cramped.
 
-Each scene is a repeated article shell: a 140px metadata rail plus a flexible body separated by 36px, with `52px 0` vertical padding and a structural bottom rule. The metadata rail sticks below the navigation at `top: 76px`. The scene body begins with a title/status row, a short thesis, and a content card, then moves into the inspection pair. At `max-width: 860px`, scenes become one column with 20px gaps and 40px vertical padding; metadata becomes a static horizontal row and the progress pip disappears.
+Each scene is a repeated article shell: a 140px metadata rail plus flexible body separated by 36px, with `52px 0` vertical padding and a structural bottom rule. The metadata rail sticks below navigation at `top: 76px`. The body begins with title/status, thesis, and context or voiceover card, then the inspection pair. At `max-width: 860px`, scenes become one column with 20px gaps and 40px vertical padding; metadata becomes a static horizontal row.
 
-The inspection pair is `.canvas-row`: `minmax(300px, 350px) minmax(0, 1fr)` with a 32px gap. The left column is the focal stage; the right column is the sequence inspection area. At `max-width: 1180px`, use `minmax(260px, 320px) minmax(0, 1fr)` and 24px gap. At `max-width: 860px`, stack the pair, center the focal stage, and cap the focal canvas at 360px wide. The sequence grid is four columns with 12px gaps on wide screens and two columns below 1180px; below 580px it becomes one column.
+The inspection pair is `.canvas-row`: `minmax(300px, 350px) minmax(0, 1fr)` with a 32px gap. The first column is the focal stage; the second supports sequence or beat inspection. At `max-width: 1180px`, use `minmax(260px, 320px) minmax(0, 1fr)` and 24px gap. At `max-width: 860px`, stack the pair, center the focal stage, and cap its width at 360px. Supporting cards use responsive columns appropriate to the target ratio and review content.
 
-Director notes close each scene body as a two-column grid with a 28px gap, separated from the inspection pair by a top rule. Below 680px, stack note columns with a 16px gap. Preserve this order when replicating: page frame → masthead → sticky rail → contact sheet → scene shell → scene context → focal/sequence pair → notes.
+Director notes close each scene body as a two-column grid with a 28px gap, separated from inspection by a top rule. Below 680px, stack note columns with a 16px gap. Preserve this order: page frame → masthead → sticky rail → overview/grouped contact sheets → scene shell → context → focal/supporting inspection → notes.
 
 ### Named Rules
-**The Overview-Then-Inspect Rule.** Always give the reviewer a compact whole-sequence scan before the detailed scene modules.
+**The Overview-Then-Inspect Rule.** Always give reviewers a compact whole-work scan before detailed scene modules; preserve chapter/sequence grouping where useful.
 
-**The Stable Scene Unit Rule.** Every scene must keep the same outer anatomy even when its internal visual content changes.
+**The Stable Scene Unit Rule.** Every scene keeps the same outer anatomy even when its internal visual content changes.
 
 ## Elevation & Depth
 
@@ -199,7 +199,7 @@ This is layered paper, not a floating-card dashboard. Depth comes first from sur
 
 ### Shadow Vocabulary
 - **Card lift** (`0 2px 6px rgba(17, 25, 35, 0.06)`): Narration cards and compact controls on the light paper field.
-- **Canvas lift** (`0 4px 12px rgba(7, 20, 35, 0.16)`): Vertical canvases and thumbnails against the paper field.
+- **Canvas lift** (`0 4px 12px rgba(7, 20, 35, 0.16)`): Visual previews and thumbnails against the paper field.
 - **Medium lift** (`0 8px 18px rgba(17, 25, 35, 0.1)`): Reserved for an explicitly elevated state, not default containers.
 - **Dark card lift** (`0 2px 6px rgba(0, 0, 0, 0.4)`): Dark-mode compact surfaces.
 
@@ -208,9 +208,9 @@ This is layered paper, not a floating-card dashboard. Depth comes first from sur
 
 ## Shapes
 
-The form language is crisp and editorial. Most containers use a restrained 4px radius; 8px is available for a larger secondary shape, while scene jump navigation is the one intentionally pill-shaped control (`999px`). Borders are 1px hairlines, with 2px red outlines reserved for a selected frame. Vertical canvases and thumbnails clip their contents with `overflow: hidden` and keep a 9:16 aspect ratio.
+The form language is crisp and editorial. Most containers use a restrained 4px radius; 8px is available for a larger secondary shape, while navigation may use a pill shape. Borders are 1px hairlines, with 2px red outlines reserved for a selected frame. Previews preserve the declared project target aspect ratio and clip their contents.
 
-Interactive targets stay generous even when labels are small: scene jumps, tools, scene controls, and beat buttons use a minimum 44px height. Avoid excessive rounding, nested pills, and heavy card chrome.
+Interactive targets stay generous even when labels are small: hierarchy navigation, tools, scene controls, and beat buttons use a minimum 44px height. Avoid excessive rounding, nested pills, and heavy card chrome.
 
 ## Components
 
@@ -226,12 +226,12 @@ Interactive targets stay generous even when labels are small: scene jumps, tools
 - **States:** Inactive jumps are transparent; active jump is dark ink with white text; tools use card paper and a 4px radius.
 - **Responsive:** Rail remains scrollable; utility tools disappear below 580px.
 
-### Contact Sheet
-- **Shape:** Borderless overview section separated by a strong bottom rule.
-- **Layout:** Seven equal thumbnail columns with 14px gaps; four columns at 1080px; horizontal 130px cards at 680px.
-- **Caption:** Scene identifier first, mono time range second; captions never become a dense paragraph.
-- **Behavior:** Each card is a jump target and may lift 3px on hover; do not add a second action inside the card.
-
+### Contact Sheets
+- **Shape:** Borderless overview sections separated by strong rules.
+- **Layout:** Group scenes by chapter/sequence where useful; choose columns based on group size and viewport, not a fixed scene count.
+- **Preview:** Preserve the project's target aspect ratio.
+- **Caption:** Scene identifier first, then time/status; keep captions concise.
+- **Behavior:** Cards jump to inspection; avoid ambiguous nested actions.
 ### Scene Shell
 - **Shape:** Repeated article section with a bottom rule and generous vertical padding.
 - **Layout:** Sticky metadata rail plus flexible body; metadata collapses to a horizontal row below 860px.
@@ -249,14 +249,14 @@ Interactive targets stay generous even when labels are small: scene jumps, tools
 - **Layout:** 350px focal stage beside a flexible sequence area, 32px gap; stack and center below 860px.
 - **Subsections:** Both columns start with the same section-label bar: mono label, optional icon, muted sublabel, bottom rule.
 
-### Vertical Canvas
-- **Shape:** 9:16 aspect ratio, 4px radius, clipped content, 1px dark border, canvas shadow.
-- **Overlay:** Small top-left HUD and bottom-left frame mark are informational overlays; keep them inside the canvas boundary.
+### Visual Canvas
+- **Shape:** Project target aspect ratio, 4px radius, clipped content, 1px dark border, canvas shadow.
+- **Overlay:** Informational overlays remain inside the canvas boundary.
 - **Responsive:** Focal canvas is fluid on desktop and capped at 360px when stacked.
 
 ### Frame Card
 - **Shape:** Borderless inspection unit with an internal header rule; canvas supplies the visual container.
-- **Layout:** Timing row, action label, 9:16 canvas, then a two-line-clamped note; use 12px vertical gaps.
+- **Layout:** Timing row, action label, target-ratio canvas, then concise note; use 12px vertical gaps.
 - **States:** Hover lifts 2px and strengthens the canvas border. Selected state uses a red border, 2px outline, and stronger shadow.
 - **Interaction:** Whole card is the inspection target; preserve keyboard focus visibility.
 
@@ -268,19 +268,19 @@ Interactive targets stay generous even when labels are small: scene jumps, tools
 ## Do's and Don'ts
 
 ### Do:
-- **Do** keep every top-level region inside the shared 1540px centered frame.
-- **Do** preserve the order: masthead, sticky rail, overview, repeated scenes, notes.
+- **Do** keep top-level regions inside the shared 1540px centered frame.
+- **Do** preserve the order: masthead, sticky rail, grouped overview, repeated scenes, notes.
 - **Do** keep scene metadata visually separate from the scene body with a stable 140px rail on desktop.
-- **Do** use the focal/sequence split to make one primary inspection surface and one supporting sequence legible at once.
-- **Do** preserve 9:16 canvases and 44px interaction targets when adapting the layout.
+- **Do** use the focal/supporting inspection split to make primary and nearby sequence/beat views legible together.
+- **Do** preserve the declared target ratio and 44px interaction targets when adapting the layout.
 - **Do** use hairline rules and surface shifts before adding more shadow.
 - **Do** let mobile become a clean single-column flow instead of shrinking the desktop composition.
 
 ### Don't:
 - **Don't** redesign the shell around frame art, scene content, or motion behavior; those are separate concerns.
-- **Don't** replace the overview contact sheet with a generic hero or dashboard summary.
-- **Don't** bury scene navigation inside the page body; the director rail is intentionally sticky.
+- **Don't** replace overview contact sheets with a generic hero or dashboard summary.
+- **Don't** bury navigation inside the page body; the director rail is intentionally sticky.
 - **Don't** use a masonry grid, arbitrary card heights, or inconsistent scene anatomy.
 - **Don't** turn every label into a pill or every surface into a floating card.
-- **Don't** remove the horizontal overflow behavior that keeps navigation and mobile overviews usable.
+- **Don't** remove horizontal overflow behavior that keeps navigation and mobile overviews usable.
 - **Don't** promote accent colors to large backgrounds; red, amber, and olive are signals.

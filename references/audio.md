@@ -64,5 +64,5 @@ For each planned cue, retain its semantic event and record whether it was **impl
 
 Audition music in the complete relational mix. Voice remains intelligible; SFX retain their semantic role. If the user or reviewer rejects a track's character, replace it rather than treating gain changes as the default rescue.
 
-Do not encode universal loudness, ducking, fade, or pause numbers without project/platform evidence.
+Silence and quiet are editorial choices: preserve them when an evidence read, emotional pause, transition, or thesis needs room; use speed or sound only when it serves the progression. Do not encode universal pause, loudness, ducking, or fade numbers without project/platform evidence.
 
