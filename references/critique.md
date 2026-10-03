@@ -38,22 +38,36 @@ Editorial QA asks whether the film communicates with clarity, specificity, and d
 
 A timeline may correctly show order but fail a claim about cumulative pressure. A portrait may establish identity while narration supplies the name. Static evidence, testimony, atmosphere, symbolism, and purposeful silence remain valid contributions.
 
+### Multilevel scope review
+
+Before freeze, obtain independent Scene and Sequence critiques, plus Chapter critique where chapters exist, and a Film-level critique. Keep findings in the existing design/editorial report: its existing scene findings retain per-scene verdicts and viewing-size evidence; add `scopeFindings` for the film and each declared sequence/chapter, preserving the receipt triad. Each scope finding records `{scopeType, scopeId, status, finding}`; scope type is `film`, `sequence`, or `chapter`, and status is `approve`, `revise`, or `redesign`.
+
+- Scene findings cover each scene's contribution and perceptible relationship.
+- Sequence findings cover local rhythm, construction, repetition, handoffs, and payoff.
+- Chapter findings cover argument turn, evidence burden, and payoff.
+- Film findings cover narrative progression, escalation, callbacks/repetition, style and emotional rhythm, payoff, and cumulative comprehension.
+
+Each scene finding includes `viewingSizeEvidence: [{widthPx, heightPx, distance, observation, proofRef, proofSha256}]`, with positive pixel dimensions for the actual video/player window, not the device display. For example, inspect a portrait short at 360×640; landscape work may include phone-player 390×219 and desktop-player 960×540 views. Record every relevant view. `proofRef` names a local file relative to the project manifest; `proofSha256` binds its inspected bytes inside the artifact-bound report. The critic must confirm the proof shows that report's frozen board or current master; a hash cannot infer this relationship or prove readability. Preserve the proof with the release, and independently refresh affected review if it changes. Simplify or recompose unreadable content rather than shrinking it.
+
+Reopen the changed scope and affected neighbors after a defining change. A harmless easing adjustment does not trigger whole-film redesign.
+
 ### Review dimensions
 
-- **Visual contribution:** can the scene's assigned relationship, identification, evidence, or emotional job be described from the observed image rather than supplied by the director's explanation?
+- **Visual contribution:** can the assigned relationship, identification, evidence, or emotional job be described from observed image rather than director explanation?
 - **Focal hierarchy:** is one element dominant in each meaningful state, and does attention move intentionally?
 - **Contribution clarity:** does the visual perform its assigned explanatory, identification, emotional, chronological, or evidence job rather than merely naming related objects?
-- **State progression:** when the intended contribution changes, does the visual respond or sustain a justified useful hold?
+- **State progression:** when the intended contribution changes, does the visual respond or sustain a justified useful hold? Stillness is valid when it satisfies the assigned job; do not require a fictional state change.
 - **Payoff:** does the scene land on a readable consequence, often with a simpler composition than the buildup?
 - **Pacing:** are holds purposeful, actions readable, and transitions timed around semantic resolution?
 - **Continuity:** does attention hand off through position, direction, object, line, color, or scale?
-- **Asset fitness:** do the selected assets support the required crop, motion, identity, and tone?
+- **Asset fitness:** do selected assets support required crop, motion, identity, and tone?
 - **Text hierarchy:** do labels, evidence, disclosures, payoff text, and accessibility captions remain useful and readable together in clean/captioned reviews?
 - **Style cohesion:** do continuity tokens create one film without forcing every scene into the same layout?
-- **Evidence honesty:** are literal, evidence, reconstruction, metaphor, and abstract treatments unmistakable and claim-safe? Could any fabricated/retypeset document be mistaken for recovered primary evidence?
-- **Review ergonomics:** can the user judge the scene without reading implementation prompts, dense telemetry, or long frame tables?
+- **Evidence honesty:** are literal, evidence, reconstruction, metaphor, and abstract treatments unmistakable and claim-safe?
+- **Review ergonomics:** can the user judge the scene without implementation prompts, dense telemetry, or long frame tables?
 - **Status coherence:** are script lock, final voice status, and timing precision described consistently?
 - **Information budget:** does every on-canvas fact/label advance orientation, proof, or payoff?
+- **Film progression:** do escalation, callbacks and repetition, style/emotional rhythm, payoff, and cumulative comprehension work across the film?
 
 ### Hard blockers at the storyboard gate
 
@@ -130,15 +144,15 @@ Run both verdicts on the mastered output, using the issue-routing table above. R
 
 Use the smallest evidence set that proves the verdict:
 
-- entry, meaningful action, payoff, and exit frames at delivery viewing size;
+- entry, meaningful action, payoff, and exit frames at actual small consumption size;
 - boundary/action clips for camera, transition, timing, and audible cue promises;
-- clean and realistically captioned views, including disclosures;
+- clean and realistically captioned views, including disclosures, at target ratio and viewing size;
 - final alignment plus orientation/trigger/completion/readable-payoff/transition windows, checked with speech;
 - deepest asset crop and complete-reveal payoff where those roles are promised;
 - frozen revision comparison and observable invariant/proof location for defining relationships;
 - before/after comparison for repairs, tied to the mastered output actually reviewed.
 
-A final frame cannot prove motion quality, and source code cannot prove rendered composition.
+Deterministic fields and hashes establish contract coverage or artifact identity; neither proves perception, independence, quality, readability, factual truth, or sound. A final frame cannot prove motion quality, and source code cannot prove rendered composition. Final multi-level editorial and technical review uses the actual mastered, captioned/audio artifact; preserve the inspected hashes and never change them to simulate review.
 
 ## Repair Discipline
 

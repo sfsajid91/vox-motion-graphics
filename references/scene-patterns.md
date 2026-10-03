@@ -60,15 +60,15 @@ Use actor/counter-force/stakes only when real conflict exists. Never invent a vi
 
 ## Selection procedure
 
-For an important beat, write one compact decision:
+For an important explanatory beat, write one compact decision: **viewer inference → starting relationship → visible operation → resulting relationship → invariant → factual limit.**
 
-**Viewer inference → starting relationship → visible operation → resulting relationship → invariant → factual limit.**
+Use a conditional `stateDelta` (`before`, `operation`, `after`, `viewerInference`) to make an explanatory change explicit. Identification, evidence, chronology, atmosphere, emotion, and payoff may instead succeed through identification, inspection, order, tone, feeling, or purposeful hold; do not invent a state change. A hold inside an explanatory scene remains valid when it advances that scene's visual job.
 
-Name what changes and what stays stable so the difference can be seen. The factual limit states what the visual must not imply. For evidence inspection or atmosphere, the operation may be a reveal or a purposeful hold; do not force a causal diagram onto every beat.
+Name what changes and what stays stable so the difference can be seen. The factual limit states what the visual must not imply. For evidence inspection or atmosphere, the operation may be a reveal or purposeful hold; do not force a causal diagram onto every beat.
 
-If a central relationship is unresolved—or the proposed action mainly reveals another noun/label while the claim concerns change—sketch **two materially different concepts** before polishing. A new palette or camera angle on the same mechanism is not a second concept.
+For difficult or important explanatory beats, compare 2–3 low-cost mechanisms across different construction families before costly production work. Do not repeat a completed comparison unless its constraints change; low-stakes and non-explanatory jobs need no divergence. A palette or camera change on one mechanism is not a second concept.
 
-Select autonomously for relationship clarity, story-specificity, factual honesty, asset feasibility, and fit with neighboring scenes. Under a vague brief, infer ordinary audience/style/pacing choices and record the selected direction briefly; do not ask the user to choose diagrams, cameras, or easing. Ask only for a material factual, rights, brand, cost, or scope constraint.
+Select autonomously for instant comprehension/relationship clarity, story specificity, visual surprise, meaningful motion potential, factual honesty, asset feasibility, continuity with neighboring scenes, and implementation cost. Stop when one clearly wins. Record candidates, selected ID, and reason only when a structured handoff needs them; otherwise keep the decision compact. Infer ordinary audience/style/pacing choices under a vague brief; ask only for a material factual, rights, brand, cost, or scope constraint.
 
 Example: a refill business needs recurrence. Concept A shows a container emptying, being refilled, and returning to use; concept B accumulates repeat orders against one durable dispenser. Choose according to the supported claim. Merely panning to a second container proves presence, not replenishment. Conversely, a timeline is right when the inference is which event came first—not that one event caused another.
 

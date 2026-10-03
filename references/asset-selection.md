@@ -2,6 +2,8 @@
 
 Use this reference when sourcing, generating, reconstructing, approving, or replacing media.
 
+Plan vocabulary before acquisition: name relevant subject identities, visual roles, viewpoints, and representations, keeping what a subject is distinct from its composition. See [Film and Sequence Direction](sequence-direction.md). Bind assets to used roles later; this ledger remains authoritative for acquisition, acceptance, rights, derivation, and provenance.
+
 ## Route by semantic need
 
 Prefer:

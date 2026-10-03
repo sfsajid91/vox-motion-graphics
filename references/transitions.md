@@ -4,24 +4,15 @@ Use this reference to connect scenes and states without losing the viewer's gaze
 
 ## Plan the handoff
 
-For each scene identify:
+For important boundaries, decide whether attention continues, matches, contrasts, resets, or hands off. A transition may preserve orientation, reveal connection, change scale/era, create contrast, or give a payoff room; a deliberate hard cut, archival/sound-led bridge, or held pause may be the clearest choice.
 
-- entry focal subject/zone;
-- exit focal subject/zone;
-- dominant direction;
-- scale state: macro, medium, or system-wide;
+At scene level identify:
+
+- entry and exit focal subject/zone;
+- dominant direction and scale;
 - object, line, shape, color, or idea that may continue.
 
-The next state may:
-
-- begin near the previous focal exit;
-- continue or deliberately reverse motion;
-- carry an object/line/shape across the cut;
-- transform the outgoing object into the next environment;
-- contrast macro and system scale;
-- hard-cut when a conceptual break should feel decisive.
-
-Continuity is a heuristic. A deliberate visual reset is valid when it helps the argument.
+The next state may begin near the previous focal exit, continue or reverse motion, carry or transform an object/line/shape, contrast macro and system scale, or hard-cut when a conceptual break should feel decisive. Continuity is a heuristic; a deliberate reset is valid.
 
 ## Transition intent
 

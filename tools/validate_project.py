@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
-"""Validate deterministic v0.9.0 motion-project contracts.
-
-The validator deliberately does not score aesthetics. It checks one compact JSON
-manifest that joins timing, asset, storyboard, and implementation metadata so
-cross-artifact mistakes can be found before an expensive render.
+"""Validate deterministic v0.10 motion-project contracts.
+The validator checks timing, asset, storyboard direction, implementation, and
+publication evidence without scoring aesthetics. Paths resolve from the manifest.
 
 Manifest shape (all times are seconds):
 
@@ -66,8 +64,17 @@ and currently supports PNG. A positive tail after narration/captions is accepted
 only when an explicit reviewed finalHold covers it. There are no built-in
 aesthetic, stillness, safe-zone, or duration-preference thresholds.
 
-Draft is the default stage and never implies publication approval. Publish adds:
-  manifest.storyboard.preview.path = frozen board file
+Draft preserves legacy manifests. v0.10 publish requires film direction and ordered
+sequence/optional chapter partitions; sequence purpose, payoff trajectory, rhythm
+intent, and repetition assessment; and scene visualJob contracts. Explanatory scenes
+require stateDelta; other visual jobs may hold without fictional change.
+Publication additionally requires independent artifact-bound design and editorial
+reviews covering every scene and film/sequence/chapter scope. Per-scene
+viewingSizeEvidence records widthPx, heightPx, distance, observation, proofRef,
+and proofSha256; local proof bytes are hash-bound inside the review report.
+Critics must confirm the proof depicts the reviewed board/master. All evidence
+paths resolve from the manifest directory.
+The validator never imposes visual diversity quotas or aesthetic thresholds.
   manifest.masterFile = mastered output file
   manifest.reviewReceipt = receipt JSON file
 Receipt: {"producerContext": "...", "board": {"file": "...", "sha256": "..."},
@@ -87,13 +94,14 @@ revisions, not quality or reviewer honesty. Keep the board snapshot self-contain
 Evidence assets require sourceUri and claimIds resolving through manifest.claimSet
 (the existing claim-set shape) to verified claims with retrievable source URLs or
 local files. Generated/reconstructed assets cannot claim representationType=evidence.
-Publish checks used assets from board/state/implementation assetIds and sceneIds;
+Publish checks used assets from board/state/implementation assetIds, used
+direction vocabulary bindings, and ledger sceneIds;
 resolved rights also require sourceUri and rightsEvidence, including creation
 records for self-created work. Unused candidates need not have resolved rights.
 
 Optional scenes[].microbeats[].semanticTiming uses scene-local seconds:
-phrase, orientationStartSec <= triggerSec <= actionCompleteSec <= readableStartSec
-< readableEndSec <= transitionEndSec, with transitionStartSec <= transitionEndSec.
+phrase, orientationStartSec <= triggerSec <= actionCompleteSec <= transitionEndSec;
+readableStartSec < readableEndSec <= transitionEndSec, with transitionStartSec <= transitionEndSec.
 Transition overlap is allowed; all times must fit the scene. Optional sfxEvents
 disposition is implemented/replaced/omitted; replacement/omission needs decisionReason.
 Storyboard relationshipInvariants contain id, observable, proofRef; these index
@@ -474,6 +482,114 @@ def _validate_assets(
     return asset_index
 
 
+def _validate_direction(
+    storyboard: dict[str, Any], planned_scenes: list[Any],
+    asset_index: dict[str, dict[str, Any]], findings: list[Finding],
+) -> None:
+    direction = _object(storyboard.get("direction"))
+    if not direction:
+        return
+    film = _object(direction.get("film"))
+    if any(not _nonempty_string(film.get(field))
+           for field in ("viewerPromise", "argument", "emotionalProgression", "conclusion")):
+        _add(findings, "INCOMPLETE_FILM_DIRECTION", "storyboard.direction.film",
+             "requires viewerPromise, argument, emotionalProgression, and conclusion")
+    scene_ids = [scene.get("id") for scene in planned_scenes
+                 if isinstance(scene, dict) and _nonempty_string(scene.get("id"))]
+    sequences = _list(direction.get("sequences"))
+    sequence_ids = _unique_ids(sequences, "storyboard.direction.sequences", findings)
+    for sequence_id, sequence in sequence_ids.items():
+        if any(not _nonempty_string(sequence.get(field))
+               for field in ("purpose", "payoffTrajectory", "rhythmIntent", "repetitionAssessment")):
+            _add(findings, "INCOMPLETE_SEQUENCE_DIRECTION",
+                 f"storyboard.direction.sequences[{sequence_id}]",
+                 "requires purpose, payoffTrajectory, rhythmIntent, and repetitionAssessment")
+    flattened_scenes: list[str] = []
+    for sequence_id, sequence in sequence_ids.items():
+        ids = sequence.get("sceneIds")
+        if not isinstance(ids, list) or not ids or any(not _nonempty_string(item) for item in ids):
+            _add(findings, "INVALID_SEQUENCE_SCENES", f"storyboard.direction.sequences[{sequence_id}].sceneIds",
+                 "must contain ordered non-empty scene ids")
+            continue
+        flattened_scenes.extend(ids)
+    if len(flattened_scenes) != len(set(flattened_scenes)):
+        _add(findings, "DUPLICATE_SEQUENCE_SCENE", "storyboard.direction.sequences",
+             "each scene must occur in exactly one sequence")
+    if flattened_scenes != scene_ids:
+        _add(findings, "SEQUENCE_PARTITION_MISMATCH", "storyboard.direction.sequences",
+             "sequence scene ids must partition all scenes in film order")
+
+    if "chapters" in direction:
+        chapter_ids = _unique_ids(_list(direction.get("chapters")), "storyboard.direction.chapters", findings)
+        flattened_sequences: list[str] = []
+        for chapter_id, chapter in chapter_ids.items():
+            if any(not _nonempty_string(chapter.get(field))
+                   for field in ("argumentTurn", "evidenceBurden", "payoff")):
+                _add(findings, "INCOMPLETE_CHAPTER_DIRECTION",
+                     f"storyboard.direction.chapters[{chapter_id}]",
+                     "requires argumentTurn, evidenceBurden, and payoff")
+            ids = chapter.get("sequenceIds")
+            if not isinstance(ids, list) or not ids or any(not _nonempty_string(item) for item in ids):
+                _add(findings, "INVALID_CHAPTER_SEQUENCES", f"storyboard.direction.chapters[{chapter_id}].sequenceIds",
+                     "must contain ordered non-empty sequence ids")
+                continue
+            flattened_sequences.extend(ids)
+        if len(flattened_sequences) != len(set(flattened_sequences)):
+            _add(findings, "DUPLICATE_CHAPTER_SEQUENCE", "storyboard.direction.chapters",
+                 "each sequence must occur in exactly one chapter")
+        if flattened_sequences != list(sequence_ids):
+            _add(findings, "CHAPTER_PARTITION_MISMATCH", "storyboard.direction.chapters",
+                 "chapter sequence ids must partition declared sequences in order")
+
+    vocabulary = _list(direction.get("vocabulary"))
+    vocabulary_index = _unique_ids(vocabulary, "storyboard.direction.vocabulary", findings)
+    used_vocabulary = {item for scene in _list(storyboard.get("scenes")) if isinstance(scene, dict)
+                       for item in _list(scene.get("vocabularyIds")) if _nonempty_string(item)}
+    for scene in _list(storyboard.get("scenes")):
+        if isinstance(scene, dict):
+            for vocabulary_id in _list(scene.get("vocabularyIds")):
+                if not _nonempty_string(vocabulary_id) or vocabulary_id not in vocabulary_index:
+                    _add(findings, "UNKNOWN_VOCABULARY_REFERENCE",
+                         f"storyboard.scenes[{scene.get('id')}].vocabularyIds",
+                         f"unknown vocabulary id {vocabulary_id!r}")
+    for vocabulary_id, item in vocabulary_index.items():
+        if any(not _nonempty_string(item.get(field))
+               for field in ("subjectIdentity", "visualRole", "viewpoint", "representation")):
+            _add(findings, "INCOMPLETE_VOCABULARY_ROLE",
+                 f"storyboard.direction.vocabulary[{vocabulary_id}]",
+                 "requires subjectIdentity, visualRole, viewpoint, and representation")
+        if item.get("representation") not in ("literal", "evidence", "reconstruction", "metaphor", "abstract"):
+            _add(findings, "INVALID_VOCABULARY_REPRESENTATION",
+                 f"storyboard.direction.vocabulary[{vocabulary_id}].representation",
+                 "must use an existing representation type")
+        bindings = item.get("assetIds")
+        if not isinstance(bindings, list):
+            _add(findings, "INVALID_VOCABULARY_ASSETS",
+                 f"storyboard.direction.vocabulary[{vocabulary_id}].assetIds", "must be an array of asset ids")
+            continue
+        valid_bindings = [value for value in bindings if _nonempty_string(value)]
+        if len(valid_bindings) != len(set(valid_bindings)):
+            _add(findings, "DUPLICATE_VOCABULARY_ASSET",
+                 f"storyboard.direction.vocabulary[{vocabulary_id}].assetIds",
+                 "asset bindings must be unique within a vocabulary role")
+        if (vocabulary_id in used_vocabulary and storyboard.get("status") in {"ready_for_approval", "frozen"}
+                and not bindings):
+            _add(findings, "UNBOUND_USED_VOCABULARY",
+                 f"storyboard.direction.vocabulary[{vocabulary_id}].assetIds",
+                 "used vocabulary roles need bound assets before freeze")
+        for asset_id in bindings:
+            if not _nonempty_string(asset_id):
+                _add(findings, "INVALID_VOCABULARY_ASSETS",
+                     f"storyboard.direction.vocabulary[{vocabulary_id}].assetIds",
+                     "asset ids must be non-empty strings")
+                continue
+            asset = asset_index.get(asset_id)
+            if asset is None:
+                _add(findings, "UNKNOWN_VOCABULARY_ASSET",
+                     f"storyboard.direction.vocabulary[{vocabulary_id}].assetIds",
+                     f"unknown asset id {asset_id!r}")
+
+
 def _validate_storyboard(
     manifest: dict[str, Any],
     asset_index: dict[str, dict[str, Any]],
@@ -497,6 +613,7 @@ def _validate_storyboard(
         for item in _list(manifest.get("scenes"))
         if isinstance(item, dict) and _nonempty_string(item.get("id"))
     }
+    _validate_direction(storyboard, storyboard_scenes, asset_index, findings)
     storyboard_state_ids: dict[str, list[str]] = {}
     for scene_id, scene in storyboard_index.items():
         path = f"storyboard.scenes[{scene_id}]"
@@ -514,6 +631,48 @@ def _validate_storyboard(
             if any(not _nonempty_string(score.get(field)) for field in
                    ("composition", "objectAction", "camera", "attention", "rhythm", "sound", "exit")):
                 _add(findings, "INCOMPLETE_SHOT_SCORE", path, "shot score must resolve composition, action, camera, attention, rhythm, sound, and exit")
+        visual_job = scene.get("visualJob")
+        valid_jobs = ("explanation", "identification", "evidence", "chronology", "atmosphere", "emotion", "payoff")
+        if visual_job is not None and visual_job not in valid_jobs:
+            _add(findings, "INVALID_VISUAL_JOB", f"{path}.visualJob", f"must be one of {sorted(valid_jobs)}")
+        if visual_job == "explanation" or "stateDelta" in scene:
+            delta = _object(scene.get("stateDelta"))
+            if any(not _nonempty_string(delta.get(field)) for field in ("before", "operation", "after", "viewerInference")):
+                _add(findings, "INCOMPLETE_STATE_DELTA", f"{path}.stateDelta",
+                     "stateDelta requires before, operation, after, and viewerInference")
+        if visual_job == "payoff" and not _nonempty_string(scene.get("payoffConstruction")):
+            _add(findings, "MISSING_PAYOFF_CONSTRUCTION", f"{path}.payoffConstruction",
+                 "payoff scenes require a construction choice")
+        if "conceptSearch" in scene:
+            search = _object(scene["conceptSearch"])
+            candidates = _list(search.get("candidates"))
+            if not 2 <= len(candidates) <= 3:
+                _add(findings, "INVALID_CONCEPT_COUNT", f"{path}.conceptSearch.candidates",
+                     "concept search needs two or three candidates")
+            if any(not _nonempty_string(_object(candidate).get(field))
+                   for candidate in candidates for field in ("id", "family", "inference", "description")):
+                _add(findings, "INCOMPLETE_CONCEPT", f"{path}.conceptSearch.candidates",
+                     "each candidate needs id, family, inference, and description")
+            ids = [_object(candidate).get("id") for candidate in candidates
+                   if _nonempty_string(_object(candidate).get("id"))]
+            families = [_object(candidate).get("family") for candidate in candidates
+                        if _nonempty_string(_object(candidate).get("family"))]
+            inferences = [_object(candidate).get("inference") for candidate in candidates
+                          if _nonempty_string(_object(candidate).get("inference"))]
+            if len(ids) != len(set(ids)):
+                _add(findings, "DUPLICATE_CONCEPT_ID", f"{path}.conceptSearch.candidates", "candidate ids must be unique")
+            if len(families) != len(set(families)):
+                _add(findings, "CONCEPT_FAMILIES_NOT_DISTINCT", f"{path}.conceptSearch.candidates",
+                     "candidate construction families must differ")
+            if len({str(value).strip().casefold() for value in inferences}) > 1:
+                _add(findings, "CONCEPT_INFERENCE_MISMATCH", f"{path}.conceptSearch.candidates",
+                     "candidates must test the same viewer inference")
+            if search.get("selectedId") not in ids:
+                _add(findings, "INVALID_SELECTED_CONCEPT", f"{path}.conceptSearch.selectedId",
+                     "selectedId must identify one candidate")
+            if not _nonempty_string(search.get("selectionReason")):
+                _add(findings, "MISSING_CONCEPT_REASON", f"{path}.conceptSearch.selectionReason",
+                     "selection needs a reason")
 
     if status in {"ready_for_approval", "frozen"}:
         evidence_field = "freezeEvidence" if status == "frozen" else "reviewEvidence"
@@ -749,6 +908,25 @@ def _validate_publish(manifest: dict[str, Any], base: Path, assets: dict[str, di
     board = _object(manifest.get("storyboard"))
     if board.get("status") != "frozen" or not _list(board.get("scenes")):
         _add(findings, "PUBLISH_REQUIRES_FREEZE", "storyboard", "publish requires a populated frozen storyboard")
+    if not _object(board.get("direction")):
+        _add(findings, "PUBLISH_REQUIRES_DIRECTION", "storyboard.direction",
+             "v0.10 publish requires film, sequence, and vocabulary direction")
+    if not _list(_object(board.get("direction")).get("vocabulary")):
+        _add(findings, "PUBLISH_REQUIRES_VOCABULARY", "storyboard.direction.vocabulary",
+             "v0.10 publish requires a populated visual vocabulary contract")
+    for index, scene in enumerate(_list(board.get("scenes"))):
+        scene = _object(scene)
+        job = scene.get("visualJob")
+        if job not in ("explanation", "identification", "evidence", "chronology", "atmosphere", "emotion", "payoff"):
+            _add(findings, "PUBLISH_REQUIRES_VISUAL_JOB", f"storyboard.scenes[{index}].visualJob",
+                 "v0.10 publish requires a declared visualJob")
+        if job == "explanation" and any(not _nonempty_string(_object(scene.get("stateDelta")).get(field))
+                                        for field in ("before", "operation", "after", "viewerInference")):
+            _add(findings, "PUBLISH_REQUIRES_STATE_DELTA", f"storyboard.scenes[{index}].stateDelta",
+                 "explanatory scenes require complete stateDelta")
+        if job == "payoff" and not _nonempty_string(scene.get("payoffConstruction")):
+            _add(findings, "PUBLISH_REQUIRES_PAYOFF", f"storyboard.scenes[{index}].payoffConstruction",
+                 "payoff scenes require payoffConstruction")
     if not _list(_object(manifest.get("implementation")).get("scenes")):
         _add(findings, "PUBLISH_REQUIRES_IMPLEMENTATION", "implementation", "publish requires as-built scene metadata")
     used = set()
@@ -758,6 +936,12 @@ def _validate_publish(manifest: dict[str, Any], base: Path, assets: dict[str, di
             for item in [scene, *[_object(state) for state in _list(scene.get("states"))]]:
                 used.update(value for value in _list(item.get("assetIds")) if _nonempty_string(value))
     used.update(asset_id for asset_id, asset in assets.items() if _list(asset.get("sceneIds")))
+    used_vocabulary = {value for scene in _list(board.get("scenes"))
+                       for value in _list(_object(scene).get("vocabularyIds")) if _nonempty_string(value)}
+    for role in _list(_object(board.get("direction")).get("vocabulary")):
+        role = _object(role)
+        if _nonempty_string(role.get("id")) and role["id"] in used_vocabulary:
+            used.update(value for value in _list(role.get("assetIds")) if _nonempty_string(value))
     for asset_id in sorted(used):
         asset = assets.get(asset_id)
         if asset is None:
@@ -829,7 +1013,7 @@ def _validate_publish(manifest: dict[str, Any], base: Path, assets: dict[str, di
                                if isinstance(scene, dict) and _nonempty_string(scene.get("id"))}
             reviewed_scenes = {item.get("sceneId") for item in scene_reviews
                                if isinstance(item, dict) and _nonempty_string(item.get("sceneId"))}
-            checks = ("thesisClear", "hierarchyClear", "stateChangeMeaningful",
+            checks = ("thesisClear", "hierarchyClear", "visualJobSatisfied",
                       "pacingResolved", "continuityResolved", "assetFit")
             if (not scene_reviews or required_scenes != reviewed_scenes
                     or len(scene_reviews) != len(reviewed_scenes)
@@ -837,6 +1021,39 @@ def _validate_publish(manifest: dict[str, Any], base: Path, assets: dict[str, di
                            or any(_object(_object(item).get("checks")).get(key) is not True for key in checks)
                            for item in scene_reviews)):
                 _add(findings, "EDITORIAL_CHECKS_UNRESOLVED", path, "every board scene needs affirmative editorial checks")
+            if any(not (isinstance(_object(item).get("viewingSizeEvidence"), list)
+                        and _object(item).get("viewingSizeEvidence"))
+                   or any(type(_object(evidence).get(field)) is not int or _object(evidence).get(field) <= 0
+                          for evidence in _list(_object(item).get("viewingSizeEvidence"))
+                          for field in ("widthPx", "heightPx"))
+                   or any(any(not _nonempty_string(_object(evidence).get(field))
+                              for field in ("distance", "observation", "proofRef"))
+                          or not _nonempty_string(_object(evidence).get("proofSha256"))
+                          for evidence in _list(_object(item).get("viewingSizeEvidence")))
+                   for item in scene_reviews):
+                _add(findings, "VIEWING_SIZE_EVIDENCE_MISSING", path,
+                     "each scene needs readable proof with positive widthPx/heightPx, distance, and observation")
+            for item in scene_reviews:
+                for index, evidence in enumerate(_list(_object(item).get("viewingSizeEvidence"))):
+                    evidence = _object(evidence)
+                    _bound_file({"file": evidence.get("proofRef"), "sha256": evidence.get("proofSha256")},
+                                base, f"{path}.sceneFindings[{_object(item).get('sceneId')}].viewingSizeEvidence[{index}]",
+                                findings)
+            direction = _object(board.get("direction"))
+            required_scopes = {("film", "film")}
+            required_scopes.update(("sequence", item.get("id")) for item in _list(direction.get("sequences"))
+                                   if isinstance(item, dict) and _nonempty_string(item.get("id")))
+            required_scopes.update(("chapter", item.get("id")) for item in _list(direction.get("chapters"))
+                                   if isinstance(item, dict) and _nonempty_string(item.get("id")))
+            scope_reviews = _list(review.get("scopeFindings"))
+            reviewed_scopes = {(item.get("scopeType"), item.get("scopeId")) for item in scope_reviews
+                               if isinstance(item, dict) and _nonempty_string(item.get("scopeType"))
+                               and _nonempty_string(item.get("scopeId"))}
+            if (required_scopes != reviewed_scopes or len(scope_reviews) != len(reviewed_scopes)
+                    or any(_object(item).get("status") != "approve"
+                           or not _nonempty_string(_object(item).get("finding")) for item in scope_reviews)):
+                _add(findings, "SCOPE_REVIEWS_UNRESOLVED", path,
+                     "review must cover film and every declared sequence/chapter")
 
 
 
@@ -865,7 +1082,7 @@ def _render_text(findings: Iterable[Finding], manifest_path: Path) -> str:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="Validate deterministic timing, asset, storyboard, and implementation contracts.",
+        description="Validate timing, assets, ordered storyboard direction, visual-job contracts, and artifact-bound publication reviews.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=__doc__,
     )

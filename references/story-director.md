@@ -28,6 +28,8 @@ A topic is not a story. Choose an engine such as:
 - accumulating consequence.
 
 Write a causal or logical spine. If the arrows are weak, the storyboard will become disconnected illustrations.
+For film, chapter, and sequence progression, vocabulary, and the full neighboring-scene scan, use [Film and Sequence Direction](sequence-direction.md). Keep the hierarchy there; this reference owns brief interpretation and scene-local reasoning.
+
 
 For each narrative beat, record:
 
@@ -69,24 +71,13 @@ Use this compact grammar:
 
 Compress or repeat states as needed. Never assign fixed time percentages to the grammar.
 
-For long-form work, a conceptual scene may persist for tens of seconds if it remains one coherent world, but it should contain multiple semantic states or microbeats whenever the narration materially advances. Reuse the world, assets, and camera logic instead of redesigning the whole frame every few seconds.
+For long-form work, a conceptual scene may persist for tens of seconds when it remains one coherent world. Add semantic states or microbeats when they serve the evolving visual contribution; narration advancing does not by itself require a new image, motion, or state change. Reuse the world, assets, and camera logic rather than redesigning the whole frame every few seconds.
 
 When several essential anchors are introduced in speech, their first visual read should usually follow the spoken order unless a deliberate reveal or suspense structure justifies otherwise.
 
-## Concept divergence
+## Concept search
 
-Generate alternatives only when a decision is genuinely unresolved. Compare different construction families rather than cosmetic variants.
+For difficult or important explanatory beats, compare **2–3 low-cost, materially different mechanisms** before expensive sourcing or implementation. A different palette, camera angle, or layout for the same mechanism is not a distinct concept.
 
-Select using:
-
-- clarity when muted;
-- specificity to this story;
-- truthful representation;
-- meaningful motion potential;
-- asset feasibility;
-- focal hierarchy and transition potential;
-- difference from neighboring scenes;
-- cost of changing the decision after implementation.
-
-Stop diverging once one concept clearly wins. Preserve rejected concepts only when they explain a useful failure.
+Select autonomously using clarity when muted, story-specificity, factual honesty, meaningful motion potential, asset feasibility, focal hierarchy and transition potential, difference from neighboring scenes, and the cost of changing the decision later. Stop once a concept clearly wins. Preserve rejected concepts only when they explain a useful failure. For the selection procedure and scene grammar, see [Scene Patterns](scene-patterns.md).
 

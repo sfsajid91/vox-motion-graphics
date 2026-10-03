@@ -17,8 +17,8 @@ Resolve these together before implementation; one short line per decision is eno
 | Exit | Orientation carried forward, or contrast motivating a reset |
 
 Object action and camera discovery are not interchangeable: finding a second object does not demonstrate replacement. Supporting motion and ambient life are optional; remove layers that compete with the assigned job.
+Review shot scale, density, movement, and stillness against the film's progression. The sequence reference owns a full neighboring-scene scan. Repetition can establish a system or rhythm; contrast can mark a turn. Do not impose a variety quota, obligatory camera move, or fixed establish/action/hold formula.
 
-Watch the sequence as a film: shot scale, density, movement, and stillness should support its emotional progression. Repetition can establish a system or rhythm; contrast can mark a turn. Do not impose a variety quota, obligatory camera move, or fixed establish/action/hold formula.
 
 ## Semantic timing
 

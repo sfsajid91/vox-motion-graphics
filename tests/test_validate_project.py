@@ -276,12 +276,69 @@ class ValidateProjectTests(unittest.TestCase):
         with redirect_stdout(io.StringIO()):
             self.assertEqual(VALIDATOR.main([str(self.manifest_path), "--json"]), 1)
 
-    def release(self):
+    def release(self, duration_sec=12.0, chaptered=False):
         manifest = base_manifest()
+        manifest["composition"]["durationSec"] = duration_sec
+        manifest["voiceover"]["endSec"] = duration_sec - 0.5
+        manifest["captions"][0]["endSec"] = duration_sec - 0.5
+        manifest["scenes"][0]["durationSec"] = duration_sec
+        manifest["finalHold"].update(startSec=duration_sec - 0.5, endSec=duration_sec)
+        board_scene = manifest["storyboard"]["scenes"][0]
+        board_scene.update(visualJob="explanation", stateDelta={
+            "before": "the system is flowing", "operation": "one route narrows",
+            "after": "flow queues at the bottleneck",
+            "viewerInference": "the system depends on this constrained route",
+        })
+        board_scene["vocabularyIds"] = ["route"]
+        scene_ids = ["S1"]
+        sequence_defs = [("Q1", ["S1"])]
+        chapter_defs = [("C1", ["Q1"])] if chaptered else []
+        if chaptered:
+            scene_ids = ["S1", "S2", "S3", "S4"]
+            for index, scene_id in enumerate(scene_ids[1:], start=1):
+                scene = json.loads(json.dumps(board_scene))
+                scene["id"] = scene_id
+                scene["beatIds"] = [f"B{index + 1}"]
+                scene["visualJob"] = "payoff" if index == 3 else "evidence"
+                scene.pop("stateDelta", None)
+                if scene["visualJob"] == "payoff":
+                    scene["payoffConstruction"] = "hold on the queue after the route closes"
+                manifest["storyboard"]["scenes"].append(scene)
+            manifest["scenes"] = [
+                {"id": scene_id, "startSec": index * duration_sec / 4, "durationSec": duration_sec / 4}
+                for index, scene_id in enumerate(scene_ids)
+            ]
+            manifest["implementation"]["scenes"] = [
+                {"id": scene_id, "stateIds": ["anchor", "payoff"]} for scene_id in scene_ids
+            ]
+            manifest["assets"][0]["sceneIds"] = scene_ids
+            sequence_defs = [("Q1", ["S1", "S2"]), ("Q2", ["S3", "S4"])]
+            chapter_defs = [("C1", ["Q1"]), ("C2", ["Q2"])]
+        manifest["storyboard"]["direction"] = {
+            "film": {"viewerPromise": "Understand the bottleneck", "argument": "one route constrains the system",
+                     "emotionalProgression": "curiosity to concern", "conclusion": "capacity is the limit"},
+            "sequences": [
+                {"id": sequence_id, "sceneIds": sequence_scene_ids, "purpose": "show the bottleneck",
+                 "payoffTrajectory": "narrowing route becomes accumulating queue",
+                 "rhythmIntent": "hold a stable scale as density rises",
+                 "repetitionAssessment": "repeated route images let the queue become legible"}
+                for sequence_id, sequence_scene_ids in sequence_defs
+            ],
+            "vocabulary": [{"id": "route", "subjectIdentity": "shared route", "visualRole": "hero subject",
+                            "viewpoint": "system overview", "representation": "metaphor", "assetIds": ["hero"]}],
+        }
+        if chapter_defs:
+            manifest["storyboard"]["direction"]["chapters"] = [
+                {"id": chapter_id, "sequenceIds": sequence_ids, "argumentTurn": "capacity becomes the story",
+                 "evidenceBurden": "show the accumulated queue", "payoff": "the route is the constraint"}
+                for chapter_id, sequence_ids in chapter_defs
+            ]
         (self.root / "board.html").write_text("<h1>Frozen transformation</h1>")
         (self.root / "master.mp4").write_bytes(b"master fixture bytes")
         (self.root / "creation.txt").write_text("Original illustration; created for this production")
-        manifest["storyboard"]["preview"] = {"path": "board.html", "mode": "static"}
+        png(self.root / "phone-frame.png", 6)
+        png(self.root / "desktop-frame.png", 6)
+        manifest["storyboard"]["preview"] = {"path": "board.html", "mode": "playable"}
         manifest["masterFile"] = "master.mp4"
         manifest["reviewReceipt"] = "release.json"
         manifest["assets"][0].update(sourceUri="creation.txt", rightsEvidence="creation.txt")
@@ -301,11 +358,34 @@ class ValidateProjectTests(unittest.TestCase):
             if name == "technical":
                 report.update(runId="qa-1", checks=[{"id": "render", "status": "pass", "evidence": "decoded frames"}])
             else:
-                report.update(critic="independent-critic", independent=True, renderRefs=["board.html"],
-                              sceneFindings=[{"sceneId": "S1", "status": "approve", "findings": [],
-                                              "checks": {key: True for key in (
-                                                  "thesisClear", "hierarchyClear", "stateChangeMeaningful",
-                                                  "pacingResolved", "continuityResolved", "assetFit")}}])
+                scopes = [{"scopeType": "film", "scopeId": "film", "status": "approve",
+                           "finding": "the argument resolves at film scale"}]
+                scopes.extend({"scopeType": "sequence", "scopeId": sequence_id, "status": "approve",
+                               "finding": "the sequence escalates to its local payoff"}
+                              for sequence_id, _ in sequence_defs)
+                scopes.extend({"scopeType": "chapter", "scopeId": chapter_id, "status": "approve",
+                               "finding": "the chapter carries the capacity turn"}
+                              for chapter_id, _ in chapter_defs)
+                viewing_sizes = [
+                    {"widthPx": 360 if duration_sec < 300 else 390,
+                     "heightPx": 640 if duration_sec < 300 else 219,
+                     "size": "portrait player" if duration_sec < 300 else "landscape phone player",
+                     "distance": "arm's length", "observation": "the bottleneck remains legible",
+                     "proofRef": "phone-frame.png", "proofSha256": self.binding("phone-frame.png")["sha256"]},
+                    *([{"widthPx": 960, "heightPx": 540, "size": "desktop player",
+                        "distance": "seated viewing", "observation": "the system hierarchy remains legible",
+                        "proofRef": "desktop-frame.png", "proofSha256": self.binding("desktop-frame.png")["sha256"]}] if duration_sec >= 300 else []),
+                ]
+                report.update(
+                    critic="independent-critic", independent=True, renderRefs=["board.html"],
+                    sceneFindings=[{"sceneId": scene_id, "status": "approve", "findings": [],
+                                    "checks": {key: True for key in (
+                                        "thesisClear", "hierarchyClear", "visualJobSatisfied",
+                                        "pacingResolved", "continuityResolved", "assetFit")},
+                                    "viewingSizeEvidence": viewing_sizes}
+                                   for scene_id in scene_ids],
+                    scopeFindings=scopes,
+                )
             (self.root / f"{name}.json").write_text(json.dumps(report))
             receipt["reviews"][name] = self.binding(f"{name}.json")
         (self.root / "release.json").write_text(json.dumps(receipt))
@@ -368,6 +448,169 @@ class ValidateProjectTests(unittest.TestCase):
             manifest = self.release()
             (self.root / "release.json").write_text(json.dumps(receipt))
             self.assertIn("INVALID_ARTIFACT_BINDING", codes(self.publish(manifest)))
+
+    def test_v010_publication_envelopes_are_artifact_bound(self):
+        for duration, chaptered in ((55.0, False), (300.0, False), (900.0, True)):
+            with self.subTest(duration=duration):
+                self.assertEqual(self.publish(self.release(duration, chaptered)), [])
+
+    def test_publish_requires_populated_visual_vocabulary(self):
+        for present, vocabulary in ((False, None), (True, []), (True, None), (True, {})):
+            with self.subTest(present=present, vocabulary=vocabulary):
+                manifest = self.release()
+                direction = manifest["storyboard"]["direction"]
+                if present:
+                    direction["vocabulary"] = vocabulary
+                else:
+                    direction.pop("vocabulary")
+                for scene in manifest["storyboard"]["scenes"]:
+                    scene.pop("vocabularyIds")
+                self.assertEqual(self.validate(manifest), [])
+                self.assertIn("PUBLISH_REQUIRES_VOCABULARY", codes(self.publish(manifest)))
+
+    def test_direction_partitions_and_vocabulary_bindings(self):
+        manifest = self.release()
+        manifest["storyboard"]["direction"]["sequences"][0]["sceneIds"] = ["missing"]
+        self.assertIn("SEQUENCE_PARTITION_MISMATCH", codes(self.validate(manifest)))
+        manifest = self.release()
+        manifest["storyboard"]["direction"]["vocabulary"][0]["assetIds"] = ["missing"]
+        self.assertIn("UNKNOWN_VOCABULARY_ASSET", codes(self.validate(manifest)))
+        manifest = self.release()
+        manifest["storyboard"]["scenes"][0]["vocabularyIds"] = ["unknown"]
+        self.assertIn("UNKNOWN_VOCABULARY_REFERENCE", codes(self.validate(manifest)))
+
+        manifest = self.release()
+        board = manifest["storyboard"]
+        second = json.loads(json.dumps(board["scenes"][0]))
+        second["id"] = "S2"
+        second["beatIds"] = ["B2"]
+        board["scenes"].append(second)
+        manifest["scenes"].append({"id": "S2", "startSec": 12, "durationSec": 4})
+        manifest["composition"]["durationSec"] = 16
+        manifest["voiceover"]["endSec"] = 15.5
+        manifest["captions"][0]["endSec"] = 15.5
+        manifest["finalHold"].update(startSec=15.5, endSec=16)
+        board["status"] = "draft"
+        board.pop("freezeEvidence")
+        board["direction"]["sequences"][0]["sceneIds"] = ["S1", "S2"]
+        board["direction"]["sequences"][0]["repetitionAssessment"] = "same family persists to make the accumulating constraint easy to compare"
+        manifest.pop("implementation")
+        self.assertEqual(self.validate(manifest), [])
+
+        ordered = self.release()
+        ordered["storyboard"]["status"] = "draft"
+        ordered["storyboard"].pop("freezeEvidence")
+        ordered["storyboard"]["scenes"].append({"id": "S2"})
+        ordered["scenes"].append({"id": "S2", "startSec": 12, "durationSec": 1})
+        ordered["storyboard"]["direction"]["sequences"] = [
+            {"id": "Q1", "sceneIds": ["S2"], "purpose": "later", "payoffTrajectory": "later",
+             "rhythmIntent": "later", "repetitionAssessment": "later"},
+            {"id": "Q2", "sceneIds": ["S1"], "purpose": "earlier", "payoffTrajectory": "earlier",
+             "rhythmIntent": "earlier", "repetitionAssessment": "earlier"},
+        ]
+        self.assertIn("SEQUENCE_PARTITION_MISMATCH", codes(self.validate(ordered)))
+        ordered["storyboard"]["direction"]["chapters"] = [
+            {"id": "C1", "sequenceIds": ["Q2", "Q1"], "argumentTurn": "turn", "evidenceBurden": "proof",
+             "payoff": "resolution"}
+        ]
+        self.assertIn("CHAPTER_PARTITION_MISMATCH", codes(self.validate(ordered)))
+        duplicate = self.release()
+        duplicate["storyboard"]["direction"]["sequences"][0]["sceneIds"] = ["S1", "S1"]
+        self.assertIn("DUPLICATE_SEQUENCE_SCENE", codes(self.validate(duplicate)))
+
+    def test_conditional_state_delta_and_concept_search(self):
+        manifest = self.release()
+        scene = manifest["storyboard"]["scenes"][0]
+        scene["visualJob"] = "evidence"
+        scene.pop("stateDelta")
+        self.assertNotIn("INCOMPLETE_STATE_DELTA", codes(self.validate(manifest)))
+        scene.update(visualJob="explanation", stateDelta={"before": "flow", "after": "queue"})
+        self.assertIn("INCOMPLETE_STATE_DELTA", codes(self.validate(manifest)))
+        scene["stateDelta"] = {"before": "flow", "operation": "route narrows", "after": "queue",
+                               "viewerInference": "the route is constrained"}
+        scene["conceptSearch"] = {
+            "candidates": [
+                {"id": "A", "family": "diagram", "inference": "route constrains flow", "description": "narrowing path"},
+                {"id": "B", "family": "spatial", "inference": "route constrains flow", "description": "crowded corridor"},
+            ],
+            "selectedId": "missing", "selectionReason": "better readability",
+        }
+        self.assertIn("INVALID_SELECTED_CONCEPT", codes(self.validate(manifest)))
+        scene["conceptSearch"]["selectedId"] = "A"
+        scene["conceptSearch"]["candidates"][1]["family"] = "diagram"
+        self.assertIn("CONCEPT_FAMILIES_NOT_DISTINCT", codes(self.validate(manifest)))
+
+    def test_publish_requires_independent_scope_and_viewing_size_proof(self):
+        manifest = self.release(900, chaptered=True)
+        self.assertEqual(self.publish(manifest), [])
+        self.change_review("editorial", lambda report: report.pop("scopeFindings"))
+        self.assertIn("SCOPE_REVIEWS_UNRESOLVED", codes(self.publish(manifest)))
+        manifest = self.release(900, chaptered=True)
+        self.change_review("editorial", lambda report: report["scopeFindings"][0].update(status="revise"))
+        self.assertIn("SCOPE_REVIEWS_UNRESOLVED", codes(self.publish(manifest)))
+        manifest = self.release(900, chaptered=True)
+        self.change_review("editorial", lambda report: report["sceneFindings"][0]["viewingSizeEvidence"][0].update(
+            proofRef="missing-frame.png"))
+        self.assertIn("ARTIFACT_READ_ERROR", codes(self.publish(manifest)))
+
+    def test_malformed_direction_values_return_findings(self):
+        for field in ("id", "family"):
+            manifest = self.release()
+            manifest["storyboard"]["scenes"][0]["conceptSearch"] = {
+                "candidates": [
+                    {"id": "A", "family": "diagram", "inference": "capacity limits flow", "description": "narrowing route"},
+                    {"id": "B", "family": "accumulation", "inference": "capacity limits flow", "description": "growing queue", field: []},
+                ],
+                "selectedId": "A", "selectionReason": "the stable route makes the limit visible",
+            }
+            self.assertIn("INCOMPLETE_CONCEPT", codes(self.validate(manifest)))
+        manifest = self.release()
+        manifest["storyboard"]["scenes"][0].update(visualJob="evidence", stateDelta={"before": "source"})
+        self.assertIn("INCOMPLETE_STATE_DELTA", codes(self.validate(manifest)))
+        manifest = self.release()
+        manifest["storyboard"]["scenes"][0]["visualJob"] = []
+        self.assertIn("PUBLISH_REQUIRES_VISUAL_JOB", codes(self.publish(manifest)))
+        manifest = self.release()
+        manifest["storyboard"]["scenes"][0]["vocabularyIds"] = [{}]
+        self.assertIn("UNKNOWN_VOCABULARY_REFERENCE", codes(self.validate(manifest)))
+        manifest = self.release()
+        manifest["storyboard"]["direction"]["vocabulary"][0]["assetIds"] = [{}]
+        self.assertIn("INVALID_VOCABULARY_ASSETS", codes(self.validate(manifest)))
+        manifest = self.release()
+        self.change_review("editorial", lambda report: report["scopeFindings"][0].update(scopeType=[]))
+        self.assertIn("SCOPE_REVIEWS_UNRESOLVED", codes(self.publish(manifest)))
+        manifest = self.release()
+        manifest["storyboard"]["direction"]["vocabulary"][0]["representation"] = "authentic-looking"
+        self.assertIn("INVALID_VOCABULARY_REPRESENTATION", codes(self.validate(manifest)))
+        manifest["storyboard"]["direction"]["vocabulary"][0].update(representation="metaphor", assetIds=["hero", "hero"])
+        self.assertIn("DUPLICATE_VOCABULARY_ASSET", codes(self.validate(manifest)))
+
+    def test_vocabulary_only_assets_obey_publication_lifecycle(self):
+        manifest = self.release()
+        for scene in manifest["storyboard"]["scenes"]:
+            scene["assetIds"] = []
+            for state in scene["states"]:
+                state.pop("assetIds", None)
+        asset = manifest["assets"][0]
+        asset["sceneIds"] = []
+        asset["role"] = "recurring route detail"
+        self.assertEqual(self.publish(manifest), [])
+        asset.update(technicalStatus="candidate", editorialStatus="pending")
+        self.assertIn("PUBLISH_ASSET_NOT_READY", codes(self.publish(manifest)))
+        asset.update(technicalStatus="verified", editorialStatus="accepted", rightsStatus="unresolved")
+        self.assertIn("PUBLISH_RIGHTS_UNRESOLVED", codes(self.publish(manifest)))
+        asset["rightsStatus"] = "self_created"
+        asset.pop("sourceUri")
+        self.assertIn("PUBLISH_PROVENANCE_MISSING", codes(self.publish(manifest)))
+
+    def test_viewing_proof_identity_is_bound_to_review(self):
+        manifest = self.release()
+        self.assertEqual(self.publish(manifest), [])
+        (self.root / "phone-frame.png").write_bytes(b"changed after independent review")
+        self.assertIn("STALE_ARTIFACT", codes(self.publish(manifest)))
+        manifest = self.release()
+        self.change_review("editorial", lambda report: report["sceneFindings"][0]["viewingSizeEvidence"][0].pop("proofSha256"))
+        self.assertIn("INVALID_ARTIFACT_BINDING", codes(self.publish(manifest)))
 
     def test_used_asset_release_rights_and_provenance(self):
         for status in ("unresolved", "needs_review"):
