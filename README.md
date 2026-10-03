@@ -4,13 +4,14 @@
 
 v0.10 adds film/chapter/sequence direction above the existing storyboard-first scene workflow. Conditional visual state deltas, pre-acquisition asset vocabulary, mechanism concept search and independent multi-level critique address inventive storytelling and cumulative rhythm—not just polished frames. Shorts collapse the hierarchy; longer explainers/documentaries use it for evidence, motifs, escalation, callbacks and payoff.
 
-Read [the upgrade architecture and audit](V0.10-DESIGN-NOTES.md) and [the changelog](V0.10.0-CHANGELOG.md). Production lessons motivate general contracts, not a Concorde template or bans on charts, asset reuse, side profiles, stillness or hard cuts. Measured creative improvement remains unproven; [behavioral evaluations](tests/vague-autopilot-prompts.md) distinguish that question from deterministic validation.
+Read [the upgrade architecture and audit](V0.10-DESIGN-NOTES.md) and [the changelog](CHANGELOG.md). Production lessons motivate general contracts, not a Concorde template or bans on charts, asset reuse, side profiles, stillness or hard cuts. Measured creative improvement remains unproven; [behavioral evaluations](tests/vague-autopilot-prompts.md) distinguish that question from deterministic validation.
 
 Start with `SKILL.md`. Load only the references linked for the current production stage.
 
 ## Package shape
 
 - `SKILL.md` — workflow, routing, gates, and non-negotiables
+- `CHANGELOG.md` — complete release history; version-specific publication notes live on [GitHub Releases](https://github.com/sfsajid91/vox-motion-graphics/releases)
 - `references/` — focused directing, reference-analysis, orchestration, and implementation guidance
 - `references/sequence-direction.md` — hierarchy, visual vocabulary, neighboring-scene rhythm and cumulative payoff
 - `references/implementation-packets.md` — bounded future ScenePacket/SequencePacket handoffs; no model router
